@@ -12,7 +12,9 @@ import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.opencapture.opencine.appkit.DiscoveryPermissions
+import com.opencapture.opencine.appkit.AppkitContext
 import com.opencapture.opencine.appkit.MediaShare
+import com.opencapture.opencine.appkit.R
 import com.opencapture.opencine.media.BoundedDiagnosticFormatter
 import com.opencapture.opencine.media.DecoderErrorRecord
 import com.opencapture.opencine.media.DiagnosticJournal
@@ -244,15 +246,15 @@ public abstract class DiagnosticCenterRuntime<S>(
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(host.supportEmail))
             intent.putExtra(Intent.EXTRA_SUBJECT, supportSubject(host.product))
             intent.putExtra(Intent.EXTRA_TEXT,
-                "What happened?\n\n\nTechnical details are attached to help us investigate. Please do not include private footage or passwords.")
+                AppkitContext.context.getString(R.string.appkit_email_body))
         }
-        val chooser = Intent.createChooser(intent, if (emailSupport) "Email support" else null)
+        val chooser = Intent.createChooser(intent, if (emailSupport) AppkitContext.context.getString(R.string.appkit_email_support) else null)
         if (context !is android.app.Activity) chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             context.startActivity(chooser)
         } catch (_: android.content.ActivityNotFoundException) {
             android.widget.Toast.makeText(context,
-                "Email ${host.supportEmail}. No compatible app is available.",
+                AppkitContext.context.getString(R.string.appkit_email_no_app, host.supportEmail),
                 android.widget.Toast.LENGTH_LONG).show()
         }
     }

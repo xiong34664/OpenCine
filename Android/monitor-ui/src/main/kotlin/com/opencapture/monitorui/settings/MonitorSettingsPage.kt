@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.horizontalScroll
@@ -45,6 +47,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.MonitorCameraAction
 import com.opencapture.monitorui.MonitorIcon
 import com.opencapture.monitorui.MonitorPageHeading
@@ -94,7 +97,7 @@ public fun MonitorSettingsPage(
     MonitorPageScaffold(
         modifier = modifier,
         navigationWidth = 190f,
-        heading = { MonitorPageHeading("Operator Setup", brand) },
+        heading = { MonitorPageHeading(stringResource(R.string.mui_operator_setup), brand) },
         navigation = { portrait ->
             Column(
                 if (portrait) Modifier.fillMaxWidth() else Modifier.fillMaxSize(),
@@ -148,7 +151,7 @@ public fun MonitorSettingsPage(
                         modifier = Modifier.border(1.dp, MonitorPalette.accent.copy(alpha = 0.16f), CircleShape)
                             .padding(horizontal = 10.dp, vertical = 6.dp))
                     back?.let { action ->
-                        MonitorSettingsActionPill("Back", modifier = Modifier.testTag("monitor.page.back"), onClick = action)
+                        MonitorSettingsActionPill(stringResource(R.string.mui_back), modifier = Modifier.testTag("monitor.page.back"), onClick = action)
                     }
                 }
             }
@@ -201,7 +204,7 @@ private fun SettingsTab(
 @Composable
 private fun SettingsDisconnect(onClick: () -> Unit, modifier: Modifier = Modifier) {
     MonitorCameraAction(
-        text = "Disconnect", primary = false, enabled = true, contentDescription = "Disconnect",
+        text = stringResource(R.string.mui_disconnect), primary = false, enabled = true, contentDescription = stringResource(R.string.mui_disconnect),
         onClick = onClick, modifier = modifier, destructive = true,
         icon = { tint -> MonitorIcon(MonitorIcon.LINK_2_OFF, null, Modifier.size(14.dp), tint) },
     )
@@ -213,7 +216,7 @@ private fun SettingsSessionStatus(isLive: Boolean, phaseLabel: String, modifier:
         verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Box(Modifier.size(7.dp).background(if (isLive) Color(0.18f, 0.78f, 0.42f) else MonitorPalette.faint, CircleShape))
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(if (isLive) "Active link" else "No camera connected",
+            Text(if (isLive) stringResource(R.string.mui_active_link) else stringResource(R.string.mui_no_camera_connected),
                 style = MonitorTypography.text(11.5f, FontWeight.SemiBold), color = MonitorPalette.text, maxLines = 1)
             Text(phaseLabel, style = MonitorTypography.text(9f), color = MonitorPalette.muted,
                 maxLines = 1, overflow = TextOverflow.Ellipsis)

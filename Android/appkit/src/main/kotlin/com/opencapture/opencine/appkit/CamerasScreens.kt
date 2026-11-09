@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.opencapture.monitorui.MonitorCameraFooter
@@ -110,17 +111,17 @@ public fun CamerasScreen(
     MonitorCameraPage(
         brand = brandName,
         sections = listOf(
-            MonitorCameraSection("PAIRED", paired, "tap to reconnect"),
-            MonitorCameraSection("NEARBY", CamerasMapping.nearby(model) + extraNearby, nearbyNote),
+            MonitorCameraSection(stringResource(R.string.appkit_paired_section), paired, stringResource(R.string.appkit_tap_to_reconnect)),
+            MonitorCameraSection(stringResource(R.string.appkit_nearby), CamerasMapping.nearby(model) + extraNearby, nearbyNote),
         ),
         key = { it.id },
-        emptyMessage = "Pair a new camera to start monitoring.",
+        emptyMessage = stringResource(R.string.appkit_pair_new_camera_empty),
         modifier = modifier,
         scanning = state.scanning,
         actions = {
-            onMultiview?.let { HeaderAction(MonitorIcon.LAYOUT_GRID, "Open Multiview", !busy, it) }
-            HeaderAction(MonitorIcon.FILM, "Media library", true, onMedia)
-            HeaderAction(MonitorIcon.SETTINGS, "Settings", true, onSettings)
+            onMultiview?.let { HeaderAction(MonitorIcon.LAYOUT_GRID, stringResource(R.string.appkit_open_multiview), !busy, it) }
+            HeaderAction(MonitorIcon.FILM, stringResource(R.string.appkit_media_library), true, onMedia)
+            HeaderAction(MonitorIcon.SETTINGS, stringResource(R.string.appkit_settings), true, onSettings)
         },
         camera = { item ->
             val camera = saved(item.id)
@@ -177,10 +178,10 @@ public fun CamerasScreen(
         footer = {
             MonitorCameraFooter(onPrivacy, onTerms) {
                 MonitorCameraAction(
-                    text = "Pair a new camera",
+                    text = stringResource(R.string.appkit_pair_a_new_camera),
                     primary = false,
                     enabled = !busy,
-                    contentDescription = "Pair a new camera",
+                    contentDescription = stringResource(R.string.appkit_pair_a_new_camera),
                     onClick = {
                         model.select(null)
                         onPair()
@@ -223,54 +224,54 @@ public fun CamerasScreen(
         var text by remember(camera.id) { mutableStateOf(camera.name.orEmpty()) }
         AlertDialog(
             onDismissRequest = { renaming = null },
-            title = { Text("Rename camera") },
+            title = { Text(stringResource(R.string.appkit_rename_camera)) },
             text = {
                 Column {
-                    Text("Give this camera a name you'll recognize.")
-                    OutlinedTextField(value = text, onValueChange = { text = it }, label = { Text("Name") })
+                    Text(stringResource(R.string.appkit_rename_camera_hint))
+                    OutlinedTextField(value = text, onValueChange = { text = it }, label = { Text(stringResource(R.string.appkit_name)) })
                 }
             },
             confirmButton = {
                 TextButton(onClick = {
                     model.rename(camera.id, text)
                     renaming = null
-                }) { Text("Save") }
+                }) { Text(stringResource(R.string.appkit_save)) }
             },
-            dismissButton = { TextButton(onClick = { renaming = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { renaming = null }) { Text(stringResource(R.string.appkit_cancel)) } },
         )
     }
     renamingSetup?.let { (cameraID, route) ->
         var text by remember(cameraID, route.id) { mutableStateOf(CamerasMapping.title(route)) }
         AlertDialog(
             onDismissRequest = { renamingSetup = null },
-            title = { Text("Rename setup") },
+            title = { Text(stringResource(R.string.appkit_rename_setup)) },
             text = {
                 Column {
-                    Text("Name this connection setup. Leave it blank to use the default name.")
-                    OutlinedTextField(value = text, onValueChange = { text = it }, label = { Text("Name") })
+                    Text(stringResource(R.string.appkit_rename_setup_hint))
+                    OutlinedTextField(value = text, onValueChange = { text = it }, label = { Text(stringResource(R.string.appkit_name)) })
                 }
             },
             confirmButton = {
                 TextButton(enabled = !busy, onClick = {
                     if (!busy) model.renameRoute(route.id, cameraID, text)
                     renamingSetup = null
-                }) { Text("Save") }
+                }) { Text(stringResource(R.string.appkit_save)) }
             },
-            dismissButton = { TextButton(onClick = { renamingSetup = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { renamingSetup = null }) { Text(stringResource(R.string.appkit_cancel)) } },
         )
     }
     removing?.let { camera ->
         AlertDialog(
             onDismissRequest = { removing = null },
-            title = { Text("Remove camera?") },
-            text = { Text("This removes ${camera.displayName} from this phone. You can pair it again later.") },
+            title = { Text(stringResource(R.string.appkit_remove_camera_question)) },
+            text = { Text(stringResource(R.string.appkit_remove_camera_body, camera.displayName)) },
             confirmButton = {
                 TextButton(onClick = {
                     removing = null
                     scope.launch { model.forget(camera.id) }
-                }) { Text("Remove") }
+                }) { Text(stringResource(R.string.appkit_remove)) }
             },
-            dismissButton = { TextButton(onClick = { removing = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { removing = null }) { Text(stringResource(R.string.appkit_cancel)) } },
         )
     }
 }
@@ -340,21 +341,22 @@ public fun PairScreen(
 @Composable
 private fun CardOptions(camera: SavedCamera, enabled: Boolean, onRename: () -> Unit, onRemove: () -> Unit) {
     var menu by remember { mutableStateOf(false) }
+    val optionsLabel = stringResource(R.string.appkit_options_for, camera.displayName)
     Box {
         Box(
             Modifier.size(36.dp, 44.dp)
                 .clickable(enabled = enabled) { menu = true }
-                .semantics { contentDescription = "Options for ${camera.displayName}" },
+                .semantics { contentDescription = optionsLabel },
             contentAlignment = Alignment.Center,
         ) {
             MonitorIcon(MonitorIcon.ELLIPSIS, null, Modifier.size(15.dp), tint = MonitorPalette.muted)
         }
         DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
-            DropdownMenuItem(text = { Text("Rename") }, onClick = {
+            DropdownMenuItem(text = { Text(stringResource(R.string.appkit_rename)) }, onClick = {
                 menu = false
                 onRename()
             })
-            DropdownMenuItem(text = { Text("Remove") }, onClick = {
+            DropdownMenuItem(text = { Text(stringResource(R.string.appkit_remove)) }, onClick = {
                 menu = false
                 onRemove()
             })

@@ -31,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -84,13 +85,14 @@ fun MonitorInstantReview(
 ) {
     val blur by animateDpAsState(if (isFullResolution) 0.dp else Layout.STAND_IN_BLUR.dp,
         tween(Layout.SHARPEN_MILLIS), label = "instantReviewSharpen")
+    val instantPlaybackLabel = stringResource(R.string.cc_instant_playback)
     BoxWithConstraints(
         modifier
             .fillMaxSize()
             .background(Color.Black)
             .clickable(remember { MutableInteractionSource() }, indication = null, onClick = onDismiss)
             .testTag(MonitorInstantReviewIds.REVIEW)
-            .semantics { contentDescription = "Instant playback" },
+            .semantics { contentDescription = instantPlaybackLabel },
     ) {
         val aspect = displayAspect?.takeIf { it.isFinite() && it > 0f }
         val fitted = Layout.imageFrame(aspect ?: image.width.toFloat(), if (aspect != null) 1f else image.height.toFloat(),
@@ -117,6 +119,7 @@ fun MonitorInstantReview(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             favorited?.let { starred ->
+                val favoriteDescription = if (starred) stringResource(R.string.cc_remove_favorite_star) else stringResource(R.string.cc_favorite_this_shot)
                 Box(
                     Modifier.size(Layout.FAVORITE_SIZE.dp)
                         .background(LiveDesign.surface, CircleShape)
@@ -124,7 +127,7 @@ fun MonitorInstantReview(
                         .chromeClickable { onToggleFavorite(!starred) }
                         .testTag(MonitorInstantReviewIds.FAVORITE)
                         .semantics {
-                            contentDescription = if (starred) "Remove favorite star" else "Favorite this shot"
+                            contentDescription = favoriteDescription
                         },
                     contentAlignment = Alignment.Center,
                 ) {

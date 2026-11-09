@@ -83,8 +83,10 @@ public object CamerasMapping {
                     nearby -> "PAIRED"
                     else -> "OFFLINE"
                 },
-                status = attempt?.let(::status) ?: if (nearby) "Nearby · ready to connect" else "Not found. Power it on to reconnect",
-                actionTitle = if (nearby) "Connect" else "Reconnect",
+                status = attempt?.let(::status) ?: if (nearby) AppkitContext.context.getString(R.string.appkit_nearby_ready_to_connect)
+                else AppkitContext.context.getString(R.string.appkit_not_found_power_on),
+                actionTitle = if (nearby) AppkitContext.context.getString(R.string.appkit_connect)
+                else AppkitContext.context.getString(R.string.appkit_reconnect),
                 isPrimary = camera.id == latest,
                 isBusy = attempt != null,
                 isAvailable = nearby,
@@ -110,9 +112,10 @@ public object CamerasMapping {
 
     /** The chip title: the operator's setup name, else the shell's name for the kind. */
     public fun title(route: SavedRoute): String = route.title ?: when (route.kind) {
-        RouteKind.CAMERA_ACCESS_POINT -> "Camera Wi-Fi"
-        RouteKind.INFRASTRUCTURE_NETWORK -> route.network?.let { "Wi-Fi · $it" } ?: "Wi-Fi"
-        RouteKind.PHONE_HOTSPOT -> "Hotspot"
+        RouteKind.CAMERA_ACCESS_POINT -> AppkitContext.context.getString(R.string.appkit_camera_wifi)
+        RouteKind.INFRASTRUCTURE_NETWORK -> route.network?.let { AppkitContext.context.getString(R.string.appkit_wifi_network, it) }
+            ?: AppkitContext.context.getString(R.string.appkit_wifi)
+        RouteKind.PHONE_HOTSPOT -> AppkitContext.context.getString(R.string.appkit_hotspot)
         RouteKind.USB -> "USB-C"
         RouteKind.CAPTURE_DEVICE -> "HDMI"
     }
@@ -145,12 +148,18 @@ public object CamerasMapping {
             when (action) {
                 is RecoveryAction.UseRoute -> {
                     val route = camera?.routes?.firstOrNull { it.id == action.route }
-                    link = MonitorConnectFailure.Action(id(action), "Connect over ${route?.let(::title) ?: "another setup"} instead")
+                    link = MonitorConnectFailure.Action(
+                        id(action),
+                        AppkitContext.context.getString(
+                            R.string.appkit_connect_over_setup,
+                            route?.let(::title) ?: AppkitContext.context.getString(R.string.appkit_another_setup),
+                        ),
+                    )
                 }
-                RecoveryAction.Retry -> actions += MonitorConnectFailure.Action(id(action), "Try again", primary = true)
-                is RecoveryAction.EditRoute -> actions += MonitorConnectFailure.Action(id(action), "Edit setup")
-                RecoveryAction.PairAgain -> actions += MonitorConnectFailure.Action(id(action), "Pair again")
-                RecoveryAction.OpenSettings -> actions += MonitorConnectFailure.Action(id(action), "Open Settings")
+                RecoveryAction.Retry -> actions += MonitorConnectFailure.Action(id(action), AppkitContext.context.getString(R.string.appkit_try_again), primary = true)
+                is RecoveryAction.EditRoute -> actions += MonitorConnectFailure.Action(id(action), AppkitContext.context.getString(R.string.appkit_edit_setup))
+                RecoveryAction.PairAgain -> actions += MonitorConnectFailure.Action(id(action), AppkitContext.context.getString(R.string.appkit_pair_again))
+                RecoveryAction.OpenSettings -> actions += MonitorConnectFailure.Action(id(action), AppkitContext.context.getString(R.string.appkit_open_settings))
                 is RecoveryAction.Integration -> actions += MonitorConnectFailure.Action(id(action), action.title)
             }
         }
@@ -183,31 +192,38 @@ public object CamerasMapping {
         val step = attempt?.progress?.let { it.steps.getOrNull(it.current) }
         val instructions = when (val prompt = attempt?.prompt) {
             is ConnectionPrompt.ApproveOnCamera ->
-                listOf(MonitorPairingInstruction("On the camera", MonitorPairingInstructionIcon.CAMERA, listOf(prompt.text)))
+                listOf(MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_on_the_camera), MonitorPairingInstructionIcon.CAMERA, listOf(prompt.text)))
             is ConnectionPrompt.AcceptNetworkJoin ->
-                listOf(MonitorPairingInstruction("On this phone", MonitorPairingInstructionIcon.PHONE, listOf(prompt.text)))
+                listOf(MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_on_this_phone), MonitorPairingInstructionIcon.PHONE, listOf(prompt.text)))
             is ConnectionPrompt.Integration ->
-                listOf(MonitorPairingInstruction("Next", MonitorPairingInstructionIcon.CAMERA, listOf(prompt.text)))
+                listOf(MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_next), MonitorPairingInstructionIcon.CAMERA, listOf(prompt.text)))
             null -> emptyList()
         }
         val settings = failure?.actions?.contains(RecoveryAction.OpenSettings) == true
         return MonitorPairingPresentation(
-            steps = listOf(MonitorPairingStep("Find your camera", "Nearby cameras")) + plan.map { MonitorPairingStep(it.title, it.detail) },
+            steps = listOf(
+                MonitorPairingStep(
+                    AppkitContext.context.getString(R.string.appkit_find_camera),
+                    AppkitContext.context.getString(R.string.appkit_nearby_cameras),
+                ),
+            ) + plan.map { MonitorPairingStep(it.title, it.detail) },
             currentStep = current,
-            title = failure?.title ?: step?.title ?: "Find your camera",
-            body = failure?.message ?: step?.detail ?: "Turn the camera on and keep this phone nearby.",
-            target = selected?.camera?.name ?: "Nothing selected yet",
+            title = failure?.title ?: step?.title ?: AppkitContext.context.getString(R.string.appkit_find_camera),
+            body = failure?.message ?: step?.detail ?: AppkitContext.context.getString(R.string.appkit_turn_camera_on_nearby),
+            target = selected?.camera?.name ?: AppkitContext.context.getString(R.string.appkit_nothing_selected_yet),
             hint = if (choosing) {
-                selected?.let { "Selected ${it.camera.name}" } ?: "Choose the camera that matches your screen"
+                selected?.let { AppkitContext.context.getString(R.string.appkit_selected_camera, it.camera.name) }
+                    ?: AppkitContext.context.getString(R.string.appkit_choose_camera_matches_screen)
             } else {
-                "Monitoring opens when the picture is ready"
+                AppkitContext.context.getString(R.string.appkit_monitoring_opens)
             },
             // The prompt has its own card; the live line is the integration's note or step.
-            progress = attempt?.let { it.progress?.note ?: step?.title ?: "Connecting…" },
+            progress = attempt?.let { it.progress?.note ?: step?.title ?: AppkitContext.context.getString(R.string.appkit_connecting) },
             devices = if (choosing) {
                 state.nearby.map {
                     MonitorPairingDevice(
-                        it.id, it.camera.name, "${it.camera.model} · nearby", selected = state.selection == it.id,
+                        it.id, it.camera.name, AppkitContext.context.getString(R.string.appkit_model_nearby, it.camera.model),
+                        selected = state.selection == it.id,
                         busy = state.attempts.isNotEmpty(), signalBars = it.camera.signalBars,
                     )
                 }
@@ -216,20 +232,22 @@ public object CamerasMapping {
             },
             instructions = instructions,
             emptyTitle = if (choosing && state.nearby.isEmpty()) {
-                if (state.scanning) "Looking for cameras" else "No cameras yet"
+                if (state.scanning) AppkitContext.context.getString(R.string.appkit_looking_for_cameras)
+                else AppkitContext.context.getString(R.string.appkit_no_cameras_yet)
             } else {
                 null
             },
             primaryAction = when {
-                failure != null -> if (settings) "Open Settings" else "Try again"
-                choosing -> "Continue"
+                failure != null -> if (settings) AppkitContext.context.getString(R.string.appkit_open_settings)
+                else AppkitContext.context.getString(R.string.appkit_try_again)
+                choosing -> AppkitContext.context.getString(R.string.appkit_continue)
                 else -> null
             },
             primaryActionEnabled = failure != null || (choosing && selected != null),
             backAction = when {
-                !choosing -> "Cancel"
+                !choosing -> AppkitContext.context.getString(R.string.appkit_cancel)
                 state.saved.isEmpty() -> null
-                else -> "Back"
+                else -> AppkitContext.context.getString(R.string.appkit_back)
             },
         )
     }
@@ -241,10 +259,12 @@ public object CamerasMapping {
         return CameraItem(
             id = camera.id,
             name = copy?.name ?: camera.name,
-            subtitle = copy?.subtitle ?: if (camera.model.isEmpty()) "nearby" else "${camera.model} · nearby",
+            subtitle = copy?.subtitle ?: if (camera.model.isEmpty()) AppkitContext.context.getString(R.string.appkit_nearby_subtitle)
+            else AppkitContext.context.getString(R.string.appkit_model_nearby, camera.model),
             badge = if (held) "IN USE" else "NEW",
-            status = if (held) "In use by another device" else copy?.status ?: "Ready to pair",
-            actionTitle = "Pair",
+            status = if (held) AppkitContext.context.getString(R.string.appkit_in_use_by_another)
+            else copy?.status ?: AppkitContext.context.getString(R.string.appkit_ready_to_pair),
+            actionTitle = AppkitContext.context.getString(R.string.appkit_pair),
             isPrimary = state.selection == camera.id,
             isBusy = ConnectTarget.Nearby(camera).cameraID in state.attempts,
             isAvailable = !held,
@@ -253,8 +273,9 @@ public object CamerasMapping {
     }
 
     internal fun status(attempt: CamerasModel.Attempt): String {
-        val progress = attempt.progress ?: return "Connecting…"
-        return attempt.prompt?.text ?: progress.note ?: progress.steps.getOrNull(progress.current)?.title ?: "Connecting…"
+        val progress = attempt.progress ?: return AppkitContext.context.getString(R.string.appkit_connecting)
+        return attempt.prompt?.text ?: progress.note ?: progress.steps.getOrNull(progress.current)?.title
+            ?: AppkitContext.context.getString(R.string.appkit_connecting)
     }
 
     internal fun matches(sighting: CamerasModel.Sighting, camera: SavedCamera): Boolean =

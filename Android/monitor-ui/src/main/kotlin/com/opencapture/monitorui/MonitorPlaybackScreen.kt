@@ -63,6 +63,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
@@ -533,8 +534,8 @@ fun MonitorPlaybackScreen(value: MonitorPlaybackPresentation, actions: MonitorPl
                                 ?: if (progress != null) {
                                     MediaTransferRate.caption(progress, value.transferRate)
                                         ?.takeIf { value.transferRate != null }
-                                        ?.let { "Buffering from camera…\n$it" } ?: "Buffering from camera…"
-                                } else "Preparing playback…",
+                                        ?.let { stringResource(R.string.mui_buffering_from_camera_rate, it) } ?: stringResource(R.string.mui_buffering_from_camera)
+                                } else stringResource(R.string.mui_preparing_playback),
                             textAlign = TextAlign.Center,
                             color = MonitorPalette.muted,
                             style = MonitorTypography.text(14f, FontWeight.Medium),
@@ -917,7 +918,7 @@ fun MonitorConfirmPopup(
     onClickFeedback: () -> Unit = LocalMonitorPlaybackSelectionFeedback.current,
     /** A line under the title that explains the consequence. */
     message: String? = null,
-    cancelTitle: String = "Cancel",
+    cancelTitle: String = stringResource(R.string.mui_cancel),
     /** What TalkBack says for each action; the visible titles are the drawing alone (ZAB-443). */
     cancelDescription: String = cancelTitle,
     confirmDescription: String = confirmTitle,

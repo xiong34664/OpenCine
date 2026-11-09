@@ -41,6 +41,7 @@ import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -150,7 +151,7 @@ fun MonitorChromeButton(
 
 @Composable
 fun LockButton(locked: Boolean, modifier: Modifier = Modifier, enabled: Boolean = true, onClick: () -> Unit) {
-    LockButton(locked, if (locked) "Unlock monitor controls" else "Lock monitor controls",
+    LockButton(locked, if (locked) stringResource(R.string.cc_unlock_monitor_controls) else stringResource(R.string.cc_lock_monitor_controls),
         modifier, enabled, onClick)
 }
 
@@ -176,6 +177,7 @@ fun LiveFocusResetButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
 /** iOS `LiveAutoExposureUnlockButton`: releases the feed AE lock back to Auto. */
 @Composable
 fun LiveAutoExposureUnlockButton(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    val unlockExposureLabel = stringResource(R.string.cc_unlock_exposure)
     Row(
         modifier
             .fillMaxSize()
@@ -183,7 +185,7 @@ fun LiveAutoExposureUnlockButton(modifier: Modifier = Modifier, onClick: () -> U
             .background(Color.Black.copy(alpha = 0.55f))
             .border(1.dp, LiveDesign.hairline, CircleShape)
             .chromeClickable(onClick = onClick)
-            .semantics { contentDescription = "Unlock exposure" },
+            .semantics { contentDescription = unlockExposureLabel },
         horizontalArrangement = Arrangement.spacedBy(2.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -218,10 +220,11 @@ fun LiveGimbalStick(
         tween(120), label = "stick-press")
     val scope = rememberCoroutineScope()
     var recenterJob by remember { mutableStateOf<Job?>(null) }
+    val gimbalStickLabel = stringResource(R.string.cc_gimbal_stick)
     Box(
         modifier
             .fillMaxSize()
-            .semantics { contentDescription = "Gimbal stick" }
+            .semantics { contentDescription = gimbalStickLabel }
             .pointerInput(enabled) {
                 if (!enabled) return@pointerInput
                 var taps = 0

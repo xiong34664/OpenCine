@@ -9,6 +9,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
@@ -20,8 +21,9 @@ import kotlin.math.roundToInt
 fun MonitorAudioMeter(left: Double, leftPeak: Double, right: Double, rightPeak: Double,
     orientation: MonitorAudioOrientation, showDB: Boolean, modifier: Modifier = Modifier) {
     val measurer = rememberTextMeasurer()
+    val audioDescription = stringResource(R.string.mui_audio_levels, MonitorAudioReadout.label(left), MonitorAudioReadout.label(right))
     Canvas(modifier.semantics {
-        contentDescription = "Audio, left ${MonitorAudioReadout.label(left)} dBFS, right ${MonitorAudioReadout.label(right)} dBFS"
+        contentDescription = audioDescription
     }) {
         val horizontal = orientation == MonitorAudioOrientation.HORIZONTAL
         val green = Color(0xFF56EB84)

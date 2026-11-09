@@ -128,11 +128,19 @@ public data class MultiviewTile(
             val control = (summary.control as? RoleStatus.Reported)?.value
             // The link as reported: a closed session is not connecting, and no report is a wait.
             val (status, detail) = when (control) {
-                ConnectionState.Ready -> null to "Connected"
-                is ConnectionState.Disconnected ->
-                    MultiviewTileStatus("Disconnected", inProgress = false) to "Disconnected"
-                null -> MultiviewTileStatus("Waiting for the camera", inProgress = true) to "Waiting for the camera"
-                else -> MultiviewTileStatus("Connecting…", inProgress = true) to "Connecting…"
+                ConnectionState.Ready -> Pair(null, AppkitContext.context.getString(R.string.appkit_connected))
+                is ConnectionState.Disconnected -> Pair(
+                    MultiviewTileStatus(AppkitContext.context.getString(R.string.appkit_disconnected), inProgress = false),
+                    AppkitContext.context.getString(R.string.appkit_disconnected),
+                )
+                null -> Pair(
+                    MultiviewTileStatus(AppkitContext.context.getString(R.string.appkit_waiting_for_camera), inProgress = true),
+                    AppkitContext.context.getString(R.string.appkit_waiting_for_camera),
+                )
+                else -> Pair(
+                    MultiviewTileStatus(AppkitContext.context.getString(R.string.appkit_connecting), inProgress = true),
+                    AppkitContext.context.getString(R.string.appkit_connecting),
+                )
             }
             return MultiviewTile(
                 name = entry.name,
@@ -146,12 +154,13 @@ public data class MultiviewTile(
                 status = status,
                 detail = detail,
                 actions = listOf(
-                    MultiviewCameraAction(MultiviewCameraAction.LIVE_VIEW, "Live View"),
+                    MultiviewCameraAction(MultiviewCameraAction.LIVE_VIEW, AppkitContext.context.getString(R.string.appkit_live_view)),
                     MultiviewCameraAction(
-                        "record", if (state == RecordingState.RECORDING) "Stop recording" else "Start recording",
+                        "record", if (state == RecordingState.RECORDING) AppkitContext.context.getString(R.string.appkit_stop_recording)
+                        else AppkitContext.context.getString(R.string.appkit_start_recording),
                         MultiviewCameraAction.Kind.RECORD,
                     ),
-                    MultiviewCameraAction("remove", "Remove camera", MultiviewCameraAction.Kind.DESTRUCTIVE),
+                    MultiviewCameraAction("remove", AppkitContext.context.getString(R.string.appkit_remove_camera), MultiviewCameraAction.Kind.DESTRUCTIVE),
                 ),
             ).withPower(snapshot?.power)
         }
@@ -258,24 +267,28 @@ public data class MultiviewRecordContext(
             if (!plan.isRefused) return null
             val reason = plan.exclusions.firstOrNull()?.reason ?: return null
             return when {
-                reason == ExclusionReason.Busy || reason == ExclusionReason.CameraTransitioning -> "A camera is busy."
+                reason == ExclusionReason.Busy || reason == ExclusionReason.CameraTransitioning ->
+                    AppkitContext.context.getString(R.string.appkit_camera_busy)
                 reason == ExclusionReason.Rejected(CommandRejection.RecordingStateUnknown) ->
-                    "Waiting for a camera's record state."
+                    AppkitContext.context.getString(R.string.appkit_waiting_record_state)
                 reason == ExclusionReason.Rejected(CommandRejection.Unavailable(UnavailableReason.Mode)) ->
-                    "A camera is not in a video mode."
-                else -> "A camera is not connected."
+                    AppkitContext.context.getString(R.string.appkit_camera_not_video_mode)
+                else -> AppkitContext.context.getString(R.string.appkit_camera_not_connected)
             }
         }
 
     /** The confirmation question for every camera, or for one ([single]). */
     public fun question(single: Boolean): String = when {
-        single -> if (stopping) "Stop recording?" else "Start recording?"
-        else -> if (stopping) "Stop recording on all cameras?" else "Record on all cameras?"
+        single -> if (stopping) AppkitContext.context.getString(R.string.appkit_stop_recording_question)
+        else AppkitContext.context.getString(R.string.appkit_start_recording_question)
+        else -> if (stopping) AppkitContext.context.getString(R.string.appkit_stop_recording_all_cameras)
+        else AppkitContext.context.getString(R.string.appkit_record_all_cameras)
     }
 
     public companion object {
         /** A group command is coordinated dispatch, not synchronized recording. */
-        public const val GROUP_NOTE: String = "Each camera confirms independently; recording is not synchronized."
+        public val GROUP_NOTE: String
+            get() = AppkitContext.context.getString(R.string.appkit_group_note)
     }
 }
 

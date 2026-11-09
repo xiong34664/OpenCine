@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.opencapture.opencine.appkit.MonitorMediaDeletionProgress
 
@@ -24,8 +25,11 @@ public fun MonitorMediaDeletionOverlay(progress: MonitorMediaDeletionProgress, d
         Column(Modifier.mediaGlass(RoundedCornerShape(16.dp))
             .padding(horizontal = 24.dp, vertical = 20.dp), horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(6.dp)) {
-            Text("Deleting ${progress.selectedCount} ${if (progress.selectedCount == 1) "item" else "items"}…", color = LiveDesign.text)
-            Text(detail ?: "${progress.completed} of ${progress.total}", color = LiveDesign.muted)
+            val deletingLabel = if (progress.selectedCount == 1)
+                stringResource(R.string.cc_deleting_one, progress.selectedCount)
+            else stringResource(R.string.cc_deleting_many, progress.selectedCount)
+            Text(deletingLabel, color = LiveDesign.text)
+            Text(detail ?: stringResource(R.string.cc_progress_of, progress.completed, progress.total), color = LiveDesign.muted)
             LinearProgressIndicator(progress = {
                 if (progress.total > 0) progress.completed.toFloat() / progress.total else 0f
             })

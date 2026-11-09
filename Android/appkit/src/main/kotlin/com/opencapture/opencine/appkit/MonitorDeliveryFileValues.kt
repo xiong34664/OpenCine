@@ -12,7 +12,8 @@ public object MonitorDeliveryFileNaming {
 public data class MonitorDeliveryMetadataFacts(public val filename: String, public val captureDate: String?, public val sizeBytes: Long?)
 public object MonitorDeliveryMetadataSummary {
     public fun text(files: List<MonitorDeliveryMetadataFacts>, formatBytes: (Long) -> String): String = files.joinToString("\n") {
-        "${it.filename} · ${it.captureDate ?: "unknown date"} · ${it.sizeBytes?.let(formatBytes) ?: "unknown size"}"
+        "${it.filename} · ${it.captureDate ?: AppkitContext.context.getString(R.string.appkit_unknown_date)} · " +
+            (it.sizeBytes?.let(formatBytes) ?: AppkitContext.context.getString(R.string.appkit_unknown_size))
     }
 }
 public data class MonitorDeliveryMetadataSelection(public val included: Boolean, public val bakedLook: Boolean,

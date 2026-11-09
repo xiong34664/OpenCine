@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -71,7 +72,7 @@ fun MonitorMediaDeliveryPanel(
                 }
             }
             if (value.step == MonitorMediaDeliveryValue.Step.DESTINATION) {
-                DeliverySectionHeader("DESTINATION")
+                DeliverySectionHeader(stringResource(R.string.mui_destination_header))
                 value.destinations.forEach { destination ->
                     Row(Modifier.fillMaxWidth().deliveryOptionPlate()
                         .monitorChromeClickable(enabled = destination.enabled) {
@@ -89,14 +90,15 @@ fun MonitorMediaDeliveryPanel(
                     }
                 }
                 value.upcoming.forEach { title ->
+                    val comingSoonDescription = stringResource(R.string.mui_coming_soon_desc, title)
                     Row(Modifier.fillMaxWidth().deliveryOptionPlate(.2f).padding(horizontal = 12.dp, vertical = 14.dp)
-                        .semantics { contentDescription = "$title, Coming soon" }
+                        .semantics { contentDescription = comingSoonDescription }
                         .testTag("monitor.share.upcoming.$title"), verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         MonitorIcon(MonitorIcon.FOLDER, null, Modifier.size(24.dp), MonitorPalette.muted)
                         Text(title, Modifier.weight(1f), style = MonitorTypography.text(14f, FontWeight.SemiBold),
                             color = MonitorPalette.muted, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        Text("Coming soon", style = MonitorTypography.text(11f), color = MonitorPalette.muted)
+                        Text(stringResource(R.string.mui_coming_soon), style = MonitorTypography.text(11f), color = MonitorPalette.muted)
                     }
                 }
             } else {
@@ -123,22 +125,23 @@ fun MonitorMediaDeliveryPanel(
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         if (value.step == MonitorMediaDeliveryValue.Step.DESTINATION) {
             MonitorIcon(MonitorIcon.SHARE, null, Modifier.size(13.dp), MonitorPalette.text)
-            Text("SHARE", style = MonitorTypography.text(9f, FontWeight.SemiBold), color = MonitorPalette.text)
+            Text(stringResource(R.string.mui_share_header), style = MonitorTypography.text(9f, FontWeight.SemiBold), color = MonitorPalette.text)
             Spacer(Modifier.weight(1f))
         } else {
             Row(Modifier.monitorChromeClickable { action(MonitorMediaDeliveryValue.Action.Back) }.testTag("monitor.share.back"),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 MonitorIcon(MonitorIcon.CHEVRON_LEFT, null, Modifier.size(12.dp), MonitorPalette.accent)
-                Text("Back", style = MonitorTypography.text(12.5f, FontWeight.SemiBold), color = MonitorPalette.accent)
+                Text(stringResource(R.string.mui_back), style = MonitorTypography.text(12.5f, FontWeight.SemiBold), color = MonitorPalette.accent)
             }
             Column(Modifier.weight(1f)) {
                 Text(value.title, style = MonitorTypography.text(12.5f, FontWeight.SemiBold), color = MonitorPalette.text)
-                Text("Options", style = MonitorTypography.text(11f), color = MonitorPalette.muted)
+                Text(stringResource(R.string.mui_options), style = MonitorTypography.text(11f), color = MonitorPalette.muted)
             }
         }
+        val closeDescription = stringResource(R.string.mui_close)
         Box(Modifier.size(30.dp).clip(CircleShape).monitorMaterial(MonitorMaterial.Delivery, CircleShape)
             .monitorChromeClickable { action(MonitorMediaDeliveryValue.Action.Close) }
-            .semantics { contentDescription = "Close" }.testTag("monitor.share.close"), contentAlignment = Alignment.Center) {
+            .semantics { contentDescription = closeDescription }.testTag("monitor.share.close"), contentAlignment = Alignment.Center) {
             MonitorIcon(MonitorIcon.X, null, Modifier.size(11.4.dp), MonitorPalette.text)
         }
     }
@@ -151,20 +154,20 @@ fun MonitorMediaDeliveryPanel(
                 DeliverySectionHeader(service.heading)
                 Text(service.message, style = MonitorTypography.text(13f), color = MonitorPalette.muted)
                 if (service.busy) DeliveryBusy(service.busyTitle)
-                else DeliveryActionButton("Hop to internet", true) { action(MonitorMediaDeliveryValue.Action.HopToInternet) }
+                else DeliveryActionButton(stringResource(R.string.mui_hop_to_internet), true) { action(MonitorMediaDeliveryValue.Action.HopToInternet) }
             }
             is MonitorMediaDeliveryValue.Service.Projects -> {
                 DeliverySectionHeader(service.heading)
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                    Text("Project", style = MonitorTypography.text(14f, FontWeight.SemiBold), color = MonitorPalette.text)
+                    Text(stringResource(R.string.mui_project), style = MonitorTypography.text(14f, FontWeight.SemiBold), color = MonitorPalette.text)
                     MonitorSettingsHelpBadge(service.help)
                 }
                 service.signInNotice?.let { Text(it, style = MonitorTypography.text(12f), color = MonitorPalette.muted) }
                 when {
-                    service.loading -> DeliveryBusy("Loading projects…")
+                    service.loading -> DeliveryBusy(stringResource(R.string.mui_loading_projects))
                     service.error != null -> {
                         Text(service.error, style = MonitorTypography.text(12f), color = MonitorPalette.accent)
-                        Text("Retry", style = MonitorTypography.text(13f, FontWeight.SemiBold), color = MonitorPalette.accent,
+                        Text(stringResource(R.string.mui_retry), style = MonitorTypography.text(13f, FontWeight.SemiBold), color = MonitorPalette.accent,
                             modifier = Modifier.monitorChromeClickable { action(MonitorMediaDeliveryValue.Action.RetryProjects) })
                     }
                     service.choices != null -> {
@@ -174,12 +177,12 @@ fun MonitorMediaDeliveryPanel(
                                 .padding(horizontal = 12.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                                 MonitorIcon(MonitorIcon.FOLDER, null, Modifier.size(14.dp), MonitorPalette.muted)
-                                Text(service.selectedProjectLabel ?: "Select a project",
+                                Text(service.selectedProjectLabel ?: stringResource(R.string.mui_select_a_project),
                                     Modifier.weight(1f), style = MonitorTypography.text(13f, FontWeight.SemiBold), color = MonitorPalette.text)
                                 MonitorIcon(MonitorIcon.CHEVRONS_UP_DOWN, null, Modifier.size(11.dp), MonitorPalette.muted)
                             }
                             DropdownMenu(expanded, onDismissRequest = { expanded = false }) {
-                                if (service.choices.isEmpty()) DropdownMenuItem(text = { Text("No projects") }, onClick = {}, enabled = false)
+                                if (service.choices.isEmpty()) DropdownMenuItem(text = { Text(stringResource(R.string.mui_no_projects)) }, onClick = {}, enabled = false)
                                 service.choices.forEach { choice ->
                                     DropdownMenuItem(text = { Text(choice.label) }, onClick = {
                                         expanded = false; action(MonitorMediaDeliveryValue.Action.Selection(MonitorMediaDeliveryValue.Selection.PROJECT, choice.id))
@@ -187,7 +190,7 @@ fun MonitorMediaDeliveryPanel(
                                 }
                             }
                         }
-                        if (service.allowsCreation) Text("Create new project", style = MonitorTypography.text(13f, FontWeight.SemiBold), color = MonitorPalette.text,
+                        if (service.allowsCreation) Text(stringResource(R.string.mui_create_new_project), style = MonitorTypography.text(13f, FontWeight.SemiBold), color = MonitorPalette.text,
                             modifier = Modifier.fillMaxWidth().deliveryOptionPlate().monitorChromeClickable {
                                 action(MonitorMediaDeliveryValue.Action.CreateProject)
                             }.padding(12.dp))
@@ -200,10 +203,10 @@ fun MonitorMediaDeliveryPanel(
 
 @Composable private fun DeliveryExport(export: MonitorMediaDeliveryValue.Export, action: (MonitorMediaDeliveryValue.Action) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-        DeliverySectionHeader("EXPORT")
+        DeliverySectionHeader(stringResource(R.string.mui_export_header))
         export.filename?.let { filename ->
             Column(Modifier.fillMaxWidth().deliveryOptionPlate().padding(12.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text("Filename", style = MonitorTypography.text(12f, FontWeight.SemiBold), color = MonitorPalette.muted)
+                Text(stringResource(R.string.mui_filename), style = MonitorTypography.text(12f, FontWeight.SemiBold), color = MonitorPalette.muted)
                 Text(filename, style = MonitorTypography.readout(13f), color = MonitorPalette.text, maxLines = 1, overflow = TextOverflow.Ellipsis)
             }
         }

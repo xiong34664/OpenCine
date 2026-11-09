@@ -32,6 +32,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -209,7 +210,7 @@ fun <C, F, P, X, H> MonitorOperatorDeliveryPopupOverlay(
     remoteArtwork: @Composable () -> Unit = { MonitorIcon(MonitorIcon.UPLOAD, null, Modifier.size(18.dp), MonitorPalette.text) },
 ) {
     val state by model.state.collectAsState()
-    val serviceName = model.remotePresentation?.displayName ?: "Upload service"
+    val serviceName = model.remotePresentation?.displayName ?: stringResource(R.string.cc_upload_service)
     var showCreate by remember(model) { mutableStateOf(false) }
     var name by remember(model) { mutableStateOf("") }
     var showHop by remember(model) { mutableStateOf(false) }
@@ -252,14 +253,14 @@ fun <C, F, P, X, H> MonitorOperatorDeliveryPopupOverlay(
                     else MonitorIcon(MonitorIcon.SHARE, null, Modifier.size(18.dp), MonitorPalette.text) })
         }
     }
-    if (showCreate) AlertDialog(onDismissRequest = { showCreate = false }, title = { Text("New $serviceName project") },
-        text = { Column { Text("Creates a blank project in your workspace."); TextField(name, { name = it }, label = { Text("Project name") }) } },
-        confirmButton = { TextButton(enabled = name.trim().isNotEmpty(), onClick = { val captured = name; name = ""; showCreate = false; model.createProject(captured) }) { Text("Create") } },
-        dismissButton = { TextButton(onClick = { name = ""; showCreate = false }) { Text("Cancel") } })
-    if (showHop) AlertDialog(onDismissRequest = { showHop = false }, title = { Text("Leave camera Wi-Fi?") },
-        text = { Text("We'll hop to home Wi-Fi or cellular so you can sign in and pick a project. The camera reconnects automatically when you're done.") },
-        confirmButton = { TextButton(onClick = { showHop = false; model.hopToInternet() }) { Text("Hop") } },
-        dismissButton = { TextButton(onClick = { showHop = false }) { Text("Cancel") } })
+    if (showCreate) AlertDialog(onDismissRequest = { showCreate = false }, title = { Text(stringResource(R.string.cc_new_project, serviceName)) },
+        text = { Column { Text(stringResource(R.string.cc_creates_blank_project)); TextField(name, { name = it }, label = { Text(stringResource(R.string.cc_project_name)) }) } },
+        confirmButton = { TextButton(enabled = name.trim().isNotEmpty(), onClick = { val captured = name; name = ""; showCreate = false; model.createProject(captured) }) { Text(stringResource(R.string.cc_create)) } },
+        dismissButton = { TextButton(onClick = { name = ""; showCreate = false }) { Text(stringResource(R.string.cc_cancel)) } })
+    if (showHop) AlertDialog(onDismissRequest = { showHop = false }, title = { Text(stringResource(R.string.cc_leave_camera_wifi)) },
+        text = { Text(stringResource(R.string.cc_hop_home_wifi)) },
+        confirmButton = { TextButton(onClick = { showHop = false; model.hopToInternet() }) { Text(stringResource(R.string.cc_hop)) } },
+        dismissButton = { TextButton(onClick = { showHop = false }) { Text(stringResource(R.string.cc_cancel)) } })
 }
 
 /**

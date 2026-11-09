@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -42,6 +44,7 @@ import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -127,7 +130,7 @@ private val DisplayShape = RoundedCornerShape(12.dp)
 /** Actual common Display section assembly over typed values and actions. */
 @Composable
 public fun MonitorDisplaySettings(
-    layoutTitle: String = "Layout For",
+    layoutTitle: String = stringResource(R.string.mui_layout_for),
     layoutHelp: String,
     choices: List<MonitorDisplayChoice>,
     selection: String,
@@ -233,6 +236,8 @@ public fun MonitorDisplayToggleGrid(items: List<MonitorDisplayToggle>, compact: 
     } + 39f + 18f + 14f
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val columns = monitorDisplayToggleColumnCount(compact, maxWidth.value, minimumCellWidth)
+        val onDescription = stringResource(R.string.mui_on)
+        val offDescription = stringResource(R.string.mui_off)
         Column(verticalArrangement = Arrangement.spacedBy(7.dp)) {
             items.chunked(columns).forEach { row ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
@@ -241,7 +246,7 @@ public fun MonitorDisplayToggleGrid(items: List<MonitorDisplayToggle>, compact: 
                             modifier = Modifier.weight(1f).testTag("monitor.settings.display.toggle.${item.id}")
                                 .semantics {
                                     contentDescription = item.accessibilityLabel
-                                    stateDescription = if (item.isOn) "On" else "Off"
+                                    stateDescription = if (item.isOn) onDescription else offDescription
                                 },
                             onToggle = item.action)
                     }
@@ -360,13 +365,15 @@ public fun MonitorDisplayOrderList(
                 val y = if (dragging) (dragPosition.y - rowHeightPx / 2f)
                     .coerceIn(0f, (listHeightPx - rowHeightPx).coerceAtLeast(0f)) else index * rowHeightPx
                 val actions = buildList {
-                    if (index > 0) add(CustomAccessibilityAction(item.moveEarlierLabel ?: "Move ${item.title} earlier") {
+                    if (index > 0) add(CustomAccessibilityAction(item.moveEarlierLabel ?: stringResource(R.string.mui_move_earlier, item.title)) {
                         latestMove(item.id, index - 1); latestInteraction(); true
                     })
-                    if (index < items.lastIndex) add(CustomAccessibilityAction(item.moveLaterLabel ?: "Move ${item.title} later") {
+                    if (index < items.lastIndex) add(CustomAccessibilityAction(item.moveLaterLabel ?: stringResource(R.string.mui_move_later, item.title)) {
                         latestMove(item.id, index + 1); latestInteraction(); true
                     })
                 }
+                val positionDescription = item.positionDescription ?: stringResource(R.string.mui_position, index + 1)
+                val reorderDescription = item.reorderLabel ?: stringResource(R.string.mui_reorder_position, item.title, index + 1)
                 Column(Modifier.offset { IntOffset(0, y.roundToInt()) }.fillMaxWidth().height(rowHeight)
                     .graphicsLayer {
                         scaleX = if (dragging) 1.02f else 1f; scaleY = if (dragging) 1.02f else 1f
@@ -377,7 +384,7 @@ public fun MonitorDisplayOrderList(
                     Row(Modifier.fillMaxWidth().weight(1f), horizontalArrangement = Arrangement.spacedBy(9.dp),
                         verticalAlignment = Alignment.CenterVertically) {
                         Box(Modifier.size(22.dp).background(MonitorPalette.surface, CircleShape)
-                            .semantics { contentDescription = item.positionDescription ?: "Position ${index + 1}" },
+                            .semantics { contentDescription = positionDescription },
                             contentAlignment = Alignment.Center) {
                             Text(item.positionLabel ?: "${index + 1}", style = MonitorTypography.readout(9f, FontWeight.Medium),
                                 color = MonitorPalette.muted)
@@ -398,7 +405,7 @@ public fun MonitorDisplayOrderList(
                         Box(Modifier.width(gripWidth).fillMaxHeight()
                             .testTag("monitor.settings.display.grip.${item.id}")
                             .semantics {
-                                contentDescription = item.reorderLabel ?: "Reorder ${item.title}, position ${index + 1}"
+                                contentDescription = reorderDescription
                                 customActions = actions
                             }, contentAlignment = Alignment.Center) {
                             Canvas(Modifier.size(18.dp, 14.dp)) {

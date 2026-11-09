@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -143,7 +144,7 @@ private fun RecordingSetupPanel(
                     .monitorScrollFade(modeScroll).verticalScroll(modeScroll, enabled = preview == null).padding(14.dp)),
                 verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 androidx.compose.runtime.SideEffect { onHeaderChanged("SHOOTING MODE", "Capture mode") }
-                if (!chromeless) SheetHeader("SHOOTING MODE", "Capture mode", onDismiss)
+                if (!chromeless) SheetHeader("SHOOTING MODE", stringResource(R.string.cc_capture_mode), onDismiss)
                 val bodyName = host.camera?.name
                 val labels = CaptureLists.shootingModeLabels(bodyName, status.shootingMode, host.labelProfile)
                 CaptureDrumWheel(labels, CameraCommands.shootingModeLabel(status.shootingMode, bodyName, host.labelProfile).orEmpty()
@@ -156,7 +157,7 @@ private fun RecordingSetupPanel(
                 ) {
                     categories()
                 }
-                if (status.isRecording) Text("Stop recording to change mode.", color = LiveDesign.muted, style = LiveType.text(11f))
+                if (status.isRecording) Text(stringResource(R.string.cc_stop_recording_to_change_mode), color = LiveDesign.muted, style = LiveType.text(11f))
                 if (!chromeless && com.opencapture.monitorui.MonitorLayoutPolicy.showsCaptureGrabber(preview != null, fromTop = true)) {
                     com.opencapture.monitorui.MonitorPanelGrabber()
                 }
@@ -724,7 +725,7 @@ private fun LiveControlSheetContent(
                             applyDrum(it)
                         },
                     )
-                    if (status.isRecording) Text("Stop recording to change mode.",
+                    if (status.isRecording) Text(stringResource(R.string.cc_stop_recording_to_change_mode),
                         color = LiveDesign.muted, style = LiveType.text(11f))
                 }
             }
@@ -819,18 +820,21 @@ private fun AudioBody(status: CameraStatus, enabled: Boolean, selectedMode: Int,
     val sourceID = remember(host) { service?.sourceID }
     var refusal by remember(host) { mutableStateOf<String?>(null) }
     val field = service?.fields?.getOrNull(selectedMode)
-    if (field == null) Text("Audio controls unavailable", color = LiveDesign.faint)
+    val audioControlsUnavailable = stringResource(R.string.cc_audio_controls_unavailable)
+    val audioControlUnavailable = stringResource(R.string.cc_audio_control_unavailable)
+    val audioControlRefused = stringResource(R.string.cc_audio_control_refused)
+    if (field == null) Text(audioControlsUnavailable, color = LiveDesign.faint)
     else CheckedRows(field.choices.map { it.label }, field.observed?.label,
         enabled && field.isEditable && service?.sourceID == sourceID) { label ->
         val current = host.audioService
         val currentField = current?.fields?.firstOrNull { it.id == field.id }
         val value = currentField?.choices?.firstOrNull { it.label == label }
         refusal = if (current == null || current.sourceID != sourceID || currentField?.isEditable != true || value == null)
-            "Audio control unavailable"
+            audioControlUnavailable
         else when (current.commit(value)) {
             CaptureAudioCommitResult.SUBMITTED -> null
-            CaptureAudioCommitResult.UNAVAILABLE -> "Audio control unavailable"
-            CaptureAudioCommitResult.REFUSED -> "Audio control refused"
+            CaptureAudioCommitResult.UNAVAILABLE -> audioControlUnavailable
+            CaptureAudioCommitResult.REFUSED -> audioControlRefused
         }
     }
     refusal?.let { Text(it, color = LiveDesign.faint) }

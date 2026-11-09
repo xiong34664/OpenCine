@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +24,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.MonitorLinkHealth
 import com.opencapture.monitorui.MonitorPalette
 import com.opencapture.monitorui.MonitorTypography
@@ -51,9 +54,9 @@ fun MonitorLinkHealthScale(title: String, caption: String, score: Int) {
         }
     val bandLabel =
         when (band) {
-            MonitorLinkHealth.Band.POOR -> "POOR"
-            MonitorLinkHealth.Band.WATCH -> "WATCH"
-            MonitorLinkHealth.Band.STABLE -> "STABLE"
+            MonitorLinkHealth.Band.POOR -> stringResource(R.string.mui_link_poor)
+            MonitorLinkHealth.Band.WATCH -> stringResource(R.string.mui_link_watch)
+            MonitorLinkHealth.Band.STABLE -> stringResource(R.string.mui_link_stable)
         }
     Column(
         Modifier.fillMaxWidth()

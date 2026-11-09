@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -152,7 +153,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                     MonitorInteractivePicture(state.presentation, width, height, feed, Modifier.fillMaxSize(),
                         enabled = model.isCurrent && !coverPresented && assist.configureTool == null && state.deleteRequestID == null,
                         onTransform = { transform = it },
-                        contentDescription = "Photo preview for ${displayRecord.asset.filename}") {
+                        contentDescription = stringResource(R.string.cc_photo_preview, displayRecord.asset.filename)) {
                             Image(shown.asImageBitmap(), null, contentScale = ContentScale.FillBounds,
                                 modifier = Modifier.fillMaxSize().graphicsLayer {
                                     scaleX = if (mirrorX) -1f else 1f; scaleY = if (mirrorY) -1f else 1f
@@ -166,7 +167,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                 Column(Modifier.align(Alignment.Center).clip(MediaCornerShape).mediaGlass(MediaCornerShape).padding(24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator(color = LiveDesign.accent)
-                    Text("Preparing image…", color = LiveDesign.muted, style = LiveType.ui(14f, FontWeight.Medium))
+                    Text(stringResource(R.string.cc_preparing_image), color = LiveDesign.muted, style = LiveType.ui(14f, FontWeight.Medium))
                 }
             }
             scrims()
@@ -175,23 +176,26 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                 end = (trailing + MonitorPlaybackLayout.PHOTO_HEADER_HORIZONTAL).dp)) {
                 Row(Modifier.fillMaxWidth().padding(top = (top + MonitorPlaybackLayout.PHOTO_HEADER_TOP_EXTRA).dp),
                     verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    MediaCircleIconButton(MonitorIcon.X, "Back to media", { if (!model.back()) model.close(close) },
+                    MediaCircleIconButton(MonitorIcon.X, stringResource(R.string.cc_back_to_media), { if (!model.back()) model.close(close) },
                         enabled = !state.closing, modifier = Modifier.testTag("monitor.photo.back"))
                     Text(displayRecord.asset.filename, color = LiveDesign.text, style = LiveType.ui(14f, FontWeight.SemiBold),
                         maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
                     if (model.variants.size > 1) photoVariantChoices(model.variants, displayRecord.asset.id,
                         !state.variantSwitching && model.isCurrent) { model.selectVariant(it, loaders, policy) }
-                    if (collection.isNotEmpty() && model.canDelete(operations)) Text("Delete all",
-                        style = LiveType.ui(13f, FontWeight.SemiBold), color = Color(0xFFFF5A54),
-                        modifier = Modifier
-                            .semantics { contentDescription = "Delete the whole burst series"; role = Role.Button }
-                            .chromeClickable { model.requestDelete(operations, collection) }.padding(8.dp))
+                    if (collection.isNotEmpty() && model.canDelete(operations)) {
+                        val deleteBurstDescription = stringResource(R.string.cc_delete_burst_series)
+                        Text(stringResource(R.string.cc_delete_all),
+                            style = LiveType.ui(13f, FontWeight.SemiBold), color = Color(0xFFFF5A54),
+                            modifier = Modifier
+                                .semantics { contentDescription = deleteBurstDescription; role = Role.Button }
+                                .chromeClickable { model.requestDelete(operations, collection) }.padding(8.dp))
+                    }
                     if (model.canDelete(operations))
-                        MediaCircleIconButton(MonitorIcon.TRASH, "Delete photo from the camera card",
+                        MediaCircleIconButton(MonitorIcon.TRASH, stringResource(R.string.cc_delete_photo_from_card),
                             { model.requestDelete(operations) })
                     if (share != null) {
                         if (state.preparingShare) CircularProgressIndicator(color = LiveDesign.accent, modifier = Modifier.size(34.dp))
-                        else MediaCircleIconButton(MonitorIcon.SHARE, "Share photo", { model.share(share, sharing) },
+                        else MediaCircleIconButton(MonitorIcon.SHARE, stringResource(R.string.cc_share_photo), { model.share(share, sharing) },
                             enabled = model.canShare(sharing))
                     }
                 }
@@ -208,7 +212,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                     if (rating != null && stars != null && state.status.showsRating) MonitorStarRating(stars,
                         select = { model.setRating(it, rating) }, levels = rating.levels,
                         enabled = model.isCurrent, selectionFeedback = haptics::selection)
-                    else if (rating == null) MediaCircleIconButton(MonitorIcon.STAR, if (favorite) "Remove from favorites" else "Add to favorites",
+                    else if (rating == null) MediaCircleIconButton(MonitorIcon.STAR, if (favorite) stringResource(R.string.cc_remove_from_favorites) else stringResource(R.string.cc_add_to_favorites),
                         { model.toggleFavorite(operations) }, filled = favorite, tint = if (favorite) LiveDesign.accent else LiveDesign.text)
                 }
             }
@@ -235,7 +239,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                 }
             }
             val deleteID = state.deleteRequestID
-            if (deleteID != null) MonitorConfirmPopup(title = state.deletionMessage ?: "Delete this photo from the camera?", confirmTitle = "Delete",
+            if (deleteID != null) MonitorConfirmPopup(title = state.deletionMessage ?: stringResource(R.string.cc_delete_photo_confirm), confirmTitle = stringResource(R.string.cc_delete),
                 onClickFeedback = haptics::selection, onDismiss = { model.cancelDelete(deleteID) },
                 cancelDescription = MonitorPlaybackCopy.DELETE_CANCEL_DESCRIPTION,
                 confirmDescription = MonitorPlaybackCopy.DELETE_CONFIRM_DESCRIPTION,
@@ -246,7 +250,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
                     else if (deletedReturning == null) (deleted ?: close)()
                 } })
             state.failure?.let { message -> AlertDialog(onDismissRequest = model::dismissFailure, text = { Text(message) },
-                confirmButton = { TextButton(model::dismissFailure) { Text("OK") } }) }
+                confirmButton = { TextButton(model::dismissFailure) { Text(stringResource(R.string.cc_ok)) } }) }
         }
     }
 }
@@ -254,18 +258,20 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
 @Composable private fun <P> photoVariantChoices(choices: List<MonitorMediaPictureVariant<P>>,
     selected: com.opencapture.opencine.media.MediaAssetID, enabled: Boolean,
     select: (com.opencapture.opencine.media.MediaAssetID) -> Unit) {
+    val photoFormatLabel = stringResource(R.string.cc_photo_format)
     Row(Modifier.background(Color.Black.copy(alpha = 0.35f), androidx.compose.foundation.shape.CircleShape).padding(2.dp)
         .semantics {
-            contentDescription = "Photo format"
+            contentDescription = photoFormatLabel
             stateDescription = choices.firstOrNull { it.id == selected }?.label.orEmpty()
         },
         horizontalArrangement = Arrangement.spacedBy(2.dp)) {
         choices.forEach { choice ->
+            val showChoiceDescription = stringResource(R.string.cc_show_choice, choice.label)
             Text(choice.label, color = if (choice.id == selected) LiveDesign.accent else LiveDesign.muted,
                 style = LiveType.mono(10f, FontWeight.Bold),
                 modifier = Modifier.background(if (choice.id == selected) LiveDesign.accentDim else Color.Transparent,
                     androidx.compose.foundation.shape.CircleShape)
-                    .semantics { contentDescription = "Show ${choice.label}"; role = Role.Button }
+                    .semantics { contentDescription = showChoiceDescription; role = Role.Button }
                     .chromeClickable(enabled) { select(choice.id) }
                     .padding(horizontal = 10.dp, vertical = 6.dp))
         }
@@ -299,7 +305,7 @@ public fun <P> MonitorOperatorPhotoScreen(library: MonitorMediaLibraryModel<P>, 
         preview = tool == MonitorAssistTool.DESQ)
     val mirror = tool == MonitorAssistTool.MIRROR
     Box(Modifier.fillMaxWidth().height(STILL_PREVIEW_HEIGHT.dp), contentAlignment = Alignment.Center) {
-        Image((rendered ?: picture).asImageBitmap(), "Preview of ${tool.title}", contentScale = ContentScale.FillBounds,
+        Image((rendered ?: picture).asImageBitmap(), stringResource(R.string.cc_preview_of_tool, tool.title), contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxHeight().aspectRatio(aspect.coerceIn(0.4f, 3f), matchHeightConstraintsFirst = true)
                 .clip(MediaCornerShape).graphicsLayer {
                     scaleX = if (mirror && assist.mirrorHorizontal) -1f else 1f

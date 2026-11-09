@@ -33,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -336,7 +337,7 @@ private fun ParadeOptions(state: MonitorAssistState, supportsCalibratedReference
 @Composable
 private fun HistogramOptions(state: MonitorAssistState, supportsCalibratedReferences: Boolean) {
     if (!supportsCalibratedReferences) {
-        Text("Encoded code percentage. Source calibration unavailable.", color = MonitorPalette.muted, fontSize = 11.sp)
+        Text(stringResource(R.string.cc_encoded_code_percentage), color = MonitorPalette.muted, fontSize = 11.sp)
         return
     }
     val haptics = LocalOperatorHaptics.current

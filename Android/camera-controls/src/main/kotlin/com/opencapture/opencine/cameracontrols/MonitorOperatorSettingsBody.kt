@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.MonitorAssistTool
@@ -125,7 +126,8 @@ internal fun MonitorOperatorSettingsBody(inputs: MonitorOperatorSettingsInputs) 
     }
 }
 
-internal const val MONITOR_LINK_UNAVAILABLE: String = "No app is available for that action."
+internal val MONITOR_LINK_UNAVAILABLE: String
+    get() = CameraControlsContext.context.getString(R.string.cc_no_app_for_action)
 
 @Composable
 private fun MonitorOperatorSettingsRows(
@@ -182,10 +184,10 @@ private fun MonitorOperatorSettingsRows(
 @Composable
 private fun SessionAssistSettings(source: MonitorOperatorPictureSettings.Session) {
     val assist = source.assist
-    MonitorSettingsRowCard("View Assist") {
+    MonitorSettingsRowCard(stringResource(R.string.cc_view_assist)) {
         source.availableAssistTools.forEach { tool ->
             MonitorSettingsSwitchInlineRow(tool.title, assist.isOn(tool),
-                help = "Apply this monitor tool to the displayed picture.", testTag = "monitor.assist.${tool.name}") {
+                help = stringResource(R.string.cc_apply_monitor_tool), testTag = "monitor.assist.${tool.name}") {
                 assist.toggle(tool)
             }
             if (tool !in setOf(MonitorAssistTool.EV, MonitorAssistTool.LEVEL) &&
@@ -203,7 +205,7 @@ private fun SessionDisplaySettings(source: MonitorOperatorPictureSettings.Sessio
     @Suppress("UNUSED_VARIABLE") val observedRevision = revision.intValue
     val preferences = source.preferences
     val session = source.session
-    MonitorPanelSettings(preferences.hdrDisplay, "Show the native monitor in HDR when the display supports it.",
+    MonitorPanelSettings(preferences.hdrDisplay, stringResource(R.string.cc_show_native_monitor_hdr),
         { preferences.hdrDisplay = it; onPreferenceChanged() })
     OperatorDisplaySections(session, setOf(MonitorDisplaySection.STATUS_BAR, MonitorDisplaySection.CAMERA_VALUES,
         MonitorDisplaySection.LOCK_BUTTON, MonitorDisplaySection.REC_READOUT, MonitorDisplaySection.TIMECODE,

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
@@ -153,11 +154,14 @@ fun MonitorDurationDial(
         if (MonitorDialHaptic.shouldTick(previous, snapped)) stepFeedback()
         update(snapped)
     }
+    val durationDescription = stringResource(R.string.mui_duration)
+    val increaseDurationLabel = stringResource(R.string.mui_increase_duration)
+    val decreaseDurationLabel = stringResource(R.string.mui_decrease_duration)
     Box(
         modifier.size(MonitorDurationDialMetrics.WIDTH.dp, MonitorDurationDialMetrics.HEIGHT.dp)
             .background(ColorWhite07, RoundedCornerShape(8.dp))
             .semantics {
-                contentDescription = "Duration"
+                contentDescription = durationDescription
                 stateDescription = formatter(displayValue)
                 if (!enabled) disabled()
                 progressBarRangeInfo = ProgressBarRangeInfo(
@@ -168,10 +172,10 @@ fun MonitorDurationDial(
                         emit(MonitorDurationDialMetrics.snap(requested.toDouble(), range, step), generation); true
                     }
                     customActions = listOf(
-                        CustomAccessibilityAction("Increase duration") {
+                        CustomAccessibilityAction(increaseDurationLabel) {
                             emit(currentValue + scale.step, generation); true
                         },
-                        CustomAccessibilityAction("Decrease duration") {
+                        CustomAccessibilityAction(decreaseDurationLabel) {
                             emit(currentValue - scale.step, generation); true
                         },
                     )

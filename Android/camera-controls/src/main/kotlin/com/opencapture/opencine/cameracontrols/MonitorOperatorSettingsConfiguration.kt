@@ -41,6 +41,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
@@ -461,12 +462,12 @@ internal fun SettingsLink(source: MonitorSettingsLinkSource) {
     MonitorLinkHealthScale(source.healthTitle, source.healthCaption, source.score ?: 0)
     MonitorConnectionSettings(source.transport, source.transportHelp, source.phase, source.phaseHelp,
         source.network?.takeIf { it.isNotEmpty() }, source.networkHelp)
-    if (source.choices.isNotEmpty() || source.controlHolder != null) MonitorSettingsRowCard("Picture") {
+    if (source.choices.isNotEmpty() || source.controlHolder != null) MonitorSettingsRowCard(stringResource(R.string.cc_picture)) {
         source.controlHolder?.let { SettingsReadout(it) }
         source.choices.forEach { SettingsChoice(it) }
     }
     if (source.processingChoices.isNotEmpty() || source.processing.isNotEmpty()) {
-        MonitorSettingsRowCard(source.processingTitle ?: "Processing") {
+        MonitorSettingsRowCard(source.processingTitle ?: stringResource(R.string.cc_processing)) {
             source.processingChoices.forEachIndexed { index, choice ->
                 MonitorSettingsInlineRow(choice.title, choice.help, showTopDivider = index > 0) {
                     MonitorSettingsSegmented(choice.choices.map { it.title },
@@ -487,7 +488,7 @@ internal fun SettingsLink(source: MonitorSettingsLinkSource) {
 internal fun SettingsSharing(source: MonitorSettingsSharingSource?, feedback: () -> Unit) {
     if (source == null) {
         MonitorSettingsRowCard {
-            Text("Coming soon...", style = LiveType.ui(15f, FontWeight.Medium), color = LiveDesign.muted,
+            Text(stringResource(R.string.cc_coming_soon), style = LiveType.ui(15f, FontWeight.Medium), color = LiveDesign.muted,
                 modifier = Modifier.fillMaxWidth().padding(vertical = 18.dp, horizontal = 2.dp))
         }
         return
@@ -539,29 +540,29 @@ internal fun SettingsSharing(source: MonitorSettingsSharingSource?, feedback: ()
 @Composable
 internal fun SettingsGyro(source: MonitorSettingsGyroSource?, feedback: () -> Unit) {
     source?.let { gyro ->
-        MonitorSettingsRowCard("Gyro logging") {
+        MonitorSettingsRowCard(stringResource(R.string.cc_gyro_logging)) {
             for (row in monitorSettingsGyroRows(gyro)) when (row) {
-                MonitorSettingsGyroRow.LOGGING -> MonitorSettingsSwitchInlineRow("Log gyro with camera recordings", gyro.enabled,
-                    help = "Mount this phone firmly to the camera. Synchronize exported logs in Gyroflow.",
+                MonitorSettingsGyroRow.LOGGING -> MonitorSettingsSwitchInlineRow(stringResource(R.string.cc_log_gyro_with_recordings), gyro.enabled,
+                    help = stringResource(R.string.cc_gyro_mount_help),
                     showTopDivider = false) {
                     if (gyro.available) { feedback(); gyro.setEnabled(!gyro.enabled) }
                 }
-                MonitorSettingsGyroRow.STATUS -> MonitorSettingsInlineRow("Status", null) {
+                MonitorSettingsGyroRow.STATUS -> MonitorSettingsInlineRow(stringResource(R.string.cc_status), null) {
                     MonitorSettingsValueText(gyro.status)
                 }
                 MonitorSettingsGyroRow.MOUNT -> gyro.configureMount?.let { configureMount ->
-                    MonitorSettingsInlineRow("Phone mount",
-                        "Choose the phone's position relative to the camera. Keep the mount unchanged during a take; rotating the whole rig needs no new selection.") {
+                    MonitorSettingsInlineRow(stringResource(R.string.cc_phone_mount),
+                        stringResource(R.string.cc_phone_mount_help)) {
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically) {
                             gyro.mountName?.let { MonitorSettingsValueText(it) }
-                            MonitorSettingsActionPill("Configure", onClick = configureMount)
+                            MonitorSettingsActionPill(stringResource(R.string.cc_configure), onClick = configureMount)
                         }
                     }
                 }
                 MonitorSettingsGyroRow.CALIBRATE -> gyro.calibrate?.let { calibrate ->
                     MonitorSettingsInlineRow(GyroCopy.settingsCalibrate, null) {
-                        MonitorSettingsActionPill("Open", onClick = { feedback(); calibrate() })
+                        MonitorSettingsActionPill(stringResource(R.string.cc_open), onClick = { feedback(); calibrate() })
                     }
                 }
             }
@@ -583,9 +584,9 @@ internal fun SettingsControls(source: MonitorSettingsControlsSource, feedback: (
     val shutter = source.shutter
     val rotation = source.autoRotateRow
     MonitorInputOrientationSettings(shutter?.enabled, shutter?.setEnabled,
-        remoteTitle = shutter?.title ?: "Remote shutter", remoteCaption = shutter?.caption,
+        remoteTitle = shutter?.title ?: stringResource(R.string.cc_remote_shutter), remoteCaption = shutter?.caption,
         autoRotateFeed = rotation?.enabled, onAutoRotateFeed = rotation?.setEnabled,
-        rotationTitle = rotation?.title ?: "Auto-Rotate Feed", rotationHelp = rotation?.help.orEmpty(),
+        rotationTitle = rotation?.title ?: stringResource(R.string.cc_auto_rotate_feed), rotationHelp = rotation?.help.orEmpty(),
         feedback = feedback)
     val motion = source.motion ?: return
     motion.sensitivity?.let { MonitorGimbalSettings(it) }
@@ -600,13 +601,13 @@ internal fun SettingsControls(source: MonitorSettingsControlsSource, feedback: (
 @Composable
 internal fun SettingsStorage(configuration: MonitorOperatorSettingsConfiguration) {
     configuration.gyro?.let { gyro ->
-        MonitorSettingsRowCard("Gyro logs") {
-            MonitorSettingsInlineRow("Saved motion logs",
+        MonitorSettingsRowCard(stringResource(R.string.cc_gyro_logs)) {
+            MonitorSettingsInlineRow(stringResource(R.string.cc_saved_motion_logs),
                 if (gyro.configureMount == null)
-                    "Share a log with the matching camera video, then select its lens and mount orientation in Gyroflow."
-                else "Share a log with the matching camera video, then select its lens in Gyroflow. A configured phone mount is included in each new log.",
+                    stringResource(R.string.cc_share_log_lens_mount)
+                else stringResource(R.string.cc_share_log_lens),
                 showTopDivider = false) {
-                MonitorSettingsActionPill("Open", onClick = gyro.openLogs)
+                MonitorSettingsActionPill(stringResource(R.string.cc_open), onClick = gyro.openLogs)
             }
         }
     }
@@ -640,7 +641,8 @@ internal fun SettingsSystem(configuration: MonitorOperatorSettingsConfiguration,
             delete = {
                 diagnostics.incidents.deleteStoredReports { deleted ->
                     Toast.makeText(context,
-                        if (deleted) "Saved feed reports deleted" else "Couldn't delete saved feed reports. Please try again.",
+                        if (deleted) CameraControlsContext.context.getString(R.string.cc_saved_feed_reports_deleted)
+                        else CameraControlsContext.context.getString(R.string.cc_couldnt_delete_saved_reports),
                         Toast.LENGTH_LONG).show()
                 }
             })
@@ -667,7 +669,8 @@ internal fun SettingsSystem(configuration: MonitorOperatorSettingsConfiguration,
 }
 
 /** The placeholder an empty passcode field shows, as on iOS (`SecureField("Optional")`). */
-internal const val SETTINGS_PASSCODE_PLACEHOLDER = "Optional"
+internal val SETTINGS_PASSCODE_PLACEHOLDER: String
+    get() = CameraControlsContext.context.getString(R.string.cc_optional)
 
 /**
  * The watcher passcode entry: an outlined field with a placeholder, so an empty code is still a

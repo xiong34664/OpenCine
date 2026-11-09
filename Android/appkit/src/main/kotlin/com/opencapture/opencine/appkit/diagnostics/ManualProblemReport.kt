@@ -1,6 +1,8 @@
 package com.opencapture.opencine.appkit.diagnostics
 
 import com.opencapture.opencine.appkit.diagnostics.ManualReportImages
+import com.opencapture.opencine.appkit.AppkitContext
+import com.opencapture.opencine.appkit.R
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
@@ -36,9 +38,9 @@ public data class ManualProblemReportSnapshot(
         get() =
             when (delivery) {
                 ManualProblemReportDelivery.IDLE -> detail.orEmpty()
-                ManualProblemReportDelivery.WAITING -> "Waiting to send"
-                ManualProblemReportDelivery.SENT -> "Sent"
-                ManualProblemReportDelivery.FAILED -> "Failed"
+                ManualProblemReportDelivery.WAITING -> AppkitContext.context.getString(R.string.appkit_waiting_to_send)
+                ManualProblemReportDelivery.SENT -> AppkitContext.context.getString(R.string.appkit_sent)
+                ManualProblemReportDelivery.FAILED -> AppkitContext.context.getString(R.string.appkit_failed)
             }
 
     public val allowsDiscard: Boolean
@@ -208,7 +210,8 @@ public class ManualProblemReport(
             generation.incrementAndGet()
             cancelUploadLocked()
             val removed = runCatching { directory()?.deleteRecursively() != false }.getOrDefault(false)
-            publishLocked(detail = if (removed) "Report removed from this phone" else "Could not remove this report. Please try again.")
+            publishLocked(detail = if (removed) AppkitContext.context.getString(R.string.appkit_report_removed)
+            else AppkitContext.context.getString(R.string.appkit_could_not_remove_report))
         }
     }
 
@@ -260,14 +263,14 @@ public class ManualProblemReport(
             }
             if (!appInForeground) {
                 cancelUploadLocked()
-                meta.detail = "Waiting to send. Keep the app open after leaving camera Wi-Fi"
+                meta.detail = AppkitContext.context.getString(R.string.appkit_waiting_to_send_keep_open)
                 writeMeta(meta)
                 publishLocked()
                 return
             }
             if (gate.shouldBlockUpload) {
                 cancelUploadLocked()
-                meta.detail = "Waiting to send. Keep the app open after leaving camera Wi-Fi"
+                meta.detail = AppkitContext.context.getString(R.string.appkit_waiting_to_send_keep_open)
                 writeMeta(meta)
                 publishLocked()
                 return
@@ -280,7 +283,7 @@ public class ManualProblemReport(
             val currentDsn = dsn.configured()
             if (envelopeUrlOverride == null && currentDsn != null && currentDsn != meta.dsn) {
                 meta.status = "failed"
-                meta.detail = "Reporting destination changed. Remove this report and send again."
+                meta.detail = AppkitContext.context.getString(R.string.appkit_reporting_destination_changed)
                 deleteEnvelopeLocked()
                 meta.envelopePresent = false
                 writeMeta(meta)
@@ -292,7 +295,7 @@ public class ManualProblemReport(
             val decision = ReliabilityReportingNetwork.decision(endpoint.url, endpoint.host, gate)
             if (decision == ReliabilityReportingLoadDecision.REJECT_HOST) {
                 meta.status = "failed"
-                meta.detail = "Reporting is unavailable in this build"
+                meta.detail = AppkitContext.context.getString(R.string.appkit_reporting_unavailable_build)
                 deleteEnvelopeLocked()
                 meta.envelopePresent = false
                 writeMeta(meta)
@@ -307,7 +310,7 @@ public class ManualProblemReport(
             val bytes = envelopeFile(directory()).takeIf { it.isFile }?.readBytes()
             if (bytes == null) {
                 meta.status = "failed"
-                meta.detail = "The queued report is missing"
+                meta.detail = AppkitContext.context.getString(R.string.appkit_queued_report_missing)
                 meta.envelopePresent = false
                 writeMeta(meta)
                 publishLocked()
@@ -408,7 +411,7 @@ public class ManualProblemReport(
             val meta = readMeta() ?: return
             if (meta.eventId != eventId) return
             if (cancelled) {
-                meta.detail = "Waiting to send"
+                meta.detail = AppkitContext.context.getString(R.string.appkit_waiting_to_send)
                 writeMeta(meta)
                 publishLocked()
                 return
@@ -418,7 +421,7 @@ public class ManualProblemReport(
             when {
                 code in 200..299 -> {
                     meta.status = "sent"
-                    meta.detail = "Report sent. Thank you for helping improve ${host.product}."
+                    meta.detail = AppkitContext.context.getString(R.string.appkit_report_sent_thanks, host.product)
                     deleteEnvelopeLocked()
                     meta.envelopePresent = false
                     writeMeta(meta)
@@ -429,17 +432,17 @@ public class ManualProblemReport(
                 code == 429 || code == 408 -> {
                     meta.status = "waiting"
                     meta.nextAttemptAtMs = nowMs() + retryDelayMs(retryAfter, meta.attempts)
-                    meta.detail = "Waiting for a connection. Your report is saved on this phone"
+                    meta.detail = AppkitContext.context.getString(R.string.appkit_waiting_for_connection_saved)
                 }
                 code in 400..499 -> {
                     meta.status = "failed"
                     meta.detail =
-                        "Report couldn't be sent. Remove it and try again, or contact ${host.supportEmail}."
+                        AppkitContext.context.getString(R.string.appkit_report_couldnt_send, host.supportEmail)
                 }
                 else -> {
                     meta.status = "waiting"
                     meta.nextAttemptAtMs = nowMs() + retryDelayMs(retryAfter, meta.attempts)
-                    meta.detail = "Waiting for a connection. Your report is saved on this phone"
+                    meta.detail = AppkitContext.context.getString(R.string.appkit_waiting_for_connection_saved)
                 }
             }
             writeMeta(meta)
@@ -469,7 +472,7 @@ public class ManualProblemReport(
         deleteEnvelopeLocked()
         meta.status = "failed"
         meta.envelopePresent = false
-        meta.detail = "Report expired before it could be sent. Please create a new report."
+        meta.detail = AppkitContext.context.getString(R.string.appkit_report_expired)
         writeMeta(meta)
         publishLocked()
     }

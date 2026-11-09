@@ -46,6 +46,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -444,18 +445,19 @@ private fun TintPad(
         onChange(CaptureTint(clampedGm, if (horizontal) clampedAb else null, range))
     }
     val shown = labelOf(CaptureTint(gm, if (horizontal) ab else null, range)).ifBlank { " " }
+    val tintDescription = stringResource(R.string.cc_tint, shown)
     Row(
         Modifier.fillMaxWidth().wrapContentHeight().alpha(if (enabled) 1f else 0.45f)
-            .semantics { contentDescription = "Tint $shown" },
+            .semantics { contentDescription = tintDescription },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
             if (horizontal) {
-                TintArrow(MonitorIcon.CHEVRON_LEFT, enabled, "Shift toward blue") { emit(ab - 1, gm) }
+                TintArrow(MonitorIcon.CHEVRON_LEFT, enabled, stringResource(R.string.cc_shift_toward_blue)) { emit(ab - 1, gm) }
             }
             Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                TintArrow(MonitorIcon.CHEVRON_UP, enabled, "Shift toward green") { emit(ab, gm + 1) }
+                TintArrow(MonitorIcon.CHEVRON_UP, enabled, stringResource(R.string.cc_shift_toward_green)) { emit(ab, gm + 1) }
                 Box(
                     Modifier.size(108.dp)
                         .background(LiveDesign.surface, RoundedCornerShape(12.dp))
@@ -490,10 +492,10 @@ private fun TintPad(
                             .background(LiveDesign.accent, CircleShape),
                     )
                 }
-                TintArrow(MonitorIcon.CHEVRON_DOWN, enabled, "Shift toward magenta") { emit(ab, gm - 1) }
+                TintArrow(MonitorIcon.CHEVRON_DOWN, enabled, stringResource(R.string.cc_shift_toward_magenta)) { emit(ab, gm - 1) }
             }
             if (horizontal) {
-                TintArrow(MonitorIcon.CHEVRON_RIGHT, enabled, "Shift toward amber") { emit(ab + 1, gm) }
+                TintArrow(MonitorIcon.CHEVRON_RIGHT, enabled, stringResource(R.string.cc_shift_toward_amber)) { emit(ab + 1, gm) }
             }
         }
         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {

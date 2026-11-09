@@ -514,7 +514,8 @@ public class MonitorControlModel(
                 return@async null
             }
             val receipt = finished(session, CameraCommand(intent, CommandPreconditions(fresh), operation), admission)
-            val label = if (intent == CameraCommandIntent.StartRecording) "Record" else "Stop"
+            val label = if (intent == CameraCommandIntent.StartRecording) AppkitContext.context.getString(R.string.appkit_record)
+            else AppkitContext.context.getString(R.string.appkit_stop)
             if (binding != current || recordOperation != operation) return@async null
             finishRecord(operation, current, noteFor(receipt.stage, label), receipt)
             receipt
@@ -530,8 +531,10 @@ public class MonitorControlModel(
     }
 
     public companion object {
-        public const val CONNECT_FIRST: String = "Connect the camera to use its controls."
-        public const val RECORDING_UNKNOWN: String = "Recording state is not known yet. Try again in a moment."
+        public val CONNECT_FIRST: String
+            get() = AppkitContext.context.getString(R.string.appkit_connect_camera_controls)
+        public val RECORDING_UNKNOWN: String
+            get() = AppkitContext.context.getString(R.string.appkit_recording_not_known_yet)
 
         /** How long [frameRateSettling] holds after a reported frame-rate change (Swift `rateChangeHold`). */
         public val RATE_CHANGE_HOLD: kotlin.time.Duration = 3.seconds

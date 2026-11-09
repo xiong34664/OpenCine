@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -71,27 +72,27 @@ public fun WatcherBrowse(
     Column(modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(20.dp),
         verticalArrangement = Arrangement.spacedBy(14.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text("Watch a feed", style = MonitorTypography.text(22f, FontWeight.Bold), color = MonitorPalette.text)
-            TextButton(onClick = host::stopWatching) { Text("Close") }
+            Text(stringResource(R.string.cc_watch_a_feed), style = MonitorTypography.text(22f, FontWeight.Bold), color = MonitorPalette.text)
+            TextButton(onClick = host::stopWatching) { Text(stringResource(R.string.cc_close)) }
         }
         Text(networkInstructions, style = MonitorTypography.text(13f), color = MonitorPalette.muted)
-        Text("Already joined? Choose the shared feed below. Keep the camera connection inside the app on the sharing phone only.",
+        Text(stringResource(R.string.cc_watcher_joined_hint),
             style = MonitorTypography.text(13f), color = MonitorPalette.muted)
-        Button(onClick = host::startWatcherBrowse) { Text("Find shared feeds") }
+        Button(onClick = host::startWatcherBrowse) { Text(stringResource(R.string.cc_find_shared_feeds)) }
         when (val status = host.watcherJoinStatus) {
             WatcherJoinStatus.NeedsPasscode -> Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("This feed needs a passcode.", style = MonitorTypography.text(14f, FontWeight.Medium), color = MonitorPalette.text)
+                Text(stringResource(R.string.cc_watcher_needs_passcode), style = MonitorTypography.text(14f, FontWeight.Medium), color = MonitorPalette.text)
                 host.watcherPasscodeError?.let { Text(it, color = MonitorPalette.recording) }
                 OutlinedTextField(value = passcode, onValueChange = { passcode = it },
-                    label = { Text("Passcode") }, singleLine = true,
+                    label = { Text(stringResource(R.string.cc_passcode)) }, singleLine = true,
                     visualTransformation = PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Go),
                     keyboardActions = KeyboardActions(onGo = { join() }))
-                Button(onClick = join, enabled = MonitorWatcherPasscodeRule.answer(passcode) != null) { Text("Join") }
+                Button(onClick = join, enabled = MonitorWatcherPasscodeRule.answer(passcode) != null) { Text(stringResource(R.string.cc_join)) }
             }
             is WatcherJoinStatus.Failed -> Text(status.message, color = MonitorPalette.recording)
-            is WatcherJoinStatus.Reconnecting -> Text("Reconnecting… ${status.attempt} of ${status.maximum}", color = MonitorPalette.muted)
-            WatcherJoinStatus.Connecting -> Text("Joining…", color = MonitorPalette.muted)
+            is WatcherJoinStatus.Reconnecting -> Text(stringResource(R.string.cc_reconnecting, status.attempt, status.maximum), color = MonitorPalette.muted)
+            WatcherJoinStatus.Connecting -> Text(stringResource(R.string.cc_joining), color = MonitorPalette.muted)
             else -> Unit
         }
         if (host.watcherFeeds.isEmpty()) {

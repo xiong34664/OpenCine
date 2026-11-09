@@ -123,11 +123,12 @@ public enum class MultiviewNetworkRestore {
     NONE, CAMERA_NETWORKS;
     public val closeQuestion: String
         get() = when (this) {
-            NONE -> "Close Multiview? Recording continues."
-            CAMERA_NETWORKS -> "Close Multiview and return cameras to their own Wi-Fi? Recording continues."
+            NONE -> AppkitContext.context.getString(R.string.appkit_close_multiview_recording)
+            CAMERA_NETWORKS -> AppkitContext.context.getString(R.string.appkit_close_multiview_return_wifi)
         }
     public companion object {
-        public const val CLOSE_ACTION: String = "Close monitoring"
+        public val CLOSE_ACTION: String
+            get() = AppkitContext.context.getString(R.string.appkit_close_monitoring)
     }
 }
 

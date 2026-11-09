@@ -78,7 +78,7 @@ object CaptureLists {
     ): String =
         when {
             sheet == LiveSheet.SHUTTER -> shutterHeaderTitle(isEvSheet(sheet, expoMode))
-            sheet == LiveSheet.FORMAT && CameraCommands.isPhotoMode(shootingMode) -> "FORMAT"
+            sheet == LiveSheet.FORMAT && CameraCommands.isPhotoMode(shootingMode) -> CameraControlsContext.context.getString(R.string.cc_format)
             else -> sheet.headerLabel
         }
 
@@ -91,7 +91,7 @@ object CaptureLists {
     ): String =
         when {
             sheet == LiveSheet.SHUTTER && !isEvSheet(sheet, expoMode) ->
-                if (CameraCommands.isPhotoMode(shootingMode)) "Speed" else sheet.subtitle
+                if (CameraCommands.isPhotoMode(shootingMode)) CameraControlsContext.context.getString(R.string.cc_shutter_speed) else sheet.subtitle
             sheet == LiveSheet.SHUTTER ->
                 shutterHeaderSubtitle(
                     isEvSheet(sheet, expoMode),
@@ -163,7 +163,7 @@ object CaptureLists {
     fun withEffectiveVideoFormats(status: CameraStatus, model: CameraModel?): CameraStatus =
         status.copy(availableVideoFormats = effectiveVideoFormats(status, model))
 
-    const val PHOTO_FORMAT_READOUT = "Photo"
+    val PHOTO_FORMAT_READOUT get() = CameraControlsContext.context.getString(R.string.cc_photo)
 
     fun formatPickerEditable(status: CameraStatus, model: CameraModel? = null): Boolean {
         if (CameraCommands.isPhotoMode(status.shootingMode)) return false
@@ -252,19 +252,22 @@ object CaptureLists {
 
     fun shouldRefreshAudio(sheet: LiveSheet): Boolean = sheet == LiveSheet.AUDIO
 
-    const val FACE_PRIORITY_TITLE = "Face Priority"
-    const val FACE_PRIORITY_HELP =
-        "On: EV follows faces to middle gray. Several faces use the median. First couple of seconds after a face appears are faster, then about 1 s. Off: put EV back to what it was, or 0.0."
-    const val NATIVE_ISO_HOP_TITLE = "Auto Native ISO"
-    const val NATIVE_ISO_HOP_HELP =
-        "On: switching D-Log ↔ D-Log2 hops ISO to that curve's starred native if you were still on native. Off: keep the ISO you set."
+    val FACE_PRIORITY_TITLE get() = CameraControlsContext.context.getString(R.string.cc_face_priority)
+    val FACE_PRIORITY_HELP get() = CameraControlsContext.context.getString(R.string.cc_face_priority_help)
+    val NATIVE_ISO_HOP_TITLE get() = CameraControlsContext.context.getString(R.string.cc_auto_native_iso)
+    val NATIVE_ISO_HOP_HELP get() = CameraControlsContext.context.getString(R.string.cc_auto_native_iso_help)
 
     val evLabels: List<String> = EvComp.allCases.map { it.label }
 
     /** Core `WhiteBalance.kelvinLadder`; AWB lock snaps to it in the core. */
     val kelvinValues: List<Int> = (2_000..10_000 step 100).toList()
     val kelvinLabels: List<String> = kelvinValues.map { "${it}K" }
-    val wbTabs: List<String> = listOf("Mode", "Kelvin", "Tint")
+    val wbTabs: List<String>
+        get() = listOf(
+            CameraControlsContext.context.getString(R.string.cc_wb_tab_mode),
+            CameraControlsContext.context.getString(R.string.cc_wb_tab_kelvin),
+            CameraControlsContext.context.getString(R.string.cc_wb_tab_tint),
+        )
     val wbModeRows: List<String> = listOf("Auto", "Custom")
     /** iOS `CaptureLists.awbLock`: WB Mode drum entry left of Auto. */
     const val AWB_LOCK = "AWB Lock"
@@ -308,9 +311,14 @@ object CaptureLists {
         shootingMode: Int = CameraCommands.SHOOT_VIDEO,
     ): List<String> =
         if (isEvSheet || CameraCommands.isPhotoMode(shootingMode)) emptyList()
-        else listOf("Speed", "Angle")
+        else listOf(
+            CameraControlsContext.context.getString(R.string.cc_shutter_speed),
+            CameraControlsContext.context.getString(R.string.cc_shutter_angle),
+        )
 
-    fun shutterHeaderTitle(isEvSheet: Boolean): String = if (isEvSheet) "EV" else "SHUTTER"
+    fun shutterHeaderTitle(isEvSheet: Boolean): String =
+        if (isEvSheet) CameraControlsContext.context.getString(R.string.cc_ev)
+        else CameraControlsContext.context.getString(R.string.cc_shutter)
 
     fun shutterHeaderSubtitle(
         isEvSheet: Boolean,
@@ -318,9 +326,9 @@ object CaptureLists {
         facePriority: Boolean,
     ): String =
         when {
-            isEvSheet -> if (facePriority) "Face priority" else "Compensation"
-            isAngleSheet -> "Angle"
-            else -> "Speed"
+            isEvSheet -> if (facePriority) CameraControlsContext.context.getString(R.string.cc_face_priority) else CameraControlsContext.context.getString(R.string.cc_compensation)
+            isAngleSheet -> CameraControlsContext.context.getString(R.string.cc_shutter_angle)
+            else -> CameraControlsContext.context.getString(R.string.cc_shutter_speed)
         }
 
     fun shutterWheelOptions(

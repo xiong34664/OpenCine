@@ -11,6 +11,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -33,7 +34,7 @@ fun MonitorMediaNavigation(
             MonitorTab(
                 selected = selected,
                 vertical = vertical,
-                accessibilityLabel = "Show ${category.title} media",
+                accessibilityLabel = stringResource(R.string.mui_show_category_media, category.title),
                 onClick = { onSelect(category.id) },
                 modifier = Modifier
                     .then(if (vertical) Modifier.fillMaxWidth() else Modifier)

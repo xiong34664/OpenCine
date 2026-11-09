@@ -1,6 +1,7 @@
 package com.opencapture.opencine.appkit
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.MonitorAssistTool
 import com.opencapture.monitorui.settings.MonitorDisplaySectionStyle
 import com.opencapture.monitorui.settings.MonitorDisplaySections
@@ -33,19 +34,19 @@ public fun MonitorOperatorDisplaySections(
             reset = {
                 feedback()
                 onChange(mode, MonitorDisplayChrome.defaults(mode))
-            }, editHint = "Arrange the bars, readouts and tools directly on the monitor.",
+            }, editHint = stringResource(R.string.appkit_arrange_monitor_hint),
             edit = edit?.let { action -> { action(mode) } },
-            unavailableEditHelp = "Connect to arrange this on the monitor.",
+            unavailableEditHelp = stringResource(R.string.appkit_connect_to_arrange),
             visibility = order.filter { it in available && MonitorDisplayChrome.isConfigurable(it, mode) }.map { section ->
                 MonitorDisplayToggle(id = mode.name + "." + section.name,
-                    title = if (section == MonitorDisplaySection.FOCUS_BOX) "AF Box" else section.title,
+                    title = if (section == MonitorDisplaySection.FOCUS_BOX) AppkitContext.context.getString(R.string.appkit_af_box) else section.title,
                     isOn = value.isVisible(section), help = displayHelp(section)) {
                     feedback(); onChange(mode, value.toggling(section))
                 }
-            }, pinsTitle = "View assists that stay on in clean view",
+            }, pinsTitle = stringResource(R.string.appkit_view_assists_stay_clean),
             pins = if (mode != MonitorDisplayMode.CLEAN) emptyList() else MonitorAssistTool.cleanPinCases.filter { it in pinnable }.map { tool ->
                 MonitorDisplayToggle(id = "clean.pin." + tool.name, title = tool.title,
-                    isOn = tool in assist.pinned, accessibilityLabel = "Keep ${tool.title} in clean view") {
+                    isOn = tool in assist.pinned, accessibilityLabel = stringResource(R.string.appkit_keep_assist_clean, tool.title)) {
                     feedback()
                     if (onPinsChanged == null) assist.togglePin(tool)
                     else {
@@ -58,22 +59,22 @@ public fun MonitorOperatorDisplaySections(
 }
 
 private fun displayHelp(section: MonitorDisplaySection): String = when (section) {
-    MonitorDisplaySection.STATUS_BAR -> "REC, timecode, format, and FPS along the top of the feed."
-    MonitorDisplaySection.TOOL_BAR -> "The view-assist strip under the feed."
-    MonitorDisplaySection.CAMERA_VALUES -> "ISO, shutter, white balance, and the rest of the capture strip."
-    MonitorDisplaySection.LOCK_BUTTON -> "Side-rail lock. Remounts while the interface is locked."
-    MonitorDisplaySection.BATTERIES -> "Phone and camera battery cluster."
-    MonitorDisplaySection.REC_READOUT -> "Standby / recording chip on the status bar."
-    MonitorDisplaySection.TIMECODE -> "Running timecode on the status bar."
-    MonitorDisplaySection.FORMAT -> "Recording resolution and frame rate."
-    MonitorDisplaySection.CODEC -> "Recording codec chip on the status bar."
-    MonitorDisplaySection.COLOR -> "Color mode chip on the status bar."
-    MonitorDisplaySection.STORAGE -> "Remaining media time on the status bar."
-    MonitorDisplaySection.FPS -> "Live-view rate and link bars."
-    MonitorDisplaySection.RAIL_RECORD -> "Rail record lamp. Stays available while rolling."
-    MonitorDisplaySection.RAIL_MEDIA -> "Rail media button."
-    MonitorDisplaySection.RAIL_SETTINGS -> "Rail settings button. Always an escape hatch."
-    MonitorDisplaySection.ZOOM_CHIP -> "Live zoom readout on the feed."
-    MonitorDisplaySection.GIMBAL_STICK -> "On-screen gimbal stick."
-    MonitorDisplaySection.FOCUS_BOX -> "Focus and face-tracking brackets on the feed."
+    MonitorDisplaySection.STATUS_BAR -> AppkitContext.context.getString(R.string.appkit_help_status_bar)
+    MonitorDisplaySection.TOOL_BAR -> AppkitContext.context.getString(R.string.appkit_help_tool_bar)
+    MonitorDisplaySection.CAMERA_VALUES -> AppkitContext.context.getString(R.string.appkit_help_camera_values)
+    MonitorDisplaySection.LOCK_BUTTON -> AppkitContext.context.getString(R.string.appkit_help_lock_button)
+    MonitorDisplaySection.BATTERIES -> AppkitContext.context.getString(R.string.appkit_help_batteries)
+    MonitorDisplaySection.REC_READOUT -> AppkitContext.context.getString(R.string.appkit_help_rec_readout)
+    MonitorDisplaySection.TIMECODE -> AppkitContext.context.getString(R.string.appkit_help_timecode)
+    MonitorDisplaySection.FORMAT -> AppkitContext.context.getString(R.string.appkit_help_format)
+    MonitorDisplaySection.CODEC -> AppkitContext.context.getString(R.string.appkit_help_codec)
+    MonitorDisplaySection.COLOR -> AppkitContext.context.getString(R.string.appkit_help_color)
+    MonitorDisplaySection.STORAGE -> AppkitContext.context.getString(R.string.appkit_help_storage)
+    MonitorDisplaySection.FPS -> AppkitContext.context.getString(R.string.appkit_help_fps)
+    MonitorDisplaySection.RAIL_RECORD -> AppkitContext.context.getString(R.string.appkit_help_rail_record)
+    MonitorDisplaySection.RAIL_MEDIA -> AppkitContext.context.getString(R.string.appkit_help_rail_media)
+    MonitorDisplaySection.RAIL_SETTINGS -> AppkitContext.context.getString(R.string.appkit_help_rail_settings)
+    MonitorDisplaySection.ZOOM_CHIP -> AppkitContext.context.getString(R.string.appkit_help_zoom_chip)
+    MonitorDisplaySection.GIMBAL_STICK -> AppkitContext.context.getString(R.string.appkit_help_gimbal_stick)
+    MonitorDisplaySection.FOCUS_BOX -> AppkitContext.context.getString(R.string.appkit_help_focus_box)
 }

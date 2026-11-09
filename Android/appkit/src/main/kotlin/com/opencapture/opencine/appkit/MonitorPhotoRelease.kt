@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.MonitorRecordLamp
@@ -57,6 +58,11 @@ public fun MonitorPhotoRelease(
     val press by rememberUpdatedState(onPressed)
     val release by rememberUpdatedState(onReleased)
     val admits by rememberUpdatedState(enabled)
+    val description = when {
+        timerRemaining != null -> stringResource(R.string.appkit_self_timer_seconds, timerRemaining)
+        capturing -> stringResource(R.string.appkit_capturing)
+        else -> stringResource(R.string.appkit_take_photo)
+    }
     var dipped by remember { mutableStateOf(false) }
     val scale by animateFloatAsState(if (dipped) .88f else 1f, tween(120), label = "photo-release-dip")
     LaunchedEffect(bodyPulse) {
@@ -83,11 +89,7 @@ public fun MonitorPhotoRelease(
             }
             .semantics {
                 role = Role.Button
-                contentDescription = when {
-                    timerRemaining != null -> "Self-timer, $timerRemaining seconds"
-                    capturing -> "Capturing"
-                    else -> "Take photo"
-                }
+                contentDescription = description
                 if (enabled) {
                     onClick {
                         press()

@@ -48,6 +48,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
@@ -221,7 +222,7 @@ internal fun commandSideDescription(titles: List<String>): String {
         2 -> titles.joinToString(" and ")
         else -> titles.dropLast(1).joinToString() + ", and " + titles.last()
     }
-    return "$list controls. Swipe up to reveal more command controls."
+    return MonitorContext.context.getString(R.string.mui_command_side_description, list)
 }
 
 /** The live surface's Sora face (tabular figures for values) without font padding. */
@@ -303,11 +304,12 @@ fun <K : Any, R : Any> MonitorCommandDashboard(
 @Composable
 private fun CommandHeroBand(hero: MonitorStatusPresentation, portrait: Boolean) {
     val description = hero.commandHeroAccessibilityValue
+    val timecodeDescription = stringResource(R.string.mui_timecode_desc, description)
     Row(
         Modifier
             .fillMaxWidth()
             .height(commandHeroHeightDp(portrait).dp)
-            .semantics(mergeDescendants = true) { contentDescription = "Timecode $description" }
+            .semantics(mergeDescendants = true) { contentDescription = timecodeDescription }
             .testTag("monitor.command.hero"),
         horizontalArrangement = Arrangement.spacedBy(11.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -376,14 +378,14 @@ private fun CommandHealthStrip(health: MonitorCommandHealth, trailing: @Composab
         verticalAlignment = Alignment.CenterVertically,
     ) {
         CommandStatusBlock(
-            "Temp",
+            stringResource(R.string.mui_temp),
             health.temperature,
             Modifier.weight(0.7f, fill = false).widthIn(min = 52.dp, max = 148.dp),
             good = health.temperatureOk,
         )
-        CommandStatusBlock("Storage", health.storage, Modifier.weight(1.1f).widthIn(min = 52.dp, max = 148.dp))
-        CommandStatusBlock("Camera", health.camera, Modifier.weight(1f).widthIn(min = 52.dp, max = 148.dp))
-        CommandStatusBlock("Lens", health.lens, Modifier.weight(1.25f).widthIn(min = 52.dp, max = 148.dp))
+        CommandStatusBlock(stringResource(R.string.mui_storage), health.storage, Modifier.weight(1.1f).widthIn(min = 52.dp, max = 148.dp))
+        CommandStatusBlock(stringResource(R.string.mui_camera), health.camera, Modifier.weight(1f).widthIn(min = 52.dp, max = 148.dp))
+        CommandStatusBlock(stringResource(R.string.mui_lens), health.lens, Modifier.weight(1.25f).widthIn(min = 52.dp, max = 148.dp))
         // The trailing chip keeps its natural size (iOS fixedSize + layoutPriority).
         trailing()
     }
@@ -569,25 +571,25 @@ private fun <K : Any, R : Any> CommandTile(
     val reorderActions =
         buildList {
             if (canMove && index > 0) {
-                add(CustomAccessibilityAction("Move ${tile.title} earlier") { onMoveTo(index - 1); true })
+                add(CustomAccessibilityAction(stringResource(R.string.mui_move_earlier, tile.title)) { onMoveTo(index - 1); true })
             }
             if (canMove && index < tileCount - 1) {
-                add(CustomAccessibilityAction("Move ${tile.title} later") { onMoveTo(index + 1); true })
+                add(CustomAccessibilityAction(stringResource(R.string.mui_move_later, tile.title)) { onMoveTo(index + 1); true })
             }
         }
-    val reorderHint = if (canMove) " Long press and drag to reorder." else ""
+    val reorderHint = if (canMove) stringResource(R.string.mui_reorder_hint) else ""
     val description =
         buildString {
             append("${tile.title}: ${tile.value}")
             when {
-                applyingThisControl -> append(". Applying change.")
-                pending -> append(". Another control is being applied.")
+                applyingThisControl -> append(stringResource(R.string.mui_applying_change))
+                pending -> append(stringResource(R.string.mui_another_control_applying))
                 request == null ->
-                    append(". ${tile.unavailableReason ?: "Read-only."}$reorderHint")
-                !controlsEnabled -> append(". Controls are locked.$reorderHint")
+                    append(". ${tile.unavailableReason ?: stringResource(R.string.mui_read_only)}$reorderHint")
+                !controlsEnabled -> append(stringResource(R.string.mui_controls_locked) + reorderHint)
                 else -> append(
-                    if (canMove) ". Double tap to change; long press and drag to reorder."
-                    else ". Double tap to change.",
+                    if (canMove) stringResource(R.string.mui_double_tap_change_reorder)
+                    else stringResource(R.string.mui_double_tap_change),
                 )
             }
         }
@@ -604,7 +606,7 @@ private fun <K : Any, R : Any> CommandTile(
             }
             .combinedClickable(
                 enabled = interactive,
-                onClickLabel = if (controlEnabled) "Change ${tile.title}" else null,
+                onClickLabel = if (controlEnabled) stringResource(R.string.mui_change_control, tile.title) else null,
                 onClick = { request?.takeIf { controlEnabled }?.let(onOpenControl) },
             )
             .padding(horizontal = 12.dp, vertical = 8.dp),
@@ -692,15 +694,16 @@ private fun <K : Any, R : Any> CommandSideColumn(
                     .height(44.dp)
                     .background(Brush.verticalGradient(listOf(Color.Transparent, MonitorPalette.backgroundDeep))),
             )
+            val moreControlsDescription = stringResource(R.string.mui_more_controls_below)
             Text(
-                "MORE ⌄",
+                stringResource(R.string.mui_more),
                 style = commandLabelStyle,
                 color = MonitorPalette.muted,
                 modifier =
                     Modifier
                         .align(Alignment.BottomCenter)
                         .padding(bottom = 3.dp)
-                        .semantics { contentDescription = "More command controls below. Swipe up to reveal them." },
+                        .semantics { contentDescription = moreControlsDescription },
             )
         }
     }
@@ -765,11 +768,11 @@ private fun <K : Any, R : Any> CommandSmallTile(
         buildString {
             append("${cell.title}: ${cell.value}")
             when {
-                applyingThisControl -> append(". Applying change.")
-                pending -> append(". Another control is being applied.")
-                request == null -> append(". ${cell.unavailableReason ?: "Read-only."}")
-                !controlsEnabled -> append(". Controls are locked.")
-                else -> append(". Double tap to change.")
+                applyingThisControl -> append(stringResource(R.string.mui_applying_change))
+                pending -> append(stringResource(R.string.mui_another_control_applying))
+                request == null -> append(". ${cell.unavailableReason ?: stringResource(R.string.mui_read_only)}")
+                !controlsEnabled -> append(stringResource(R.string.mui_controls_locked))
+                else -> append(stringResource(R.string.mui_double_tap_change))
             }
         }
     // iOS CommandSmallTile: minHeight 42, pad h10/v6, caption title muted, value 15 medium Sora tabular.
@@ -792,7 +795,7 @@ private fun <K : Any, R : Any> CommandSmallTile(
             }
             .combinedClickable(
                 enabled = enabled,
-                onClickLabel = "Change ${cell.title}",
+                onClickLabel = stringResource(R.string.mui_change_control, cell.title),
                 onClick = { request?.let(onOpenControl) },
             )
             .padding(horizontal = 10.dp, vertical = 6.dp),

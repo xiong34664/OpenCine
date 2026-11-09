@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.*
 import com.opencapture.opencine.appkit.*
@@ -129,9 +130,9 @@ public fun <P> MonitorOperatorCatalogScreen(
         layout = MediaBrowserLayout.valueOf((presentation?.layout ?: value.layout).name),
         thumbnailSize = MediaThumbnailSize.valueOf((presentation?.thumbnailSize ?: value.thumbnailSize).name), sortOrder = sort,
         headerCount = when {
-            value.fetching && value.fetchedCount == 0 -> "Scanning…"
-            value.fetching -> "Listing… ${value.fetchedCount} found"
-            else -> (presentation?.projection?.displayIDs?.size ?: records.size).let { "$it item${if (it == 1) "" else "s"}" }
+            value.fetching && value.fetchedCount == 0 -> stringResource(R.string.cc_scanning)
+            value.fetching -> stringResource(R.string.cc_listing_found, value.fetchedCount)
+            else -> (presentation?.projection?.displayIDs?.size ?: records.size).let { if (it == 1) stringResource(R.string.cc_item_count_one, it) else stringResource(R.string.cc_item_count_many, it) }
         }, fetchInProgress = value.fetching, isLive = sourceAvailable, isSelecting = value.selecting,
         filterOpen = state.filterPopupPresented, activeFilterCount = presentation?.activeFilterCount ?: value.activeFilterCount,
         selectedCount = selected.size,
@@ -225,8 +226,8 @@ public fun <P> MonitorOperatorCatalogScreen(
     if (state.confirmationPresented) {
         val confirmation = state.deleteRequestID
         MonitorConfirmPopup(
-            title = state.deletionMessage ?: "Delete ${state.deleteCount} item${if (state.deleteCount == 1) "" else "s"} from the camera?",
-            confirmTitle = "Delete", onClickFeedback = haptics::selection,
+            title = state.deletionMessage ?: if (state.deleteCount == 1) stringResource(R.string.cc_delete_item_from_camera, state.deleteCount) else stringResource(R.string.cc_delete_items_from_camera, state.deleteCount),
+            confirmTitle = stringResource(R.string.cc_delete), onClickFeedback = haptics::selection,
             cancelDescription = MonitorPlaybackCopy.DELETE_CANCEL_DESCRIPTION,
             confirmDescription = MonitorPlaybackCopy.DELETE_CONFIRM_DESCRIPTION,
             onDismiss = { gallery.cancelDelete(confirmation) }, onConfirm = { gallery.confirmDelete(confirmation) },
@@ -234,7 +235,7 @@ public fun <P> MonitorOperatorCatalogScreen(
     }
     state.failure?.let { message ->
         AlertDialog(onDismissRequest = gallery::dismissFailure, title = { Text(message) },
-            confirmButton = { TextButton(onClick = gallery::dismissFailure) { Text("OK") } })
+            confirmButton = { TextButton(onClick = gallery::dismissFailure) { Text(stringResource(R.string.cc_ok)) } })
     }
 }
 

@@ -35,23 +35,33 @@ public data class PairingWizard(
     val blocker: String? = null,
 ) {
     public companion object {
-        internal val titles = listOf("Find your camera", "Approve on the camera", "Join camera Wi-Fi", "Open video link")
-        internal val rail = listOf("Bluetooth scan", "Camera prompt", "Camera network", "Video link")
+        internal val titles get() = listOf(
+            AppkitContext.context.getString(R.string.appkit_find_camera),
+            AppkitContext.context.getString(R.string.appkit_approve_on_camera),
+            AppkitContext.context.getString(R.string.appkit_join_camera_wifi),
+            AppkitContext.context.getString(R.string.appkit_open_video_link),
+        )
+        internal val rail get() = listOf(
+            AppkitContext.context.getString(R.string.appkit_bluetooth_scan),
+            AppkitContext.context.getString(R.string.appkit_camera_prompt),
+            AppkitContext.context.getString(R.string.appkit_camera_network),
+            AppkitContext.context.getString(R.string.appkit_video_link),
+        )
 
         /**
          * The apps' live label for a connection phase (Swift `ConnectionPhase.label`). Reads each
          * integration's phase enum by its constant names, which match by design.
          */
         public fun phaseLabel(phase: Enum<*>): String = when (phase.name) {
-            "SCANNING" -> "Scanning for camera…"
-            "CONNECTING_GATT" -> "Connecting (Bluetooth)…"
-            "PAIRING" -> "Pairing…"
-            "AWAITING_APPROVAL" -> "Approve on the camera screen"
-            "READING_WIFI_CREDS" -> "Reading Wi-Fi credentials…"
-            "JOINING_WIFI" -> "Joining camera Wi-Fi…"
-            "OPENING_DATALINK" -> "Opening datalink…"
-            "LIVE" -> "Connected"
-            else -> "Idle"
+            "SCANNING" -> AppkitContext.context.getString(R.string.appkit_scanning_for_camera)
+            "CONNECTING_GATT" -> AppkitContext.context.getString(R.string.appkit_connecting_bluetooth)
+            "PAIRING" -> AppkitContext.context.getString(R.string.appkit_pairing)
+            "AWAITING_APPROVAL" -> AppkitContext.context.getString(R.string.appkit_approve_on_camera_screen)
+            "READING_WIFI_CREDS" -> AppkitContext.context.getString(R.string.appkit_reading_wifi_credentials)
+            "JOINING_WIFI" -> AppkitContext.context.getString(R.string.appkit_joining_camera_wifi)
+            "OPENING_DATALINK" -> AppkitContext.context.getString(R.string.appkit_opening_datalink)
+            "LIVE" -> AppkitContext.context.getString(R.string.appkit_connected)
+            else -> AppkitContext.context.getString(R.string.appkit_idle)
         }
 
         /** A connect's scan (a first step with a live note, as both integrations report it) is still page 0. */
@@ -111,21 +121,24 @@ public fun CamerasMapping.wizard(model: CamerasModel, wizard: PairingWizard): Mo
     val instructions = when (page) {
         0 -> listOfNotNull(wizard.choosing.takeIf { failure == null })
         1 -> listOf(
-            MonitorPairingInstruction("On the camera", MonitorPairingInstructionIcon.CAMERA, wizard.approveLines),
+            MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_on_the_camera), MonitorPairingInstructionIcon.CAMERA, wizard.approveLines),
             MonitorPairingInstruction(
-                "On this phone", MonitorPairingInstructionIcon.PHONE,
-                listOf("Wait here, we keep the Bluetooth link alive", "Don't force-quit the app"),
+                AppkitContext.context.getString(R.string.appkit_on_this_phone), MonitorPairingInstructionIcon.PHONE,
+                listOf(
+                    AppkitContext.context.getString(R.string.appkit_wait_here_bluetooth),
+                    AppkitContext.context.getString(R.string.appkit_dont_force_quit),
+                ),
             ),
         )
         2 -> listOf(
-            MonitorPairingInstruction("On the camera", MonitorPairingInstructionIcon.CAMERA, wizard.joinLines),
+            MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_on_the_camera), MonitorPairingInstructionIcon.CAMERA, wizard.joinLines),
             MonitorPairingInstruction(
-                "On this phone", MonitorPairingInstructionIcon.PHONE,
-                listOf("Tap Join when Android asks to join the camera network", LocalVPNFilter.JOIN_WIFI_PHONE_STEP),
+                AppkitContext.context.getString(R.string.appkit_on_this_phone), MonitorPairingInstructionIcon.PHONE,
+                listOf(AppkitContext.context.getString(R.string.appkit_tap_join), LocalVPNFilter.JOIN_WIFI_PHONE_STEP),
             ),
         )
         else -> if (wizard.vpnActive) {
-            listOf(MonitorPairingInstruction("Check the connection", MonitorPairingInstructionIcon.PHONE, listOf(LocalVPNFilter.WIZARD_BANNER)))
+            listOf(MonitorPairingInstruction(AppkitContext.context.getString(R.string.appkit_check_the_connection), MonitorPairingInstructionIcon.PHONE, listOf(LocalVPNFilter.WIZARD_BANNER)))
         } else {
             emptyList()
         }
@@ -139,30 +152,39 @@ public fun CamerasMapping.wizard(model: CamerasModel, wizard: PairingWizard): Mo
     val name = selected?.let { device(it, state, model).name } ?: failedName
     val checks = if (page >= 2) {
         listOf(
-            MonitorPairingCheck("Bluetooth link", name ?: "Camera connected", MonitorPairingCheckState.COMPLETE, "OK"),
             MonitorPairingCheck(
-                "Camera Wi-Fi", wizard.joinedNetwork ?: "Waiting for the camera network",
+                AppkitContext.context.getString(R.string.appkit_bluetooth_link),
+                name ?: AppkitContext.context.getString(R.string.appkit_camera_connected),
+                MonitorPairingCheckState.COMPLETE,
+                "OK",
+            ),
+            MonitorPairingCheck(
+                AppkitContext.context.getString(R.string.appkit_camera_wifi),
+                wizard.joinedNetwork ?: AppkitContext.context.getString(R.string.appkit_waiting_for_camera_network),
                 if (page > 2) MonitorPairingCheckState.COMPLETE else MonitorPairingCheckState.ACTIVE,
                 if (page > 2) "OK" else "JOINING",
             ),
             MonitorPairingCheck(
-                "Live picture", if (page > 2) "Opening the video link…" else "Starts after Wi-Fi joins",
-                if (page > 2) MonitorPairingCheckState.ACTIVE else MonitorPairingCheckState.WAITING, "WAITING",
+                AppkitContext.context.getString(R.string.appkit_live_picture),
+                if (page > 2) AppkitContext.context.getString(R.string.appkit_opening_the_video_link) else AppkitContext.context.getString(R.string.appkit_starts_after_wifi_joins),
+                if (page > 2) MonitorPairingCheckState.ACTIVE else MonitorPairingCheckState.WAITING,
+                "WAITING",
             ),
         )
     } else {
         emptyList()
     }
     val hint = when (page) {
-        0 -> name?.let { "Selected $it" } ?: "Choose the camera that matches your screen"
-        1 -> "Nothing to type. Approve it on the camera"
-        2 -> "Android asks to join the camera network"
-        else -> "Monitoring opens when the picture is ready"
+        0 -> name?.let { AppkitContext.context.getString(R.string.appkit_selected_camera, it) }
+            ?: AppkitContext.context.getString(R.string.appkit_choose_camera_matches_screen)
+        1 -> AppkitContext.context.getString(R.string.appkit_nothing_to_type)
+        2 -> AppkitContext.context.getString(R.string.appkit_android_asks_join)
+        else -> AppkitContext.context.getString(R.string.appkit_monitoring_opens)
     }
     val (primary, enabled) = when {
-        failure != null -> "Try again" to true
+        failure != null -> AppkitContext.context.getString(R.string.appkit_try_again) to true
         wizard.blocker != null -> wizard.blocker to true
-        choosing -> "Continue" to (selected != null && !busy)
+        choosing -> AppkitContext.context.getString(R.string.appkit_continue) to (selected != null && !busy)
         else -> null to false
     }
     return MonitorPairingPresentation(
@@ -170,7 +192,7 @@ public fun CamerasMapping.wizard(model: CamerasModel, wizard: PairingWizard): Mo
         currentStep = page,
         title = PairingWizard.titles[page],
         body = wizard.bodies[page],
-        target = name ?: "Nothing selected yet",
+        target = name ?: AppkitContext.context.getString(R.string.appkit_nothing_selected_yet),
         hint = hint,
         // A blocker means discovery is not running (main's scan never started).
         progress = wizard.label.takeIf { failure == null && (busy || state.scanning && wizard.blocker == null) },
@@ -186,12 +208,13 @@ public fun CamerasMapping.wizard(model: CamerasModel, wizard: PairingWizard): Mo
         instructions = instructions,
         checks = checks,
         emptyTitle = if (choosing && state.nearby.isEmpty() && wizard.blocker == null) {
-            if (state.scanning) "Looking for cameras" else "No cameras yet"
+            if (state.scanning) AppkitContext.context.getString(R.string.appkit_looking_for_cameras)
+            else AppkitContext.context.getString(R.string.appkit_no_cameras_yet)
         } else {
             null
         },
         primaryAction = primary,
         primaryActionEnabled = enabled,
-        backAction = if (busy) "Cancel" else null,
+        backAction = if (busy) AppkitContext.context.getString(R.string.appkit_cancel) else null,
     )
 }

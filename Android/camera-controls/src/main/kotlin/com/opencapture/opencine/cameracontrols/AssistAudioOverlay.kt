@@ -17,6 +17,7 @@ import com.opencapture.monitorui.MonitorTypography
 import com.opencapture.opencine.media.MonitorAudioMeterLevels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalDensity
 import com.opencapture.monitorui.MonitorAssistTool
 import com.opencapture.monitorui.MonitorAudioMeter
@@ -61,10 +62,12 @@ public fun AssistAudioOverlay(state: MonitorAssistState, levels: MonitorAudioMet
     val base = MonitorScopeSize(if (provenance == null) 28f else 104f, 168f)
     AssistAudioPanel(state, base, canvas, placement, locked, null, panelPlacement, feed,
         portraitOverride) {
+        val audioLevelsLabel = stringResource(R.string.cc_audio_levels)
+        val audioLevelsUnavailableLabel = stringResource(R.string.cc_audio_levels_unavailable)
         Column(Modifier.fillMaxSize().clearAndSetSemantics {
-            contentDescription = "Audio levels"
+            contentDescription = audioLevelsLabel
             if (spokenValue != null) stateDescription = spokenValue
-            else if (levels == null) stateDescription = "Audio levels unavailable"
+            else if (levels == null) stateDescription = audioLevelsUnavailableLabel
         }, horizontalAlignment = Alignment.CenterHorizontally) {
             Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 // The floor is a drawing baseline only; absence is explicitly labelled no data.

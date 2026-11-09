@@ -60,6 +60,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
@@ -95,7 +96,7 @@ fun <T> MonitorAssistPalette(tools: List<T>, portrait: Boolean, locked: Boolean,
     accessibilityLabel: (T) -> String? = { null },
     accessibilityValue: (T) -> String? = { null },
     accessibilityIdentifier: (T) -> String? = { null },
-    expansionAccessibilityName: String = "view assists",
+    expansionAccessibilityName: String = stringResource(R.string.mui_view_assists),
     expansionAccessibilityIdentifier: String = "monitor.assists.expand",
     cellSize: Float? = null,
     maxExpandedHeight: Float? = null,
@@ -221,6 +222,8 @@ fun <T> MonitorAssistPalette(tools: List<T>, portrait: Boolean, locked: Boolean,
         val tint = if (active) MonitorPalette.accent else MonitorPalette.text
         val shown = if (index < compactCount) 1f else extraOpacity
         val identifier = accessibilityIdentifier(tool)
+        val onDescription = stringResource(R.string.mui_on)
+        val offDescription = stringResource(R.string.mui_off)
         Box(Modifier.size(buttonSize).graphicsLayer { alpha = shown * if (available) 1f else .4f }
             .clip(RoundedCornerShape(9.dp)).background(if (active) MonitorPalette.accent.copy(alpha = .13f) else Color.Transparent)
             .combinedClickable(enabled = !locked && available && shown > 0.35f, onClick = { used(tool); onToggle(tool) },
@@ -228,7 +231,7 @@ fun <T> MonitorAssistPalette(tools: List<T>, portrait: Boolean, locked: Boolean,
             .then(if (identifier != null) Modifier.testTag(identifier) else Modifier)
             .semantics {
                 role = Role.Button
-                contentDescription = accessibilityLabel(tool) ?: "${title(tool)}, ${if (active) "on" else "off"}"
+                contentDescription = accessibilityLabel(tool) ?: "${title(tool)}, ${if (active) onDescription else offDescription}"
                 accessibilityValue(tool)?.let { stateDescription = it }
             },
             contentAlignment = Alignment.Center) {
@@ -247,6 +250,8 @@ fun <T> MonitorAssistPalette(tools: List<T>, portrait: Boolean, locked: Boolean,
     val fullHPx = with(density) { fullH.toPx() }
     val expandHit: @Composable () -> Unit = {
         val open = reveal < 0.5f
+        val showExpansionDescription = stringResource(R.string.mui_show_view_assists, expansionAccessibilityName)
+        val collapseExpansionDescription = stringResource(R.string.mui_collapse_view_assists, expansionAccessibilityName)
         Box(Modifier.size(if (portrait) visibleW - 8.dp else expansionLane, if (portrait) 24.dp else visibleH - 8.dp)
             .then(
                 if (portrait) {
@@ -347,7 +352,7 @@ fun <T> MonitorAssistPalette(tools: List<T>, portrait: Boolean, locked: Boolean,
             )
             .testTag(expansionAccessibilityIdentifier)
             .semantics {
-                contentDescription = if (open) "Show $expansionAccessibilityName" else "Collapse $expansionAccessibilityName"
+                contentDescription = if (open) showExpansionDescription else collapseExpansionDescription
                 role = Role.Button
                 if (portrait && !locked) onClick {
                     if (dragging) false else { expanded = !expanded; true }

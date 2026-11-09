@@ -45,6 +45,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -240,7 +241,7 @@ private class CaptureReadoutActions(
                     state.show(MonitorOperatorCapturePreview(readout.id, value, field, native?.identity), currentInputs.previewChanged)
                 }
             }
-            MonitorOperatorCaptureDrawer(readout.title, "drag to set", maximum,
+            MonitorOperatorCaptureDrawer(readout.title, stringResource(R.string.appkit_drag_to_set), maximum,
                 inputs.isTop(readout.id), portrait, compact = true, close = {}) {
                 MonitorValueDrum(value.control.options, value.selection, markedValues = value.control.marked,
                     interactive = false, displayPosition = value.position, onSelect = {})
@@ -415,8 +416,8 @@ public fun monitorOperatorCapturePlacement(layout: MonitorFieldLayout, top: Bool
         Box(Modifier.offset(place.x.dp, place.y.dp).width(place.width.dp).onGloballyPositioned {
             height = with(density) { it.size.height.toDp().value }
         }) {
-            MonitorOperatorCaptureDrawer(header?.title ?: panel.title ?: field?.title ?: "Camera",
-                header?.subtitle ?: panel.subtitle ?: field?.label ?: "Not set", place.maxHeight, panel.top, layout.portrait,
+            MonitorOperatorCaptureDrawer(header?.title ?: panel.title ?: field?.title ?: stringResource(R.string.appkit_camera),
+                header?.subtitle ?: panel.subtitle ?: field?.label ?: stringResource(R.string.appkit_not_set), place.maxHeight, panel.top, layout.portrait,
                 close = { if (enabled && currentSource()) inputs.dismiss() }) {
                 if (panel.chrome == MonitorOperatorCameraPanelChrome.DESCRIPTOR && field != null) {
                     MonitorCaptureDrum(control, field, enabled = commandEnabled && currentSource())
@@ -457,6 +458,7 @@ public fun monitorOperatorCapturePlacement(layout: MonitorFieldLayout, top: Bool
 @Composable public fun MonitorOperatorCaptureHeader(title: String, subtitle: String, onClose: () -> Unit,
     showsClose: Boolean = true, enabled: Boolean = true): Unit {
     val haptics = LocalOperatorHaptics.current
+    val closeLabel = stringResource(R.string.appkit_close_camera_control)
     Row(Modifier.fillMaxWidth().then(if (!showsClose) Modifier.height(MonitorLayoutPolicy.CAPTURE_HEADER_HEIGHT.dp) else Modifier),
         verticalAlignment = Alignment.CenterVertically) {
         Row(Modifier.weight(1f), verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
@@ -466,7 +468,7 @@ public fun monitorOperatorCapturePlacement(layout: MonitorFieldLayout, top: Bool
         }
         if (showsClose) Box(Modifier.size(44.dp).monitorChromeClickable(enabled = enabled, onClick = onClose,
             onClickFeedback = { haptics.selection() }).testTag("monitor.capture.close")
-            .semantics { contentDescription = "Close camera control" }, contentAlignment = Alignment.Center) {
+            .semantics { contentDescription = closeLabel }, contentAlignment = Alignment.Center) {
             MonitorIcon(MonitorIcon.X, null, Modifier.size(13.dp), MonitorPalette.muted)
         }
     }

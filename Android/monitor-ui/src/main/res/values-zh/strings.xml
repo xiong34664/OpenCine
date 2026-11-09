@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MonitorCameraSetups -->
+    <string name="mui_setup_options">设置选项</string>
+    <string name="mui_connect_camera_over_setup">通过 %2$s 连接 %1$s</string>
+    <string name="mui_rename_setup">重命名设置</string>
+    <string name="mui_forget_setup">忘记 %1$s 设置</string>
+    <string name="mui_add_setup_for_camera">为 %1$s 添加设置</string>
+    <string name="mui_add_setup">添加设置</string>
+
+    <!-- MonitorInspector -->
+    <string name="mui_dismiss_title">关闭 %1$s</string>
+    <string name="mui_show_option_help">显示选项帮助</string>
+    <string name="mui_on">开</string>
+    <string name="mui_off">关</string>
+    <string name="mui_close_title">关闭 %1$s</string>
+
+    <!-- MonitorFocusResetButton -->
+    <string name="mui_recenter_focus">重新对焦</string>
+
+    <!-- MonitorZoomDisc -->
+    <string name="mui_zoom_level">变焦 %1$s</string>
+    <string name="mui_close_zoom">关闭变焦</string>
+
+    <!-- MonitorTelemetry -->
+    <string name="mui_camera_battery">相机电池</string>
+    <string name="mui_phone_battery">手机电池</string>
+    <string name="mui_battery_unavailable">不可用</string>
+    <string name="mui_camera_battery_percent">相机电池 %1$d%%</string>
+    <string name="mui_camera_battery_unavailable">相机电池不可用</string>
+    <string name="mui_bars_of">%1$d / %2$d 格</string>
+
+    <!-- MonitorCameraPage -->
+    <string name="mui_your_cameras">我的相机</string>
+    <string name="mui_no_cameras_saved">尚未保存任何相机</string>
+    <string name="mui_cancel">取消</string>
+    <string name="mui_cancel_connecting_to">取消连接 %1$s</string>
+    <string name="mui_scanning_for_cameras">正在扫描相机</string>
+    <string name="mui_scanning">扫描中</string>
+
+    <!-- MonitorMediaDeliveryProgressPanel -->
+    <string name="mui_progress">进度</string>
+    <string name="mui_file">文件</string>
+    <string name="mui_destination">目标位置：%1$s</string>
+    <string name="mui_collapse">收起</string>
+    <string name="mui_expand_delivery_progress">展开传输进度</string>
+
+    <!-- MonitorDurationDial -->
+    <string name="mui_duration">时长</string>
+    <string name="mui_increase_duration">增加时长</string>
+    <string name="mui_decrease_duration">减少时长</string>
+
+    <!-- MonitorClipCatalog -->
+    <string name="mui_toggle_selection">切换选择</string>
+    <string name="mui_open">打开</string>
+    <string name="mui_select_clip">选择片段</string>
+    <string name="mui_deselect_clip">取消选择片段</string>
+    <string name="mui_remove_from_favorites">取消收藏</string>
+    <string name="mui_add_to_favorites">加入收藏</string>
+    <string name="mui_frames">%1$d 帧</string>
+    <string name="mui_grid_view">网格视图</string>
+    <string name="mui_list_view">列表视图</string>
+    <string name="mui_thumbnails">%1$s 缩略图</string>
+    <string name="mui_sort_clips">排序片段</string>
+    <string name="mui_filter_library">筛选媒体库</string>
+    <string name="mui_filter">筛选</string>
+
+    <!-- MonitorMediaNavigation -->
+    <string name="mui_show_category_media">显示 %1$s 媒体</string>
+
+    <!-- MonitorSelectionTray -->
+    <string name="mui_share_selected">分享所选</string>
+    <string name="mui_delete_selected">删除所选</string>
+    <string name="mui_count_selected">已选择 %1$d 项</string>
+    <string name="mui_select_all">全选</string>
+    <string name="mui_all">全部</string>
+    <string name="mui_share">分享</string>
+
+    <!-- MonitorMediaFilterForm -->
+    <string name="mui_filter_format">格式</string>
+    <string name="mui_filter_resolution">分辨率</string>
+    <string name="mui_filter_size">大小</string>
+    <string name="mui_filter_date">日期</string>
+    <string name="mui_filter_colour">颜色</string>
+    <string name="mui_filter_storage">存储</string>
+    <string name="mui_start">开始</string>
+    <string name="mui_end">结束</string>
+    <string name="mui_nothing_to_filter">此标签页没有可筛选的内容。</string>
+    <string name="mui_clear_all_filters">清除所有筛选</string>
+    <string name="mui_choice_filter">%1$s 筛选</string>
+
+    <!-- MonitorStatusChrome -->
+    <string name="mui_timecode_not_available">时间码不可用</string>
+    <string name="mui_elapsed_time_unknown">经过时间未知</string>
+
+    <!-- MonitorAudioMeter -->
+    <string name="mui_audio_levels">音频，左声道 %1$s dBFS，右声道 %2$s dBFS</string>
+
+    <!-- MonitorLevelOverlay -->
+    <string name="mui_no_level_data">无水平仪数据</string>
+
+    <!-- MonitorLinkHealthScale -->
+    <string name="mui_link_poor">差</string>
+    <string name="mui_link_watch">注意</string>
+    <string name="mui_link_stable">稳定</string>
+
+    <!-- MonitorCommandDashboard -->
+    <string name="mui_timecode_desc">时间码 %1$s</string>
+    <string name="mui_temp">温度</string>
+    <string name="mui_storage">存储</string>
+    <string name="mui_camera">相机</string>
+    <string name="mui_lens">镜头</string>
+    <string name="mui_move_earlier">将 %1$s 前移</string>
+    <string name="mui_move_later">将 %1$s 后移</string>
+    <string name="mui_reorder_hint"> 长按并拖动以重新排序。</string>
+    <string name="mui_applying_change">。正在应用更改。</string>
+    <string name="mui_another_control_applying">。另一个控件正在应用。</string>
+    <string name="mui_read_only">只读。</string>
+    <string name="mui_controls_locked">。控件已锁定。</string>
+    <string name="mui_double_tap_change_reorder">。双击更改；长按并拖动以重新排序。</string>
+    <string name="mui_double_tap_change">。双击更改。</string>
+    <string name="mui_change_control">更改 %1$s</string>
+    <string name="mui_more">更多 ⌄</string>
+    <string name="mui_more_controls_below">下方还有更多命令控件，向上滑动以显示。</string>
+
+    <!-- MonitorMediaDeliveryPanel -->
+    <string name="mui_destination_header">目标位置</string>
+    <string name="mui_coming_soon_desc">%1$s，即将推出</string>
+    <string name="mui_coming_soon">即将推出</string>
+    <string name="mui_share_header">分享</string>
+    <string name="mui_back">返回</string>
+    <string name="mui_options">选项</string>
+    <string name="mui_close">关闭</string>
+    <string name="mui_hop_to_internet">跳转到互联网</string>
+    <string name="mui_project">项目</string>
+    <string name="mui_loading_projects">正在加载项目…</string>
+    <string name="mui_retry">重试</string>
+    <string name="mui_select_a_project">选择一个项目</string>
+    <string name="mui_no_projects">无项目</string>
+    <string name="mui_create_new_project">创建新项目</string>
+    <string name="mui_export_header">导出</string>
+    <string name="mui_filename">文件名</string>
+
+    <!-- MonitorFramingMenus -->
+    <string name="mui_orientation">方向</string>
+    <string name="mui_show_db_values">显示 dB 数值</string>
+    <string name="mui_horizontal">水平</string>
+    <string name="mui_vertical">垂直</string>
+    <string name="mui_thirds">三分构图</string>
+    <string name="mui_phi_grid">黄金分割网格</string>
+    <string name="mui_diagonal">对角线</string>
+    <string name="mui_mask_outside_frame">遮罩画面外部</string>
+    <string name="mui_ratio">比例</string>
+    <string name="mui_custom">自定义</string>
+    <string name="mui_custom_ratio">自定义比例</string>
+    <string name="mui_custom_ratio_help">1.00×–2.00×，步进 0.01。</string>
+    <string name="mui_anamorphic_desqueeze_ratio">变形宽银幕解压缩自定义比例</string>
+    <string name="mui_direction">方向</string>
+
+    <!-- MonitorImageAssistMenus -->
+    <string name="mui_sensitivity">灵敏度</string>
+    <string name="mui_color">颜色</string>
+    <string name="mui_scale">刻度</string>
+    <string name="mui_false_color_read">读数</string>
+    <string name="mui_reference_key">参考图例</string>
+    <string name="mui_reference_display">参考显示</string>
+    <string name="mui_units">单位</string>
+    <string name="mui_highlight">高光</string>
+    <string name="mui_midtone">中间调</string>
+    <string name="mui_threshold">阈值</string>
+    <string name="mui_title_threshold">%1$s 阈值</string>
+
+    <!-- MonitorPairCameraPage -->
+    <string name="mui_step_of">步骤 %1$d / %2$d</string>
+    <string name="mui_pair_a_camera">配对相机</string>
+    <string name="mui_target">目标</string>
+    <string name="mui_report_a_problem">报告问题</string>
+    <string name="mui_pairing_help_diagnostics">配对帮助与诊断</string>
+    <string name="mui_share_diagnostics">分享诊断信息</string>
+    <string name="mui_watch_a_feed">观看画面</string>
+    <string name="mui_step_title_status">步骤 %1$d：%2$s，%3$s</string>
+    <string name="mui_status_complete">已完成</string>
+    <string name="mui_status_current">当前</string>
+    <string name="mui_status_waiting">等待中</string>
+    <string name="mui_connect_device">连接 %1$s</string>
+    <string name="mui_signal_bars_of">信号 %1$d / 4</string>
+
+    <!-- MonitorScopeMenus -->
+    <string name="mui_mode">模式</string>
+    <string name="mui_brightness">亮度</string>
+    <string name="mui_brightness_help">在明亮光线下提高轨迹强度。</string>
+    <string name="mui_encoded_code_percentage">编码码率百分比。无法进行源校准。</string>
+    <string name="mui_guide_lines">引导线</string>
+    <string name="mui_safe_clip">安全高光</string>
+    <string name="mui_safe_crush">安全暗部</string>
+    <string name="mui_middle_gray">中间灰</string>
+    <string name="mui_trace_zoom">轨迹缩放</string>
+    <string name="mui_trace_zoom_help">仅放大色度轨迹；刻度盘保持统一。</string>
+    <string name="mui_chroma_brightness_help">当色度图难以辨认时提高轨迹强度。</string>
+
+    <!-- MonitorHistogramMenu -->
+    <string name="mui_traffic_lights">红绿灯</string>
+    <string name="mui_crush_clip_compensation">暗部/高光补偿</string>
+
+    <!-- MonitorTrackingOverlay -->
+    <string name="mui_stop_subject_tracking">停止主体跟踪</string>
+
+    <!-- MonitorAssistPalette -->
+    <string name="mui_view_assists">查看辅助</string>
+    <string name="mui_show_view_assists">显示 %1$s</string>
+    <string name="mui_collapse_view_assists">收起 %1$s</string>
+
+    <!-- MonitorImagePreview -->
+    <string name="mui_waiting_for_picture">等待画面</string>
+
+    <!-- MonitorSettingsPage -->
+    <string name="mui_operator_setup">操作设置</string>
+    <string name="mui_disconnect">断开连接</string>
+    <string name="mui_active_link">活动链接</string>
+    <string name="mui_no_camera_connected">未连接相机</string>
+
+    <!-- MonitorOperatorSettings -->
+    <string name="mui_haptics_help">开关、设置和控件的短促确认震动。</string>
+    <string name="mui_keep_screen_awake_help">应用打开时防止自动锁屏。监视器应保持常亮。</string>
+    <string name="mui_touch_safety">触摸与安全</string>
+    <string name="mui_record_confirmation">录制确认</string>
+    <string name="mui_record_confirmation_help">在开始或停止录制前确认，防止误触。</string>
+    <string name="mui_haptics">触觉反馈</string>
+    <string name="mui_keep_screen_awake">保持屏幕常亮</string>
+    <string name="mui_panel">面板</string>
+    <string name="mui_hdr_display">HDR 显示</string>
+
+    <!-- MonitorSupportSettings -->
+    <string name="mui_help_feedback">帮助与反馈</string>
+    <string name="mui_report_help">告诉我们应用里发生了什么。可选择是否包含技术细节和回复邮箱。</string>
+    <string name="mui_report_status">报告状态</string>
+    <string name="mui_report_id">报告 ID</string>
+    <string name="mui_report_id_help">如需跟进，请使用此 ID。</string>
+    <string name="mui_queued_report">排队的报告</string>
+    <string name="mui_queued_report_help">从本机移除未发送的报告。</string>
+    <string name="mui_discard">丢弃</string>
+    <string name="mui_automatic_error_reports">自动错误报告</string>
+    <string name="mui_reporting_privacy">报告隐私</string>
+    <string name="mui_reporting_privacy_help">报告包含的内容、保留期限及如何申请删除。</string>
+    <string name="mui_read_action">阅读</string>
+    <string name="mui_diagnostic_options">诊断选项</string>
+    <string name="mui_diagnostic_options_caption">在本机保存或移除报告</string>
+    <string name="mui_save_diagnostic_report">保存诊断报告</string>
+    <string name="mui_save_diagnostic_report_help">保留副本或与支持人员分享。</string>
+    <string name="mui_save">保存</string>
+    <string name="mui_delete_saved_feed_reports">删除已保存的画面报告</string>
+    <string name="mui_delete">删除</string>
+
+    <!-- MonitorConnectionSettings -->
+    <string name="mui_connection">连接</string>
+    <string name="mui_current_transport">当前传输方式</string>
+    <string name="mui_phase">阶段</string>
+    <string name="mui_camera_wifi">相机 Wi-Fi</string>
+    <string name="mui_saved">已保存</string>
+    <string name="mui_none">无</string>
+
+    <!-- MonitorStorageSystemSettings -->
+    <string name="mui_full_resolution_caching">全分辨率缓存</string>
+    <string name="mui_local_media_cache">本地媒体缓存</string>
+    <string name="mui_clear_cache">清除缓存</string>
+    <string name="mui_clearing">正在清除…</string>
+    <string name="mui_clear">清除</string>
+    <string name="mui_app_information">应用信息</string>
+    <string name="mui_theme">主题</string>
+    <string name="mui_protocol_implementation">协议实现</string>
+    <string name="mui_app_version">应用版本</string>
+    <string name="mui_project_legal">项目与法律</string>
+    <string name="mui_source_code">源代码</string>
+    <string name="mui_open_source_code">打开源代码</string>
+    <string name="mui_privacy">隐私</string>
+    <string name="mui_privacy_help">本应用在此手机上存储的内容。</string>
+    <string name="mui_open_privacy_policy">打开隐私政策</string>
+    <string name="mui_terms">条款</string>
+    <string name="mui_open_terms_of_use">打开使用条款</string>
+    <string name="mui_licenses">许可证</string>
+    <string name="mui_licenses_help">Apache 2.0 及第三方声明。</string>
+    <string name="mui_open_licenses">打开许可证</string>
+    <string name="mui_notice">NOTICE</string>
+    <string name="mui_notice_help">随应用发布的归属声明。</string>
+    <string name="mui_open_notice">打开 NOTICE</string>
+
+    <!-- MonitorExposureLookSettings -->
+    <string name="mui_ev_meter">EV 曝光计</string>
+    <string name="mui_enabled">已启用</string>
+    <string name="mui_look">观感</string>
+    <string name="mui_choose_look">选择观感</string>
+
+    <!-- MonitorMotionControlSettings -->
+    <string name="mui_gimbal">云台</string>
+    <string name="mui_joystick_sensitivity">摇杆灵敏度</string>
+    <string name="mui_head_tracking_experimental">头部跟踪（实验性）</string>
+    <string name="mui_on_screen_joystick">屏幕摇杆</string>
+    <string name="mui_size">大小</string>
+    <string name="mui_invert_pan">反转平移</string>
+    <string name="mui_invert_tilt">反转俯仰</string>
+    <string name="mui_dead_zone">死区</string>
+    <string name="mui_response_curve">响应曲线</string>
+    <string name="mui_controller">控制器</string>
+    <string name="mui_gimbal_joystick">云台摇杆</string>
+    <string name="mui_gamepad">游戏手柄</string>
+
+    <!-- MonitorAccountSettings -->
+    <string name="mui_sign_in">登录</string>
+    <string name="mui_log_out">退出登录</string>
+    <string name="mui_not_configured">未配置</string>
+    <string name="mui_signed_out">已退出</string>
+    <string name="mui_connected">已连接</string>
+
+    <!-- MonitorInputOrientationSettings -->
+    <string name="mui_remote_shutter">远程快门</string>
+    <string name="mui_auto_rotate_feed">自动旋转画面</string>
+    <string name="mui_input_orientation">输入与方向</string>
+
+    <!-- MonitorSettingsControls -->
+    <string name="mui_reset_to_defaults">恢复默认设置</string>
+    <string name="mui_help">帮助</string>
+
+    <!-- MonitorDisplaySettings -->
+    <string name="mui_layout_for">布局适用于</string>
+    <string name="mui_position">位置 %1$d</string>
+    <string name="mui_reorder_position">重新排序 %1$s，位置 %2$d</string>
+
+    <!-- MonitorViewAssistSettings -->
+    <string name="mui_parade">RGB 分量图</string>
+
+    <!-- MonitorPlaybackScreen -->
+    <string name="mui_buffering_from_camera">正在从相机缓冲…</string>
+    <string name="mui_buffering_from_camera_rate">正在从相机缓冲…\n%1$s</string>
+    <string name="mui_preparing_playback">正在准备播放…</string>
+
+    <!-- MonitorWristScreen -->
+    <string name="mui_camera_battery_bars">相机电池 %1$d / %2$d 格</string>
+
+    <!-- MonitorPlaybackCopy -->
+    <string name="mui_back_to_media">返回媒体</string>
+    <string name="mui_favorite_clip">收藏片段</string>
+    <string name="mui_clip_information">片段信息</string>
+    <string name="mui_share_clip">分享片段</string>
+    <string name="mui_share_title">分享</string>
+    <string name="mui_delete_clip_from_camera">从相机删除片段</string>
+    <string name="mui_clip_info_title">片段信息</string>
+    <string name="mui_close_clip_information">关闭片段信息</string>
+    <string name="mui_delete_confirmation_title">从相机删除此片段？</string>
+    <string name="mui_delete_confirm">删除</string>
+    <string name="mui_delete_cancel">取消</string>
+    <string name="mui_cancel_deletion">取消删除</string>
+    <string name="mui_delete_from_camera_card">从相机存储卡删除</string>
+    <string name="mui_back_15_seconds">后退 15 秒</string>
+    <string name="mui_forward_15_seconds">前进 15 秒</string>
+    <string name="mui_play">播放</string>
+    <string name="mui_pause">暂停</string>
+    <string name="mui_restart_clip">重新播放片段</string>
+    <string name="mui_previous_clip">上一个片段</string>
+    <string name="mui_next_clip">下一个片段</string>
+    <string name="mui_conform_preview">Conform 预览</string>
+    <string name="mui_close_conform_preview">关闭 Conform 预览</string>
+    <string name="mui_mute">静音</string>
+    <string name="mui_unmute">取消静音</string>
+    <string name="mui_loop_playback">循环播放</string>
+    <string name="mui_hide_playback_controls">隐藏播放控制</string>
+    <string name="mui_hide_controls_hint">恢复控制按钮保留在角落</string>
+    <string name="mui_show_playback_controls">显示播放控制</string>
+    <string name="mui_conform_title">Conform 预览</string>
+    <string name="mui_real_time">实时</string>
+    <string name="mui_playback_position">播放位置</string>
+    <string name="mui_show_rating">显示星级评分</string>
+    <string name="mui_hide_rating">隐藏星级评分</string>
+    <string name="mui_seconds">%1$d 秒</string>
+    <string name="mui_rate_level">评分 %1$d %2$s</string>
+    <string name="mui_star">星</string>
+    <string name="mui_stars">星</string>
+
+    <!-- MonitorSelectionTray -->
+    <string name="mui_exit_selection">退出选择</string>
+
+    <!-- MonitorInteractivePicture -->
+    <string name="mui_zoom_in">放大</string>
+    <string name="mui_zoom_out">缩小</string>
+    <string name="mui_reset_zoom">重置缩放</string>
+    <string name="mui_zoom_scale">缩放 %1$.1fx</string>
+
+    <!-- MonitorFramingValues -->
+    <string name="mui_crosshair_help">点按工具栏按钮以显示或隐藏中心十字线。</string>
+
+    <!-- MonitorWatcherLayout -->
+    <string name="mui_joining_shared_feed">正在加入共享画面…</string>
+    <string name="mui_waiting_for_host_picture">正在等待主机的画面…</string>
+    <string name="mui_reconnecting">正在重新连接… %1$d / %2$d</string>
+    <string name="mui_passcode_too_short_hint">至少 4 个字符，或留空表示开放画面。</string>
+
+    <!-- MonitorCameraSetups -->
+    <string name="mui_connecting">连接中</string>
+
+    <!-- MonitorCommandDashboard -->
+    <string name="mui_command_side_description">%1$s 控制。向上滑动以显示更多命令控制。</string>
+
+    <!-- MonitorStatusChrome -->
+    <string name="mui_recording">录制中</string>
+    <string name="mui_standby">待机</string>
+    <string name="mui_recording_state_unknown">录制状态未知</string>
+    <string name="mui_one_minute">1 分钟</string>
+    <string name="mui_minutes">%1$d 分钟</string>
+    <string name="mui_one_second">1 秒</string>
+
+    <!-- MonitorLevelOverlay -->
+    <string name="mui_level_with_label">水平仪，%1$s</string>
+    <string name="mui_level_roll_tilt">水平仪，横滚 %1$+.1f°，俯仰 %2$+.1f°</string>
+    <string name="mui_level_off_plumb">水平仪，偏斜 %1$+.1f° / %2$+.1f°</string>
+    <string name="mui_level_horizon_roll">水平仪，水平横滚 %1$+.1f°</string>
+
+    <!-- MonitorAssistToolValues -->
+    <string name="mui_assist_peaking">峰值对焦</string>
+    <string name="mui_assist_zebra">斑马纹</string>
+    <string name="mui_assist_waveform">波形图</string>
+    <string name="mui_assist_rgb_parade">RGB 分量图</string>
+    <string name="mui_assist_histogram">直方图</string>
+    <string name="mui_assist_vectorscope">矢量示波器</string>
+    <string name="mui_assist_nd">ND 建议</string>
+    <string name="mui_assist_audio">音频电平</string>
+    <string name="mui_assist_guides">参考线</string>
+    <string name="mui_assist_grid">网格</string>
+    <string name="mui_assist_crosshair">十字线</string>
+    <string name="mui_assist_level">水平仪</string>
+    <string name="mui_assist_desqueeze">变形宽银幕解压缩</string>
+    <string name="mui_assist_mirror">镜像</string>
+
+    <!-- MonitorValueDrum -->
+    <string name="mui_choose_value">选择数值</string>
+
+    <!-- MonitorTelemetryValues -->
+    <string name="mui_battery_percent_value">%1$d%%</string>
+    <string name="mui_external_power">外接电源</string>
+    <string name="mui_charging">充电中</string>
+    <string name="mui_percent_spoken">%1$d%%</string>
+    <string name="mui_exhausted">电量耗尽</string>
+    <string name="mui_link_down">中断</string>
+    <string name="mui_delivery_bars">传输信号 %1$d / 4 格</string>
+    <string name="mui_unavailable">不可用</string>
+    <string name="mui_frames_per_second">%1$s 帧每秒</string>
+    <string name="mui_live_link_feed">实时链接 %1$s，画面 %2$s</string>
+</resources>

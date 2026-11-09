@@ -5,9 +5,15 @@ import kotlin.math.roundToInt
 
 public enum class MonitorDeliveryDestination {
     NATIVE_SHARE, REMOTE_UPLOAD;
-    public fun title(remoteDisplayName: String?): String = if (this == NATIVE_SHARE) "Share" else remoteDisplayName ?: "Upload"
+    public fun title(remoteDisplayName: String?): String = if (this == NATIVE_SHARE)
+        AppkitContext.context.getString(R.string.appkit_share)
+    else remoteDisplayName ?: AppkitContext.context.getString(R.string.appkit_upload)
     public fun subtitle(remoteDisplayName: String?, nativeShareSubtitle: String = "Share with other apps"): String =
-        if (this == NATIVE_SHARE) nativeShareSubtitle else "Upload to your ${remoteDisplayName ?: "remote"} project"
+        if (this == NATIVE_SHARE) nativeShareSubtitle
+        else AppkitContext.context.getString(
+            R.string.appkit_upload_to_project,
+            remoteDisplayName ?: AppkitContext.context.getString(R.string.appkit_remote),
+        )
 }
 public enum class MonitorDeliveryPostExportAction { SYSTEM_SHARE, SAVE_TO_PHOTOS }
 public data class MonitorDeliveryExportConfiguration<C, F>(
@@ -31,18 +37,24 @@ public data class MonitorDeliveryBatchProgress(
     public val showsBusySpinner: Boolean get() = isPreparingClip || isSwitchingNetworks || stage == Stage.SAVING || stage == Stage.AWAITING_PHOTOS_ACCESS
     public val percentText: String get() = if (isPreparingClip) "" else "${(overallFraction * 100).roundToInt()}%"
     public fun statusLine(uploadCaption: String? = null): String {
-        if (isSwitchingNetworks) return "Switching networks…"
-        if (stage == Stage.AWAITING_PHOTOS_ACCESS) return "Waiting for Photos access…"
-        if (stage == Stage.SAVING) return "Saving to Photos…"
+        if (isSwitchingNetworks) return AppkitContext.context.getString(R.string.appkit_switching_networks)
+        if (stage == Stage.AWAITING_PHOTOS_ACCESS) return AppkitContext.context.getString(R.string.appkit_waiting_for_photos_access)
+        if (stage == Stage.SAVING) return AppkitContext.context.getString(R.string.appkit_saving_to_photos)
         val verb = if (isCaching) {
-            if (isPreparingClip) "Caching from camera…" else "Caching from camera"
+            if (isPreparingClip) AppkitContext.context.getString(R.string.appkit_caching_from_camera_ellipsis)
+            else AppkitContext.context.getString(R.string.appkit_caching_from_camera)
         } else if (destination == MonitorDeliveryDestination.NATIVE_SHARE) {
-            if (clipFraction > 0 && clipFraction < 0.95) "Exporting" else if (isPreparingClip) "Preparing…" else "Preparing to share"
+            if (clipFraction > 0 && clipFraction < 0.95) AppkitContext.context.getString(R.string.appkit_exporting)
+            else if (isPreparingClip) AppkitContext.context.getString(R.string.appkit_preparing_ellipsis)
+            else AppkitContext.context.getString(R.string.appkit_preparing_to_share)
         } else {
-            if (clipFraction > 0 && clipFraction < 0.45) "Exporting" else if (isPreparingClip) "Preparing…" else uploadCaption ?: this.uploadCaption ?: "Uploading"
+            if (clipFraction > 0 && clipFraction < 0.45) AppkitContext.context.getString(R.string.appkit_exporting)
+            else if (isPreparingClip) AppkitContext.context.getString(R.string.appkit_preparing_ellipsis)
+            else uploadCaption ?: this.uploadCaption ?: AppkitContext.context.getString(R.string.appkit_uploading)
         }
         // Before the first byte the only reading is Stalled: it still shows.
-        if (isCaching && isPreparingClip && transferRate != null) return "Caching from camera · $transferRate"
+        if (isCaching && isPreparingClip && transferRate != null)
+            return AppkitContext.context.getString(R.string.appkit_caching_from_camera) + " · $transferRate"
         if (isPreparingClip) return verb
         if (isCaching && transferRate != null) return "$verb $percentText · $transferRate"
         return "$verb $percentText"
@@ -102,26 +114,28 @@ public data class MonitorDeliveryBatchCounts(
  * access is asked before any cache or export work, and the outcome counts every item.
  */
 public object MonitorDeliveryBatchPolicy {
-    public fun cacheFailure(count: Int): String = "Couldn't cache $count clip(s) from the camera. Check the connection and try again."
+    public fun cacheFailure(count: Int): String =
+        AppkitContext.context.getString(R.string.appkit_cache_failure, count)
     /** The link died mid-transfer: the camera stopped answering while caching. */
     public fun cameraStoppedResponding(count: Int): String =
-        "The camera stopped responding while caching $count clip(s). Reconnect and try again."
-    public const val EMPTY_SELECTION: String = "Select at least one clip."
-    public const val INTERNET_FAILURE: String =
-        "Couldn't reach the internet after leaving the camera's Wi-Fi. Check cellular or home Wi-Fi and try again."
+        AppkitContext.context.getString(R.string.appkit_camera_stopped_responding, count)
+    public val EMPTY_SELECTION: String
+        get() = AppkitContext.context.getString(R.string.appkit_select_at_least_one_clip)
+    public val INTERNET_FAILURE: String
+        get() = AppkitContext.context.getString(R.string.appkit_internet_failure)
     /** The note shared beside a partial native share, or null when every item was prepared. */
     public fun nativeSummary(counts: MonitorDeliveryBatchCounts): String? = buildList {
-        if (counts.failed > 0) add("Prepared ${counts.prepared}; ${counts.failed} failed.")
-        if (counts.uncached > 0) add("${counts.uncached} clip(s) couldn't be cached from the camera.")
+        if (counts.failed > 0) add(AppkitContext.context.getString(R.string.appkit_prepared_failed, counts.prepared, counts.failed))
+        if (counts.uncached > 0) add(AppkitContext.context.getString(R.string.appkit_clips_couldnt_cache, counts.uncached))
     }.joinToString(" ").ifEmpty { null }
     /** A Photos save that saved nothing or rejected an item fails with its exact counts. */
     public fun photosFailure(saved: Int, failed: Int): String? =
-        if (saved == 0 || failed > 0) "Saved $saved; $failed couldn't be saved to Photos." else null
+        if (saved == 0 || failed > 0) AppkitContext.context.getString(R.string.appkit_saved_failed_photos, saved, failed) else null
 }
 
 public fun <A> MonitorDeliveryBatchOutcome<A>.completion(): MonitorDeliveryCompletion<MonitorDeliveryBatchOutcome<A>, MonitorDeliveryShareFiles<A>> = when (this) {
     is MonitorDeliveryBatchOutcome.Share -> MonitorDeliveryCompletion(this, share = MonitorDeliveryShareFiles(urls, metadataText, stagingCleanupURL))
-    is MonitorDeliveryBatchOutcome.SavedToPhotos -> MonitorDeliveryCompletion(this, toast = "Saved $count clip${if (count == 1) "" else "s"} to Photos")
+    is MonitorDeliveryBatchOutcome.SavedToPhotos -> MonitorDeliveryCompletion(this, toast = AppkitContext.context.getString(R.string.appkit_saved_to_photos, count))
     is MonitorDeliveryBatchOutcome.Uploaded -> MonitorDeliveryCompletion(this, toast = summary)
     is MonitorDeliveryBatchOutcome.Failed -> MonitorDeliveryCompletion(this, toast = message)
 }

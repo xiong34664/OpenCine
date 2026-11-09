@@ -43,9 +43,9 @@ enum class MediaThumbnailSize {
     val accessibilityLabel: String
         get() =
             when (this) {
-                SMALL -> "Small thumbnails"
-                MEDIUM -> "Medium thumbnails"
-                LARGE -> "Large thumbnails"
+                SMALL -> CameraControlsContext.context.getString(R.string.cc_small_thumbnails)
+                MEDIUM -> CameraControlsContext.context.getString(R.string.cc_medium_thumbnails)
+                LARGE -> CameraControlsContext.context.getString(R.string.cc_large_thumbnails)
             }
 }
 
@@ -82,27 +82,26 @@ object MediaClipPresentation {
 
 /** Operator-facing media-browser copy. Never name a sister app. */
 object MediaLibraryCopy {
-    const val FILTER_EMPTY = "Nothing in this tab matches the filters."
-    const val EMPTY_ALL = "Nothing on this camera yet. Record a clip, then pull to refresh."
-    const val EMPTY_FAVORITES = "Nothing favorited yet. Star a clip to find it here."
-    const val EMPTY_VIDEOS = "No videos on this camera yet. Record a clip, then pull to refresh."
-    const val EMPTY_PHOTOS = "No photos on this camera yet. Capture a still, then pull to refresh."
-    const val DISCONNECTED = "Connect the camera to list clips on the body."
-    const val DISCONNECTED_EMPTY_CACHE =
-        "No cached clips here. Connect the camera to list clips on the body."
+    val FILTER_EMPTY get() = CameraControlsContext.context.getString(R.string.cc_filter_empty)
+    val EMPTY_ALL get() = CameraControlsContext.context.getString(R.string.cc_empty_all)
+    val EMPTY_FAVORITES get() = CameraControlsContext.context.getString(R.string.cc_empty_favorites)
+    val EMPTY_VIDEOS get() = CameraControlsContext.context.getString(R.string.cc_empty_videos)
+    val EMPTY_PHOTOS get() = CameraControlsContext.context.getString(R.string.cc_empty_photos)
+    val DISCONNECTED get() = CameraControlsContext.context.getString(R.string.cc_connect_to_list_clips)
+    val DISCONNECTED_EMPTY_CACHE get() = CameraControlsContext.context.getString(R.string.cc_no_cached_connect_to_list)
     /**
      * Offline, the gallery shows only clips cached on this phone; the last card listing stays
      * hidden (the documented offline browse: downloaded clips only), and the gallery says so.
      */
-    const val DISCONNECTED_CACHED_ONLY = "Camera disconnected. Showing clips cached on this phone."
-    const val BROWSE_HINT = "Tap to open · Hold, then drag to select"
-    const val SELECTING_HINT = "Swipe to scroll · Hold or drag sideways to select"
-    const val READING_HINT = "Reading camera media…"
-    const val LISTING_TITLE = "Listing clips on camera…"
-    const val FILTER_EMPTY_TITLE = "No matching clips"
-    const val DISCONNECTED_TITLE = "Camera disconnected"
-    const val NO_CACHED_TITLE = "No cached clips"
-    const val EMPTY_TITLE = "No clips yet"
+    val DISCONNECTED_CACHED_ONLY get() = CameraControlsContext.context.getString(R.string.cc_disconnected_cached_only)
+    val BROWSE_HINT get() = CameraControlsContext.context.getString(R.string.cc_browse_hint)
+    val SELECTING_HINT get() = CameraControlsContext.context.getString(R.string.cc_selecting_hint)
+    val READING_HINT get() = CameraControlsContext.context.getString(R.string.cc_reading_camera_media)
+    val LISTING_TITLE get() = CameraControlsContext.context.getString(R.string.cc_listing_title)
+    val FILTER_EMPTY_TITLE get() = CameraControlsContext.context.getString(R.string.cc_filter_empty_title)
+    val DISCONNECTED_TITLE get() = CameraControlsContext.context.getString(R.string.cc_disconnected_title)
+    val NO_CACHED_TITLE get() = CameraControlsContext.context.getString(R.string.cc_no_cached_title)
+    val EMPTY_TITLE get() = CameraControlsContext.context.getString(R.string.cc_empty_title)
 
     /** The gallery's hint line under its item count (Swift `MonitorMediaGalleryCopy.galleryHint`). */
     fun galleryHint(fetching: Boolean, selecting: Boolean, isLive: Boolean): String =
@@ -125,15 +124,15 @@ object MediaLibraryCopy {
             !isLive -> NO_CACHED_TITLE
             else -> EMPTY_TITLE
         }
-    const val PROXY_TAG = "Proxy"
-    const val PROXY_HELP = "720p preview. Connect the camera to share the original."
+    val PROXY_TAG get() = CameraControlsContext.context.getString(R.string.cc_proxy_tag)
+    val PROXY_HELP get() = CameraControlsContext.context.getString(R.string.cc_proxy_help)
 
     fun headerTitle(category: MediaLibraryTab): String =
         when (category) {
-            MediaLibraryTab.ALL -> "All clips"
-            MediaLibraryTab.VIDEOS -> "Videos"
-            MediaLibraryTab.PHOTOS -> "Photos"
-            MediaLibraryTab.FAVORITES -> "Favorites"
+            MediaLibraryTab.ALL -> CameraControlsContext.context.getString(R.string.cc_all_clips)
+            MediaLibraryTab.VIDEOS -> CameraControlsContext.context.getString(R.string.cc_videos)
+            MediaLibraryTab.PHOTOS -> CameraControlsContext.context.getString(R.string.cc_photos)
+            MediaLibraryTab.FAVORITES -> CameraControlsContext.context.getString(R.string.cc_favorites)
         }
 
     /**
@@ -153,17 +152,17 @@ object MediaLibraryCopy {
 }
 
 object MediaOperatorCopy {
-    const val LISTING = "Listing camera clips…"
-    const val NOT_CONNECTED = "Connect the camera to list clips."
-    const val PLAYBACK_FAILED = "Camera did not enter playback."
-    const val BROWSING_ON_CAMERA = "Playback is open on the camera. Close to return to live view."
-    const val NO_CLIPS = "No clips on the camera."
-    const val LIST_FAILED = "Could not list camera clips."
-    const val NOT_DELETABLE = "That clip cannot be deleted from here."
-    const val DELETE_FAILED = "Could not delete that clip."
-    const val DOWNLOAD_FAILED = "Could not download that clip."
-    const val THUMB_FAILED = "Could not load that thumbnail."
-    const val CLIP_OPEN_FAILED = "Could not open that clip."
-    const val CLIP_LOADING = "Loading clip from camera…"
-    const val CLIP_NOT_CACHED = "This clip is not cached on the phone."
+    val LISTING get() = CameraControlsContext.context.getString(R.string.cc_listing_camera_clips)
+    val NOT_CONNECTED get() = CameraControlsContext.context.getString(R.string.cc_connect_to_list_clips_short)
+    val PLAYBACK_FAILED get() = CameraControlsContext.context.getString(R.string.cc_playback_failed)
+    val BROWSING_ON_CAMERA get() = CameraControlsContext.context.getString(R.string.cc_browsing_on_camera)
+    val NO_CLIPS get() = CameraControlsContext.context.getString(R.string.cc_no_clips)
+    val LIST_FAILED get() = CameraControlsContext.context.getString(R.string.cc_list_failed)
+    val NOT_DELETABLE get() = CameraControlsContext.context.getString(R.string.cc_not_deletable)
+    val DELETE_FAILED get() = CameraControlsContext.context.getString(R.string.cc_delete_failed)
+    val DOWNLOAD_FAILED get() = CameraControlsContext.context.getString(R.string.cc_download_failed)
+    val THUMB_FAILED get() = CameraControlsContext.context.getString(R.string.cc_thumb_failed)
+    val CLIP_OPEN_FAILED get() = CameraControlsContext.context.getString(R.string.cc_clip_open_failed)
+    val CLIP_LOADING get() = CameraControlsContext.context.getString(R.string.cc_clip_loading)
+    val CLIP_NOT_CACHED get() = CameraControlsContext.context.getString(R.string.cc_clip_not_cached)
 }

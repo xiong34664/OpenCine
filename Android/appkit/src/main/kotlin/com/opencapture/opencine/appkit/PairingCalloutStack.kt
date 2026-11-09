@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -94,10 +95,10 @@ public fun PairingCalloutStack(
         }
         if (!radioOn) {
             PairingCallout(
-                title = "Bluetooth",
+                title = stringResource(R.string.appkit_bluetooth),
                 body = PairingCalloutRules.bluetoothBody(copy),
                 icon = MonitorIcon.RADIO,
-                action = "Turn on",
+                action = stringResource(R.string.appkit_turn_on),
                 onAction = onEnableBluetooth,
             )
         }
@@ -109,23 +110,23 @@ public fun PairingCalloutStack(
                     copy, name, discovery.needsSettings, DiscoveryPermissions.discoveryNeedsLocationServices(),
                 ),
                 icon = MonitorIcon.RADIO,
-                action = if (discovery.needsSettings) "Open Settings" else "Allow",
+                action = if (discovery.needsSettings) stringResource(R.string.appkit_open_settings) else stringResource(R.string.appkit_allow),
                 onAction = discovery::request,
             )
         }
         if (permissionsGranted && locationOff) {
             PairingCallout(
-                title = "Location",
-                body = "Android 10 and 11 only find Bluetooth cameras while Location is on.",
+                title = stringResource(R.string.appkit_location),
+                body = stringResource(R.string.appkit_location_android_note),
                 icon = MonitorIcon.RADIO,
-                action = "Turn on",
+                action = stringResource(R.string.appkit_turn_on),
                 onAction = { runCatching { context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)) } },
             )
         }
         if (slowScan && waitingForCamera) {
-            PairingCallout(title = "Still looking", body = copy.stillLooking, icon = MonitorIcon.RADIO)
+            PairingCallout(title = stringResource(R.string.appkit_still_looking), body = copy.stillLooking, icon = MonitorIcon.RADIO)
         } else if (choosing) {
-            PairingCallout(title = "Before you pair", body = copy.precheck, icon = MonitorIcon.TRIANGLE_ALERT)
+            PairingCallout(title = stringResource(R.string.appkit_before_you_pair), body = copy.precheck, icon = MonitorIcon.TRIANGLE_ALERT)
         }
     }
 }
@@ -143,15 +144,15 @@ internal object PairingCalloutRules {
     ): Boolean = choosing && scanning && radioOn && permissionsGranted && !locationOff && nothingNearby
 
     fun bluetoothBody(copy: PairingCalloutCopy): String =
-        "Turn Bluetooth on so we can find your ${copy.cameraNoun}."
+        AppkitContext.context.getString(R.string.appkit_turn_bluetooth_on_find, copy.cameraNoun)
 
     fun permissionBody(copy: PairingCalloutCopy, name: String, needsSettings: Boolean, needsLocation: Boolean): String =
         when {
             needsSettings ->
-                "Android won’t ask again. Open Settings › Permissions › $name and choose Allow."
+                AppkitContext.context.getString(R.string.appkit_open_settings_permissions_allow, name)
             needsLocation ->
-                "Android 10 and 11 need Location to scan for Bluetooth cameras. It is only used to find your ${copy.cameraNoun}."
-            else -> "Allow Nearby devices so we can find your ${copy.cameraNoun} over Bluetooth. Location isn’t needed."
+                AppkitContext.context.getString(R.string.appkit_android_10_11_location, copy.cameraNoun)
+            else -> AppkitContext.context.getString(R.string.appkit_allow_nearby_devices, copy.cameraNoun)
         }
 }
 

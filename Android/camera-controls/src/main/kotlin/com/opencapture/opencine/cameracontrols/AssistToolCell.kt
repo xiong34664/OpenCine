@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
@@ -37,6 +38,8 @@ fun AssistToolCell(
     modifier: Modifier = Modifier,
 ) {
     val tint = if (isOn) LiveDesign.accent else LiveDesign.muted
+    val options = if (onLongClick != null) stringResource(R.string.cc_assist_tool_hold_options) else ""
+    val stateDescription = "${tool.title}, ${stringResource(if (isOn) R.string.cc_on else R.string.cc_off)}$options"
     Column(
         modifier =
             modifier
@@ -55,8 +58,7 @@ fun AssistToolCell(
                     // the 9sp "WAVE" abbreviation being read after the name;
                     // plain `semantics` leaves it behind as a second stop, and
                     // the tap and hold actions survive the clear.
-                    val options = if (onLongClick != null) ". Hold for options" else ""
-                    contentDescription = "${tool.title}, ${if (isOn) "on" else "off"}$options"
+                    contentDescription = stateDescription
                     if (!enabled) disabled()
                 }
                 .padding(vertical = 5.dp, horizontal = 8.dp)

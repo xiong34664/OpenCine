@@ -101,9 +101,10 @@ public class MonitorRemoteShutter(context: Context, sessionTag: String) {
 
     public companion object {
         /** The Controls row title and caption every app shows for this owner. */
-        public const val TITLE: String = "Bluetooth Remote Shutter"
-        public const val CAPTION: String =
-            "A paired Bluetooth shutter remote's button press starts or stops recording while the live view is up front. Android cannot reliably distinguish Bluetooth from phone hardware keys, so Volume Up/Down and Play/Pause also toggle recording. Record Confirmation is skipped for remote presses."
+        public val TITLE: String
+            get() = AppkitContext.context.getString(R.string.appkit_bluetooth_remote_shutter)
+        public val CAPTION: String
+            get() = AppkitContext.context.getString(R.string.appkit_bluetooth_remote_shutter_caption)
     }
 }
 

@@ -32,7 +32,7 @@ public object MonitorTelemetryValues {
      */
     public fun batteryValue(percent: Int?, bars: Int?, charging: Boolean?, externalPower: Boolean?): String? {
         if (bars != null) return null
-        if (percent != null) return "$percent%"
+        if (percent != null) return MonitorContext.context.getString(R.string.mui_battery_percent_value, percent)
         return if (charging == true || externalPower == true) "EXT" else "\u2014"
     }
 
@@ -42,9 +42,11 @@ public object MonitorTelemetryValues {
      */
     public fun batterySpokenValue(percent: Int?, bars: Int?, barCount: Int, charging: Boolean?,
         externalPower: Boolean?, exhausted: Boolean): String? {
-        val power = if (externalPower == true) "external power" else if (charging == true) "charging" else null
-        val level = bars?.let { "$it of $barCount bars" } ?: percent?.let { "$it percent" }
-        val parts = listOfNotNull(level, "exhausted".takeIf { exhausted }, power)
+        val power = if (externalPower == true) MonitorContext.context.getString(R.string.mui_external_power)
+            else if (charging == true) MonitorContext.context.getString(R.string.mui_charging) else null
+        val level = bars?.let { MonitorContext.context.getString(R.string.mui_bars_of, it, barCount) }
+            ?: percent?.let { MonitorContext.context.getString(R.string.mui_percent_spoken, it) }
+        val parts = listOfNotNull(level, MonitorContext.context.getString(R.string.mui_exhausted).takeIf { exhausted }, power)
         return if (parts.isEmpty()) null else parts.joinToString(", ")
     }
 
@@ -67,16 +69,16 @@ public object MonitorTelemetryValues {
     public fun linkSpokenLabel(fps: String?, signalBars: Int?): String {
         val word = fps?.takeIf(::isStateWord)
         val signal = when {
-            word in LINK_DOWN_WORDS -> "down"
-            signalBars != null -> "$signalBars of 4 delivery bars"
-            else -> "unavailable"
+            word in LINK_DOWN_WORDS -> MonitorContext.context.getString(R.string.mui_link_down)
+            signalBars != null -> MonitorContext.context.getString(R.string.mui_delivery_bars, signalBars)
+            else -> MonitorContext.context.getString(R.string.mui_unavailable)
         }
         val feed = when {
             word != null -> word
-            fps == null || fps == "\u2014" -> "unavailable"
-            else -> "$fps frames per second"
+            fps == null || fps == "\u2014" -> MonitorContext.context.getString(R.string.mui_unavailable)
+            else -> MonitorContext.context.getString(R.string.mui_frames_per_second, fps)
         }
-        return "Live link $signal, feed $feed"
+        return MonitorContext.context.getString(R.string.mui_live_link_feed, signal, feed)
     }
 
     /** The held-frame badge (`SessionRecoveryCopy.HELD_FRAME_BADGE`) and the failed-link word. */

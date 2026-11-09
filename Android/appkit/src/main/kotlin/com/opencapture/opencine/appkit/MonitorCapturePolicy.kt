@@ -44,21 +44,21 @@ public data class MonitorCapturePolicy(
     }
 
     public val accessibilityLabel: String get() = when {
-        photo -> "Take photo"
-        recording == true && pending -> "Stopping recording"
-        recording == true -> "Stop recording"
-        recording == null -> "Recording state unknown"
-        else -> "Start recording"
+        photo -> AppkitContext.context.getString(R.string.appkit_take_photo)
+        recording == true && pending -> AppkitContext.context.getString(R.string.appkit_stopping_recording)
+        recording == true -> AppkitContext.context.getString(R.string.appkit_stop_recording)
+        recording == null -> AppkitContext.context.getString(R.string.appkit_recording_state_unknown)
+        else -> AppkitContext.context.getString(R.string.appkit_start_recording)
     }
 
     /** What a hold does, for the screen reader; null where a hold is a press. */
-    public val holdAccessibilityLabel: String? get() = if (offersMode) "Shooting mode" else null
+    public val holdAccessibilityLabel: String? get() = if (offersMode) AppkitContext.context.getString(R.string.appkit_shooting_mode) else null
 
     /** Spoken beside the action, like the pre-shared Android record disc. */
     public val stateDescription: String? get() = when {
         photo -> null
-        recording == true -> "Recording"
-        recording == false -> "Standby"
+        recording == true -> AppkitContext.context.getString(R.string.appkit_recording)
+        recording == false -> AppkitContext.context.getString(R.string.appkit_standby)
         else -> null
     }
 

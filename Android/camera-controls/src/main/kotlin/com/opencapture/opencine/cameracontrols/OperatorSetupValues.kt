@@ -37,12 +37,12 @@ object OperatorLinkHealth {
     fun score(bars: Int): Int = MonitorLinkHealth.score(bars)
 
     fun caption(isLive: Boolean, bars: Int): String {
-        if (!isLive) return "No live path."
-        if (bars <= 0) return "Waiting for the link."
+        if (!isLive) return CameraControlsContext.context.getString(R.string.cc_no_live_path)
+        if (bars <= 0) return CameraControlsContext.context.getString(R.string.cc_waiting_for_link)
         return when (MonitorLinkHealth.band(score(bars))) {
-            MonitorLinkHealth.Band.STABLE -> "Link is clean. · Stable"
-            MonitorLinkHealth.Band.WATCH -> "Some loss on the link. · Watch"
-            MonitorLinkHealth.Band.POOR -> "Link is weak. · Poor"
+            MonitorLinkHealth.Band.STABLE -> CameraControlsContext.context.getString(R.string.cc_link_clean_stable)
+            MonitorLinkHealth.Band.WATCH -> CameraControlsContext.context.getString(R.string.cc_link_some_loss)
+            MonitorLinkHealth.Band.POOR -> CameraControlsContext.context.getString(R.string.cc_link_weak)
         }
     }
 
@@ -70,17 +70,18 @@ object OperatorLinkHealth {
 
 fun connectionPhaseLabel(phase: ConnectionPhase, failure: String?): String =
     when (phase) {
-        ConnectionPhase.IDLE -> "Idle"
-        ConnectionPhase.SCANNING -> "Scanning for camera…"
-        ConnectionPhase.CONNECTING_GATT -> "Connecting (Bluetooth)…"
-        ConnectionPhase.PAIRING -> "Pairing…"
-        ConnectionPhase.AWAITING_APPROVAL -> "Approve on the camera screen"
-        ConnectionPhase.READING_WIFI_CREDS -> "Reading Wi-Fi credentials…"
-        ConnectionPhase.JOINING_WIFI -> "Joining camera Wi-Fi…"
-        ConnectionPhase.OPENING_DATALINK -> "Opening datalink…"
-        ConnectionPhase.LIVE -> "Connected"
+        ConnectionPhase.IDLE -> CameraControlsContext.context.getString(R.string.cc_idle)
+        ConnectionPhase.SCANNING -> CameraControlsContext.context.getString(R.string.cc_scanning_for_camera)
+        ConnectionPhase.CONNECTING_GATT -> CameraControlsContext.context.getString(R.string.cc_connecting_bluetooth)
+        ConnectionPhase.PAIRING -> CameraControlsContext.context.getString(R.string.cc_pairing)
+        ConnectionPhase.AWAITING_APPROVAL -> CameraControlsContext.context.getString(R.string.cc_approve_on_camera)
+        ConnectionPhase.READING_WIFI_CREDS -> CameraControlsContext.context.getString(R.string.cc_reading_wifi_creds)
+        ConnectionPhase.JOINING_WIFI -> CameraControlsContext.context.getString(R.string.cc_joining_camera_wifi)
+        ConnectionPhase.OPENING_DATALINK -> CameraControlsContext.context.getString(R.string.cc_opening_datalink)
+        ConnectionPhase.LIVE -> CameraControlsContext.context.getString(R.string.cc_connected)
         ConnectionPhase.FAILED ->
-            if (failure.isNullOrBlank()) "Failed" else "Failed: $failure"
+            if (failure.isNullOrBlank()) CameraControlsContext.context.getString(R.string.cc_failed)
+            else CameraControlsContext.context.getString(R.string.cc_failed_with, failure)
     }
 
 /** The assists a clean view can keep pinned, by stored key. */
@@ -104,100 +105,60 @@ enum class CleanPinTool(val key: String, val title: String) {
 }
 
 /** The cache size line: the shared decimal byte label, "Empty" for nothing cached. */
-fun formatCacheSize(bytes: Long): String = if (bytes <= 0L) "Empty" else MediaClipFormatting.byteLabel(bytes)
+fun formatCacheSize(bytes: Long): String = if (bytes <= 0L) CameraControlsContext.context.getString(R.string.cc_empty) else MediaClipFormatting.byteLabel(bytes)
 
 fun formatAppVersion(versionName: String, versionCode: Long): String = "$versionName ($versionCode)"
 
 /** The operator setup help copy both apps show; [appName] fills the lines that name the app. */
 @Suppress("PropertyName")
-open class OperatorHelpCopy(appName: String) {
-    val CURRENT_TRANSPORT =
-        "Pocket uses Bluetooth to pair, then the camera's own Wi-Fi for HEVC. USB-C, hotspot, and HDMI capture are not in this build."
-    val PHASE = "Where the BLE → Wi-Fi → datalink handshake is right now."
-    val CAMERA_WIFI =
-        "SSID joined for this session. The password stays in the Android Keystore on this phone."
-    val SAVED_CAMERAS =
-        "Pair from the home list. Settings does not start a new pair. That stays on Your cameras."
-    val EDIT_VIEW = "Opens the monitor with an eye on each element you can show or hide."
-    val FRAME_IO =
-        "Sign in to upload clips from the share popup. Frame.io needs the internet, so the phone hops off the camera Wi‑Fi for the upload."
-    val RECORD_CONFIRMATION = "Ask before starting or stopping recording to prevent mistaps."
-    val SHOOTING_MODE =
-        "Switch the camera between Video, Photo and the time-based modes. The camera reports " +
-            "the mode back, so this follows a change made on the body itself."
-    val HAPTICS =
-        "Short confirmation pulses for switches, settings, and gimbal limits. A connected controller also rumbles at a stop."
-    val JOYSTICK_SENSITIVITY =
-        "How far a stick throw moves the gimbal, on-screen or with a connected game controller. Small throws crawl; full throw is fastest. 4 is the captured feel. 5 reaches full speed sooner; 1 is the slowest."
-    val VIRTUAL_JOYSTICK_SIZE =
-        "How large the on-screen stick is. Medium is the default. Large is easier to grab; Small keeps more of the picture clear."
-    val VIRTUAL_JOYSTICK_INVERT_PAN =
-        "Reverse left and right on the on-screen stick. Off is the default. A game controller is unchanged."
-    val VIRTUAL_JOYSTICK_INVERT_TILT =
-        "Reverse up and down on the on-screen stick. Off is the default. A game controller is unchanged."
-    val VIRTUAL_JOYSTICK_DEADZONE =
-        "Ignore small movements near the center. The default is 8%. Increase it to make the center less sensitive."
-    val VIRTUAL_JOYSTICK_RESPONSE =
-        "Standard keeps the current feel. Linear responds evenly. Fine makes small movements gentler."
-    val GIMBAL_JOYSTICK =
-        "Which analog stick pans and tilts. Left is the default. The other stick does not move the gimbal."
-    val GAMEPAD =
-        "A connected game controller. The selected gimbal joystick pans and tilts. Cross/A records. Circle/B recenters. Square/X is rotate-180. Triangle/Y tracks a face. L1/R1 jump zoom out/in. L2/R2 hold-to-zoom (deeper is faster). D-pad up/down ISO, left/right shutter. Unplug rests the stick. On-screen stick wins while you hold it."
-    val KEEP_SCREEN_AWAKE =
-        MonitorSettingsCopy.keepScreenAwake
-    val HDR_DISPLAY =
-        "Outdoor panel brightness, not a grade. WAVE, HISTO, PARADE, VECTOR, zebras and false color still read the decoded camera signal, so judge exposure there, not from how bright the picture looks. Screen recording drops back to a normal SDR picture so the file is not HDR-boosted. This is not the camera's HDR/HLG color mode. Off by default."
-    val THEME = "Charcoal field-monitor chrome with Sky Blue accents, tuned for low reflection on set."
-    val SUPPORT = "Connection, live view, controls, and troubleshooting."
-    val REPORT = "Opens a public issue form on GitHub for this project."
-    val REPORT_PROBLEM =
-        "Tell us what happened. Technical details stay off unless you include them. You can attach up to three photos. Sending does not turn on automatic reports."
-    val RELIABILITY_REPORTS = MonitorSettingsCopy.automaticReports
-    val RELIABILITY_UNAVAILABLE =
-        "This build cannot send automatic reports. You can still share or delete reports stored on this phone."
-    val FEATURE = "Start an idea in this project's feature-request discussion."
-    val SOURCE =
-        "View the $appName project on GitHub. Opening this may leave the camera Wi-Fi if that is the only network."
-    val LINK_HEALTH = "How healthy the camera link is right now: delivery, not radio RSSI."
-    val CLEAR_CACHE =
-        "Removes cached clips, thumbnails and camera indexes for every camera. Cameras reload their library when connected."
-    val LUT_LOOK = "Looks apply on this phone. The file on the camera is unchanged."
-    val APP_VERSION = "Current $appName build from the native project metadata."
-    val LOCAL_CACHE = "Cached clips, thumbnails and camera indexes for every camera on this phone."
-    val CACHE_FULL_RESOLUTION =
-        "Download the original camera file when you open a clip. Off keeps only the 720p proxy to save space. Share needs the original, so connect the camera if it is not cached."
-    val FEED_UPSCALER = MonitorSettingsCopy.feedUpscaler
-    val FALSE_COLOR_SCALE =
-        "The camera color mode selects D-Log, D-Log2, Rec.709, or HLG automatically. " +
-            "CineStop paints five stops around 18% gray, read through the " +
-            "camera's log curve: dark green −2, yellow-green −1, gray at 18%, light pink +1 " +
-            "(skin), soft yellow +2 (upper skin limit). Red is clipped and violet is crushed; " +
-            "other shadows are flat dark gray and other highlights flat light gray. " +
-            "Video paints video-level IRE stripes (green 41–48, pink 61–70, red clip) " +
-            "over luminance grayscale. IRE paints six video-level zones over " +
-            "luminance grayscale: purple crush, blue near-black, green 18% gray, pink one " +
-            "stop over, yellow near clip, red clip. On log, Video and IRE read the camera's " +
-            "Rec.709 look (709) or the raw signal (LOG), set under Read. Limits paints only shadow and highlight warnings, leaving other colors untouched."
-    val FALSE_COLOR_REFERENCE =
-        "Show a compact color key over live view while False Color is active."
-    val PEAKING_SENSITIVITY =
-        "Higher sensitivity catches finer edges but can get noisy on detailed scenes."
-    val PEAKING_COLOR = "Choose the edge color that stays readable over your typical scene."
-    val ZEBRA_UNITS =
-        "Switch between native 0-255 encoded codes and a 0-100 monitoring IRE scale."
-    val ZEBRA_HIGHLIGHT =
-        "High zebra warns when bright detail approaches clipping after the active log curve is compensated."
-    val ZEBRA_MIDTONE =
-        "Midtone zebra gives a curve-compensated reference band for faces or key subject exposure."
-    val WAVEFORM_BRIGHTNESS =
-        "Raise trace intensity when the waveform is hard to read in bright light."
-    val PARADE_BRIGHTNESS = "Raise trace intensity when channel separation is hard to see."
-    val VECTORSCOPE_ZOOM =
-        "Magnifies only the chroma trace; the graticule stays at unity. The vectorscope reads the camera signal through the built-in display tone map, whatever LUT is on, so chroma stays meaningful."
-    val VECTORSCOPE_BRIGHTNESS =
-        "Raise trace intensity when the chroma plot is hard to read."
-    val TRAFFIC_LIGHTS_COMPENSATION =
-        "Stops of crush/clip tolerance before a channel indicator glows. Shared with the histogram traffic lights."}
+open class OperatorHelpCopy(private val appName: String) {
+    val CURRENT_TRANSPORT get() = CameraControlsContext.context.getString(R.string.cc_current_transport)
+    val PHASE get() = CameraControlsContext.context.getString(R.string.cc_phase_handshake)
+    val CAMERA_WIFI get() = CameraControlsContext.context.getString(R.string.cc_camera_wifi_help)
+    val SAVED_CAMERAS get() = CameraControlsContext.context.getString(R.string.cc_saved_cameras_help)
+    val EDIT_VIEW get() = CameraControlsContext.context.getString(R.string.cc_edit_view_help)
+    val FRAME_IO get() = CameraControlsContext.context.getString(R.string.cc_frame_io_help)
+    val RECORD_CONFIRMATION get() = CameraControlsContext.context.getString(R.string.cc_record_confirmation_help)
+    val SHOOTING_MODE get() = CameraControlsContext.context.getString(R.string.cc_shooting_mode_help)
+    val HAPTICS get() = CameraControlsContext.context.getString(R.string.cc_haptics_help)
+    val JOYSTICK_SENSITIVITY get() = CameraControlsContext.context.getString(R.string.cc_joystick_sensitivity_help)
+    val VIRTUAL_JOYSTICK_SIZE get() = CameraControlsContext.context.getString(R.string.cc_virtual_joystick_size_help)
+    val VIRTUAL_JOYSTICK_INVERT_PAN get() = CameraControlsContext.context.getString(R.string.cc_virtual_joystick_invert_pan_help)
+    val VIRTUAL_JOYSTICK_INVERT_TILT get() = CameraControlsContext.context.getString(R.string.cc_virtual_joystick_invert_tilt_help)
+    val VIRTUAL_JOYSTICK_DEADZONE get() = CameraControlsContext.context.getString(R.string.cc_virtual_joystick_deadzone_help)
+    val VIRTUAL_JOYSTICK_RESPONSE get() = CameraControlsContext.context.getString(R.string.cc_virtual_joystick_response_help)
+    val GIMBAL_JOYSTICK get() = CameraControlsContext.context.getString(R.string.cc_gimbal_joystick_help)
+    val GAMEPAD get() = CameraControlsContext.context.getString(R.string.cc_gamepad_help)
+    val KEEP_SCREEN_AWAKE get() = MonitorSettingsCopy.keepScreenAwake
+    val HDR_DISPLAY get() = CameraControlsContext.context.getString(R.string.cc_hdr_display_help)
+    val THEME get() = CameraControlsContext.context.getString(R.string.cc_theme_help)
+    val SUPPORT get() = CameraControlsContext.context.getString(R.string.cc_support_help)
+    val REPORT get() = CameraControlsContext.context.getString(R.string.cc_report_help)
+    val REPORT_PROBLEM get() = CameraControlsContext.context.getString(R.string.cc_report_problem_help)
+    val RELIABILITY_REPORTS get() = MonitorSettingsCopy.automaticReports
+    val RELIABILITY_UNAVAILABLE get() = CameraControlsContext.context.getString(R.string.cc_reliability_unavailable_help)
+    val FEATURE get() = CameraControlsContext.context.getString(R.string.cc_feature_help)
+    val SOURCE get() = CameraControlsContext.context.getString(R.string.cc_source_help, appName)
+    val LINK_HEALTH get() = CameraControlsContext.context.getString(R.string.cc_link_health_help)
+    val CLEAR_CACHE get() = CameraControlsContext.context.getString(R.string.cc_clear_cache_help)
+    val LUT_LOOK get() = CameraControlsContext.context.getString(R.string.cc_lut_look_help)
+    val APP_VERSION get() = CameraControlsContext.context.getString(R.string.cc_app_version_help, appName)
+    val LOCAL_CACHE get() = CameraControlsContext.context.getString(R.string.cc_local_cache_help)
+    val CACHE_FULL_RESOLUTION get() = CameraControlsContext.context.getString(R.string.cc_cache_full_resolution_help)
+    val FEED_UPSCALER get() = MonitorSettingsCopy.feedUpscaler
+    val FALSE_COLOR_SCALE get() = CameraControlsContext.context.getString(R.string.cc_false_color_scale_help)
+    val FALSE_COLOR_REFERENCE get() = CameraControlsContext.context.getString(R.string.cc_false_color_reference_help)
+    val PEAKING_SENSITIVITY get() = CameraControlsContext.context.getString(R.string.cc_peaking_sensitivity_help)
+    val PEAKING_COLOR get() = CameraControlsContext.context.getString(R.string.cc_peaking_color_help)
+    val ZEBRA_UNITS get() = CameraControlsContext.context.getString(R.string.cc_zebra_units_help)
+    val ZEBRA_HIGHLIGHT get() = CameraControlsContext.context.getString(R.string.cc_zebra_highlight_help)
+    val ZEBRA_MIDTONE get() = CameraControlsContext.context.getString(R.string.cc_zebra_midtone_help)
+    val WAVEFORM_BRIGHTNESS get() = CameraControlsContext.context.getString(R.string.cc_waveform_brightness_help)
+    val PARADE_BRIGHTNESS get() = CameraControlsContext.context.getString(R.string.cc_parade_brightness_help)
+    val VECTORSCOPE_ZOOM get() = CameraControlsContext.context.getString(R.string.cc_vectorscope_zoom_help)
+    val VECTORSCOPE_BRIGHTNESS get() = CameraControlsContext.context.getString(R.string.cc_vectorscope_brightness_help)
+    val TRAFFIC_LIGHTS_COMPENSATION get() = CameraControlsContext.context.getString(R.string.cc_traffic_lights_compensation_help)
+}
 
 /**
  * The clip cache directories: the app's [mediaRoots] (per-camera folders, each keeping its `index.json`)

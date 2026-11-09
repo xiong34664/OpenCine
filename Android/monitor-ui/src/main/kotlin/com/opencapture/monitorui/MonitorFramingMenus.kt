@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -31,11 +32,11 @@ fun MonitorAssistHelp(text: String) { Text(text, color = MonitorPalette.muted, f
 @Composable
 fun MonitorAudioMenu(orientation: MonitorAudioOrientation, onOrientation: (MonitorAudioOrientation) -> Unit,
     showDB: Boolean, onShowDB: (Boolean) -> Unit, help: String) {
-    MonitorSettingsInlineRow("Orientation", help = help, showTopDivider = false, stacked = true) {
+    MonitorSettingsInlineRow(stringResource(R.string.mui_orientation), help = help, showTopDivider = false, stacked = true) {
         MonitorSettingsChoices(MonitorAudioOrientation.entries, orientation, accentSelection = true,
             title = { it.label }, onSelect = onOrientation)
     }
-    MonitorSettingsSwitchInlineRow("Show dB values", isOn = showDB, stacked = false) { onShowDB(!showDB) }
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_show_db_values), isOn = showDB, stacked = false) { onShowDB(!showDB) }
 }
 
 @Composable
@@ -54,18 +55,18 @@ fun MonitorMirrorMenu(horizontal: Boolean, onHorizontal: (Boolean) -> Unit,
     horizontalHelp: String, verticalHelp: String) {
     MonitorAssistHelp(explanation)
     Spacer(Modifier.height(8.dp))
-    MonitorSettingsSwitchInlineRow("Horizontal", help = horizontalHelp, isOn = horizontal,
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_horizontal), help = horizontalHelp, isOn = horizontal,
         showTopDivider = false, stacked = false) { onHorizontal(!horizontal) }
-    MonitorSettingsSwitchInlineRow("Vertical", help = verticalHelp, isOn = vertical,
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_vertical), help = verticalHelp, isOn = vertical,
         stacked = false) { onVertical(!vertical) }
 }
 
 @Composable
 fun MonitorGridMenu(thirds: Boolean, onThirds: (Boolean) -> Unit, phi: Boolean,
     onPhi: (Boolean) -> Unit, diagonal: Boolean, onDiagonal: (Boolean) -> Unit) {
-    MonitorSettingsSwitchInlineRow("Thirds", isOn = thirds, showTopDivider = false, stacked = false) { onThirds(!thirds) }
-    MonitorSettingsSwitchInlineRow("Phi Grid", isOn = phi, stacked = false) { onPhi(!phi) }
-    MonitorSettingsSwitchInlineRow("Diagonal", isOn = diagonal, stacked = false) { onDiagonal(!diagonal) }
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_thirds), isOn = thirds, showTopDivider = false, stacked = false) { onThirds(!thirds) }
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_phi_grid), isOn = phi, stacked = false) { onPhi(!phi) }
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_diagonal), isOn = diagonal, stacked = false) { onDiagonal(!diagonal) }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -99,7 +100,7 @@ fun MonitorGuidesMenu(family: MonitorGuideFamily, selected: Set<MonitorGuideAspe
         }
     }
     Spacer(Modifier.height(10.dp))
-    MonitorSettingsSwitchInlineRow("Mask outside frame", isOn = mask, showTopDivider = false,
+    MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_mask_outside_frame), isOn = mask, showTopDivider = false,
         stacked = false) { onMask(!mask) }
 }
 
@@ -107,21 +108,23 @@ fun MonitorGuidesMenu(family: MonitorGuideFamily, selected: Set<MonitorGuideAspe
 fun MonitorDesqueezeMenu(preset: MonitorDesqueezePreset, custom: Boolean, factor: Double,
     direction: MonitorDesqueezeDirection, help: String, onSelect: (MonitorDesqueezePreset?) -> Unit,
     onFactor: (Double) -> Unit, onDirection: (MonitorDesqueezeDirection) -> Unit) {
-    MonitorSettingsInlineRow("Ratio", help = help, showTopDivider = false, stacked = true) {
+    val customLabel = stringResource(R.string.mui_custom)
+    MonitorSettingsInlineRow(stringResource(R.string.mui_ratio), help = help, showTopDivider = false, stacked = true) {
         Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
             val selected = if (custom) null else preset
             (MonitorDesqueezePreset.entries.map { it as MonitorDesqueezePreset? } + null).chunked(4).forEach { row ->
                 MonitorSettingsChoices(row, selected, accentSelection = true,
-                    title = { it?.label ?: "Custom" }, onSelect = onSelect)
+                    title = { it?.label ?: customLabel }, onSelect = onSelect)
             }
         }
     }
     if (custom) {
-        MonitorSettingsInlineRow("Custom ratio", help = "1.00×–2.00× in 0.01 increments.", stacked = true) {
+        val desqueezeDescription = stringResource(R.string.mui_anamorphic_desqueeze_ratio)
+        MonitorSettingsInlineRow(stringResource(R.string.mui_custom_ratio), help = stringResource(R.string.mui_custom_ratio_help), stacked = true) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 Slider(value = factor.toFloat(), onValueChange = { onFactor(it.toDouble()) },
                     valueRange = 1f..2f, steps = 99, modifier = Modifier.weight(1f).semantics {
-                        contentDescription = "Anamorphic desqueeze custom ratio"
+                        contentDescription = desqueezeDescription
                         stateDescription = MonitorAnamorphicDesqueeze.label(factor)
                     })
                 Text(MonitorAnamorphicDesqueeze.label(factor), style = MonitorTypography.text(12f, FontWeight.Medium),
@@ -129,7 +132,7 @@ fun MonitorDesqueezeMenu(preset: MonitorDesqueezePreset, custom: Boolean, factor
             }
         }
     }
-    MonitorSettingsInlineRow("Direction", stacked = true) {
+    MonitorSettingsInlineRow(stringResource(R.string.mui_direction), stacked = true) {
         MonitorSettingsChoices(MonitorDesqueezeDirection.entries, direction, accentSelection = true,
             title = { it.label }, onSelect = onDirection)
     }

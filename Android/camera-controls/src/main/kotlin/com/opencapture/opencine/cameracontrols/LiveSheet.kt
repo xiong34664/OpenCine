@@ -37,29 +37,29 @@ fun hidesLowerCaptureValues(
 val LiveSheet.headerLabel: String
     get() =
         when (this) {
-            LiveSheet.ISO -> "ISO"
-            LiveSheet.SHUTTER -> "SHUTTER"
-            LiveSheet.WB -> "WHITE BALANCE"
-            LiveSheet.FOCUS -> "FOCUS"
-            LiveSheet.APERTURE -> "APERTURE"
-            LiveSheet.EXPO -> "MODE"
-            LiveSheet.AUDIO -> "AUDIO"
-            LiveSheet.COLOR -> "COLOR"
-            LiveSheet.FORMAT -> "RESOLUTION"
-            LiveSheet.MODE -> "SHOOTING MODE"
+            LiveSheet.ISO -> CameraControlsContext.context.getString(R.string.cc_iso)
+            LiveSheet.SHUTTER -> CameraControlsContext.context.getString(R.string.cc_shutter)
+            LiveSheet.WB -> CameraControlsContext.context.getString(R.string.cc_white_balance)
+            LiveSheet.FOCUS -> CameraControlsContext.context.getString(R.string.cc_focus)
+            LiveSheet.APERTURE -> CameraControlsContext.context.getString(R.string.cc_aperture)
+            LiveSheet.EXPO -> CameraControlsContext.context.getString(R.string.cc_exposure_mode)
+            LiveSheet.AUDIO -> CameraControlsContext.context.getString(R.string.cc_audio)
+            LiveSheet.COLOR -> CameraControlsContext.context.getString(R.string.cc_color)
+            LiveSheet.FORMAT -> CameraControlsContext.context.getString(R.string.cc_resolution)
+            LiveSheet.MODE -> CameraControlsContext.context.getString(R.string.cc_shooting_mode)
         }
 
 val LiveSheet.subtitle: String
     get() =
         when (this) {
-            LiveSheet.ISO -> "Sensitivity"
-            LiveSheet.SHUTTER -> "Angle · speed"
-            LiveSheet.WB -> "Kelvin · auto · tint"
-            LiveSheet.FOCUS -> "AF-S / AF-C"
-            LiveSheet.APERTURE -> "Aperture strategy"
-            LiveSheet.EXPO -> "Exposure"
-            LiveSheet.AUDIO -> "Channel · wind · direction · vocal"
-            LiveSheet.COLOR -> "Color mode"
-            LiveSheet.FORMAT -> "Frame rate"
-            LiveSheet.MODE -> "Shooting mode"
+            LiveSheet.ISO -> CameraControlsContext.context.getString(R.string.cc_sensitivity)
+            LiveSheet.SHUTTER -> CameraControlsContext.context.getString(R.string.cc_shutter_angle_speed)
+            LiveSheet.WB -> CameraControlsContext.context.getString(R.string.cc_kelvin_auto_tint)
+            LiveSheet.FOCUS -> CameraControlsContext.context.getString(R.string.cc_af_s_af_c)
+            LiveSheet.APERTURE -> CameraControlsContext.context.getString(R.string.cc_aperture_strategy)
+            LiveSheet.EXPO -> CameraControlsContext.context.getString(R.string.cc_exposure)
+            LiveSheet.AUDIO -> CameraControlsContext.context.getString(R.string.cc_audio_tabs_subtitle)
+            LiveSheet.COLOR -> CameraControlsContext.context.getString(R.string.cc_color_mode)
+            LiveSheet.FORMAT -> CameraControlsContext.context.getString(R.string.cc_frame_rate)
+            LiveSheet.MODE -> CameraControlsContext.context.getString(R.string.cc_shooting_mode)
         }

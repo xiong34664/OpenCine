@@ -15,9 +15,9 @@ public object MonitorWatcherControlPlacement {
 
 /** Common notice wording; the adapter only maps its transport phase. */
 public object MonitorWatcherNotices {
-    public val joining: MonitorWatcherNotice get() = MonitorWatcherNotice("Joining shared feed…")
-    public val waitingForPicture: MonitorWatcherNotice get() = MonitorWatcherNotice("Waiting for picture from the host…")
-    public fun reconnecting(attempt: Int, maximum: Int): MonitorWatcherNotice = MonitorWatcherNotice("Reconnecting… $attempt of $maximum")
+    public val joining: MonitorWatcherNotice get() = MonitorWatcherNotice(MonitorContext.context.getString(R.string.mui_joining_shared_feed))
+    public val waitingForPicture: MonitorWatcherNotice get() = MonitorWatcherNotice(MonitorContext.context.getString(R.string.mui_waiting_for_host_picture))
+    public fun reconnecting(attempt: Int, maximum: Int): MonitorWatcherNotice = MonitorWatcherNotice(MonitorContext.context.getString(R.string.mui_reconnecting, attempt, maximum))
     public fun failed(message: String): MonitorWatcherNotice = MonitorWatcherNotice(message, canChooseFeed = true)
 }
 public enum class MonitorWatcherConnectionPhase { JOINING, WATCHING, DENIED, FAILED }
@@ -44,7 +44,7 @@ public object MonitorWatcherPasscodeRule {
     public const val MINIMUM_LENGTH: Int = 4
 
     /** Shown under a broadcaster's entry that is not yet long enough to take effect. */
-    public const val TOO_SHORT_HINT: String = "At least 4 characters, or empty for an open feed."
+    public val TOO_SHORT_HINT: String get() = MonitorContext.context.getString(R.string.mui_passcode_too_short_hint)
 
     /** What a broadcaster's entry means. */
     public sealed interface Entry {

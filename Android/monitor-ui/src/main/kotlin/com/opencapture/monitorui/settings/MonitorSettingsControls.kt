@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -34,6 +36,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -88,7 +91,7 @@ fun MonitorSettingsRowCard(
 
 @Composable
 fun MonitorSettingsResetButton(onClick: () -> Unit) {
-    val description = "Reset to defaults"
+    val description = stringResource(R.string.mui_reset_to_defaults)
     Box(
         Modifier.size(28.dp)
             .background(MonitorPalette.background.copy(alpha = 0.42f), CircleShape)
@@ -203,7 +206,7 @@ fun MonitorSettingsSwitchInlineRow(
 @Composable
 fun MonitorSettingsHelpBadge(text: String) {
     var open by remember { mutableStateOf(false) }
-    val description = "Help"
+    val description = stringResource(R.string.mui_help)
     Box {
         // A 16dp mark inside a 24dp target. The full 44dp floor would reserve 44dp of ROW
         // width on every helped row and squeeze the trailing control off a landscape-phone

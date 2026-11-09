@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
@@ -235,8 +236,8 @@ private fun <P, L> MonitorOperatorPage(shell: ShellModel, cover: ShellModel.Cove
                 thumbnail = thumbnail, playbackPicture = playbackPicture)
         } else {
             Column(Modifier.fillMaxSize().background(MonitorPalette.backgroundDeep).padding(24.dp)) {
-                Text("No media service is available for this camera.", color = MonitorPalette.muted)
-                MonitorSettingsActionPill("Back", modifier = Modifier.testTag("monitor.page.back"), onClick = shell::dismissCover)
+                Text(stringResource(R.string.cc_no_media_service), color = MonitorPalette.muted)
+                MonitorSettingsActionPill(stringResource(R.string.cc_back), modifier = Modifier.testTag("monitor.page.back"), onClick = shell::dismissCover)
             }
         }
     }
@@ -254,7 +255,7 @@ public fun <P> MonitorOperatorSettingsScreen(shell: ShellModel, brand: String, a
     val session = operatorSession ?: remember(shell, assist, display) { MonitorOperatorSessionModel(shell, assist, display, scope) }
     val live = state.monitor != null
     val cameraName = state.monitor?.camera?.saved?.displayName
-    val phase = cameraName ?: "No camera connected"
+    val phase = cameraName ?: stringResource(R.string.cc_no_camera_connected)
     val revision = remember { mutableIntStateOf(0) }
     @Suppress("UNUSED_VARIABLE") val observedRevision = revision.intValue
     fun write(apply: () -> Unit) { apply(); revision.intValue++ }
@@ -265,10 +266,10 @@ public fun <P> MonitorOperatorSettingsScreen(shell: ShellModel, brand: String, a
     val configuration = MonitorOperatorSettingsConfiguration(
         brand = brand, isLive = live, phase = phase, close = shell::dismissCover,
         disconnect = if (live) shell::close else null, feedback = {},
-        link = MonitorSettingsLinkSource(transport = if (live) "Connected" else "Not connected",
-            transportHelp = "How this phone reaches the camera.", phase = phase,
-            phaseHelp = "The camera this monitor shows.", healthTitle = "Link Health",
-            healthCaption = if (live) "Live" else "No live path.", score = null),
+        link = MonitorSettingsLinkSource(transport = if (live) stringResource(R.string.cc_connected) else stringResource(R.string.cc_not_connected),
+            transportHelp = stringResource(R.string.cc_transport_help), phase = phase,
+            phaseHelp = stringResource(R.string.cc_phase_help), healthTitle = stringResource(R.string.cc_link_health),
+            healthCaption = if (live) stringResource(R.string.cc_live) else stringResource(R.string.cc_no_live_path), score = null),
         sharing = null, sharingSubtitle = null, sharingRail = null,
         controls = MonitorSettingsControlsSource(preferences.recordConfirmation, { write { preferences.recordConfirmation = it } },
             preferences.haptics, { write { preferences.haptics = it } },
@@ -276,8 +277,8 @@ public fun <P> MonitorOperatorSettingsScreen(shell: ShellModel, brand: String, a
             keepAwakeHelp = MonitorSettingsCopy.keepScreenAwake),
         cache = cache,
         support = MonitorSettingsSupportSource(report = actions.reportProblem, actions = listOf(
-            MonitorSupportAction("support.diagnostics", "Diagnostics", actionTitle = "Share",
-                accessibilityLabel = "Share Diagnostics", action = actions.diagnostics))),
+            MonitorSupportAction("support.diagnostics", stringResource(R.string.cc_diagnostics), actionTitle = stringResource(R.string.cc_share),
+                accessibilityLabel = stringResource(R.string.cc_share_diagnostics), action = actions.diagnostics))),
         legal = legal,
     )
     MonitorOperatorSettingsBody(MonitorOperatorSettingsInputs(configuration, session.settingsTab,

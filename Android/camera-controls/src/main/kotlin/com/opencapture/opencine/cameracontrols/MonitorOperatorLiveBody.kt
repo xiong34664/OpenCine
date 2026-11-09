@@ -40,6 +40,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.semantics
@@ -452,13 +453,13 @@ internal fun <K, S, M, N> MonitorOperatorLiveComposition(
                 navigationHidden = state.preview != null || (panel != null && !layout.portrait), interactive = accepts,
                 lock = { enabled ->
                     if (returnToStage == null) LockButton(locked, edit(sections.lock).testTag("monitor.system.lock"), enabled) { if (exposed) setLocked(!locked) }
-                    else MonitorChromeButton(MonitorIcon.LAYOUT_GRID, "Return to Multiview", edit(sections.lock)) {
+                    else MonitorChromeButton(MonitorIcon.LAYOUT_GRID, stringResource(R.string.cc_return_to_multiview), edit(sections.lock)) {
                         if (enabled && exposed) returnToStage()
                     }
-                }, settings = { enabled -> MonitorChromeButton(MonitorIcon.SETTINGS, "Operator Setup", edit(sections.settings)
+                }, settings = { enabled -> MonitorChromeButton(MonitorIcon.SETTINGS, stringResource(R.string.cc_operator_setup), edit(sections.settings)
                     .testTag("monitor.system.settings")) { if (enabled && interactive) { dismiss(); settings() } }
                 }, media = { enabled -> MonitorChromeButton(if (photo) MonitorIcon.IMAGE else MonitorIcon.FILM,
-                    "Media", edit(sections.media).testTag("monitor.system.media")) { if (enabled && interactive) { dismiss(); media() } } },
+                    stringResource(R.string.cc_media), edit(sections.media).testTag("monitor.system.media")) { if (enabled && interactive) { dismiss(); media() } } },
                 record = { enabled ->
                     val decoration = edit(sections.record).testTag("monitor.system.record")
                     if (photo) photoRelease?.invoke(enabled && admitted && recordEnabled, decoration)
@@ -466,7 +467,7 @@ internal fun <K, S, M, N> MonitorOperatorLiveComposition(
                         busy = !recordEnabled, confirm = confirmRecord,
                         openMode = openMode?.let { action -> { if (admits() && recordEnabled) action() } }, onConfirmingChange = onRecordConfirming)
                 }, display = { enabled -> MonitorDisplayButton(displayIndex, displayCount,
-                    displayTitle ?: displayIndex?.let { "DISP ${it + 1}" } ?: "Display mode unavailable",
+                    displayTitle ?: displayIndex?.let { "DISP ${it + 1}" } ?: stringResource(R.string.cc_display_mode_unavailable),
                     layout.display.width, layout.display.height, (sections.display?.let { edit(it) } ?: Modifier).testTag("monitor.system.display"), enabled = enabled && interactive,
                     onClick = cycleDisplay, onLongClick = null, onClickFeedback = { displayHaptics.selection() }) })
         }, tools = { accepts ->
@@ -557,12 +558,13 @@ internal fun <K, S, M, N> MonitorOperatorLiveComposition(
                 cameraViews.motion?.controls?.invoke(this, accepts && admitted)
                 aspect?.let { value ->
                     val haptics = LocalOperatorHaptics.current
+                    val aspectDescription = if (value.fills) stringResource(R.string.cc_fit_feed_in_frame) else stringResource(R.string.cc_fill_frame_with_feed)
                     Box(Modifier.descriptorFrame(value.frame).alpha(if (locked) .4f else 1f)
                         .clip(CircleShape).background(Color.Black.copy(alpha = .55f))
                         .border(1.dp, LiveDesign.hairline, CircleShape)
                         .monitorChromeClickable(enabled = interactive) { if (interactive && currentSource()) { haptics.selection(); value.change() } }
                         .testTag("portrait_aspect_toggle")
-                        .semantics { contentDescription = if (value.fills) "Fit feed in frame" else "Fill frame with feed" },
+                        .semantics { contentDescription = aspectDescription },
                         contentAlignment = Alignment.Center) {
                         MonitorIcon(if (value.fills) MonitorIcon.MINIMIZE else MonitorIcon.MAXIMIZE, null,
                             Modifier.size(15.dp), LiveDesign.text)

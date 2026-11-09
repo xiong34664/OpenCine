@@ -53,6 +53,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
@@ -125,14 +126,14 @@ fun MediaCategoryTab(tab: MediaLibraryTab, active: Boolean, fill: Boolean = fals
     val haptics = LocalOperatorHaptics.current
     val label =
         when (tab) {
-            MediaLibraryTab.ALL -> "All"
-            MediaLibraryTab.VIDEOS -> "Videos"
-            MediaLibraryTab.PHOTOS -> "Photos"
-            MediaLibraryTab.FAVORITES -> "Favorites"
+            MediaLibraryTab.ALL -> stringResource(R.string.cc_all)
+            MediaLibraryTab.VIDEOS -> stringResource(R.string.cc_videos)
+            MediaLibraryTab.PHOTOS -> stringResource(R.string.cc_photos)
+            MediaLibraryTab.FAVORITES -> stringResource(R.string.cc_favorites)
         }
     MonitorTab(active, { haptics.selection(); onClick() }, Modifier.then(if (fill) Modifier.fillMaxWidth() else Modifier),
         vertical = fill, separator = tab != MediaLibraryTab.entries.first(),
-        accessibilityLabel = "Show $label media") {
+        accessibilityLabel = stringResource(R.string.cc_show_media, label)) {
         Row(Modifier.then(if (fill) Modifier.fillMaxWidth() else Modifier),
             verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             // iOS category tabs carry no glyph.
@@ -243,7 +244,7 @@ fun MediaEmptyState(listing: Boolean, subtitle: String, title: String? = null, r
             style = LiveType.ui(12f),
             modifier = Modifier.padding(horizontal = 24.dp, vertical = 4.dp),
         )
-        if (retry != null) Text("Retry", color = LiveDesign.accent, style = LiveType.ui(13f, FontWeight.SemiBold),
+        if (retry != null) Text(stringResource(R.string.cc_retry), color = LiveDesign.accent, style = LiveType.ui(13f, FontWeight.SemiBold),
             modifier = Modifier.chromeClickable(onClick = retry).padding(horizontal = 16.dp, vertical = 8.dp))
     }
 }
@@ -256,10 +257,11 @@ fun MediaListingState(listed: Int) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         CircularProgressIndicator(color = LiveDesign.muted)
-        Text("Listing clips on camera…", color = LiveDesign.muted, style = LiveType.ui(15f, FontWeight.Medium), modifier = Modifier.padding(top = 12.dp))
+        Text(stringResource(R.string.cc_listing_clips_on_camera), color = LiveDesign.muted, style = LiveType.ui(15f, FontWeight.Medium), modifier = Modifier.padding(top = 12.dp))
         Text(
-            if (listed == 0) "Querying card storage…"
-            else "$listed clip${if (listed == 1) "" else "s"} found so far",
+            if (listed == 0) stringResource(R.string.cc_querying_card_storage)
+            else if (listed == 1) stringResource(R.string.cc_clip_found_so_far, listed)
+            else stringResource(R.string.cc_clips_found_so_far, listed),
             color = LiveDesign.faint,
             style = LiveType.ui(12f),
         )
@@ -328,14 +330,14 @@ fun MediaFilterPopup(
                 Column(Modifier.padding(top = 72.dp, start = 20.dp, end = 20.dp).widthIn(max = 400.dp).fillMaxWidth()
                     .mediaPanelGlass(MediaCornerShape).chromeClickable(onClick = {}).padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Filters", style = LiveType.ui(16f, FontWeight.SemiBold), color = LiveDesign.text)
+                    Text(stringResource(R.string.cc_filters), style = LiveType.ui(16f, FontWeight.SemiBold), color = LiveDesign.text)
                     val scroll = rememberScrollState()
                     Column(Modifier.fillMaxWidth().weight(1f, fill = false).heightIn(max = 290.dp).verticalScroll(scroll)) { form() }
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text("Clear all", style = LiveType.ui(13f, FontWeight.Medium),
+                        Text(stringResource(R.string.cc_clear_all), style = LiveType.ui(13f, FontWeight.Medium),
                             color = if (hasActiveFilters) LiveDesign.accent else LiveDesign.faint,
                             modifier = Modifier.chromeClickable(enabled = hasActiveFilters, onClick = onClear))
-                        Text("Done", style = LiveType.ui(13f, FontWeight.SemiBold), color = LiveDesign.accent,
+                        Text(stringResource(R.string.cc_done), style = LiveType.ui(13f, FontWeight.SemiBold), color = LiveDesign.accent,
                             modifier = Modifier.chromeClickable(onClick = onClose))
                     }
                 }
@@ -361,6 +363,7 @@ fun MediaFilterPopup(
                 .clickable(onClick = onClose),
         )
         val filterScroll = rememberScrollState()
+        val filterPopupLabel = stringResource(R.string.cc_filter_popup)
         Column(
             Modifier
                 .absoluteOffset { IntOffset((card.x * density.density).roundToInt(), (card.y * density.density).roundToInt()) }
@@ -371,11 +374,11 @@ fun MediaFilterPopup(
                 .padding(16.dp)
                 .monitorScrollFade(filterScroll)
                 .verticalScroll(filterScroll)
-                .semantics { contentDescription = "Filter popup" },
+                .semantics { contentDescription = filterPopupLabel },
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
-                    "FILTER",
+                    stringResource(R.string.cc_filter),
                     color = LiveDesign.muted,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Bold,
@@ -404,12 +407,12 @@ fun MediaFilterPopup(
                                 edit.commit(key)
                             }
                             edit.cancel(); pickingDate = null
-                        }) { Text("Done") }
+                        }) { Text(stringResource(R.string.cc_done)) }
                     },
                     dismissButton = {
                         TextButton(onClick = {
                             edit.commit(null); edit.cancel(); pickingDate = null
-                        }) { Text("Clear") }
+                        }) { Text(stringResource(R.string.cc_clear)) }
                     },
                 ) {
                     DatePicker(pickerState)
@@ -429,13 +432,14 @@ fun MediaCloseButton(
     size: Dp = 37.dp,
     enabled: Boolean = true,
 ) {
+    val closeLabel = stringResource(R.string.cc_close)
     Box(
         modifier
             .size(size)
             .clip(CircleShape)
             .mediaGlass(CircleShape)
             .chromeClickable(enabled = enabled, onClick = onClick)
-            .semantics { contentDescription = "Close" },
+            .semantics { contentDescription = closeLabel },
         contentAlignment = Alignment.Center,
     ) {
         MonitorIcon(
@@ -585,11 +589,11 @@ fun MediaLibraryPage(
                 modifier = Modifier.windowInsetsPadding(safe).padding(horizontal = 12.dp, vertical = 10.dp),
                 navigationWidth = 206f,
                 back = close?.let { onClose ->
-                    { MonitorChromeButton(MonitorIcon.CHEVRON_LEFT, "Back", Modifier.testTag("monitor.page.back"),
+                    { MonitorChromeButton(MonitorIcon.CHEVRON_LEFT, stringResource(R.string.cc_back), Modifier.testTag("monitor.page.back"),
                         onClick = onClose) }
                 },
                 heading = {
-                    com.opencapture.monitorui.MonitorPageHeading("Media", state.cameraName)
+                    com.opencapture.monitorui.MonitorPageHeading(stringResource(R.string.cc_media), state.cameraName)
                 },
                 navigation = { compact ->
                     Column(

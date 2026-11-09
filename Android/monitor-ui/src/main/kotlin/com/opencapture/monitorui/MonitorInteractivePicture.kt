@@ -27,16 +27,15 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.unit.IntOffset
-import java.util.Locale
 import kotlin.math.roundToInt
 
-internal const val ZOOM_IN_ACTION = "Zoom in"
-internal const val ZOOM_OUT_ACTION = "Zoom out"
-internal const val RESET_ZOOM_ACTION = "Reset zoom"
+internal val ZOOM_IN_ACTION get() = MonitorContext.context.getString(R.string.mui_zoom_in)
+internal val ZOOM_OUT_ACTION get() = MonitorContext.context.getString(R.string.mui_zoom_out)
+internal val RESET_ZOOM_ACTION get() = MonitorContext.context.getString(R.string.mui_reset_zoom)
 
 /** The screen reader's zoom state for a page or playback picture: the same label on both pages. */
 internal fun monitorZoomStateDescription(scale: Float): String =
-    String.format(Locale.US, "Zoom %.1fx", scale)
+    MonitorContext.context.getString(R.string.mui_zoom_scale, scale)
 
 /** One retained bounded picture, with source/size/cover cancellation and independent pinch/pan. */
 @Composable
