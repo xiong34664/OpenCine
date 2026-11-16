@@ -49,6 +49,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import androidx.compose.ui.res.stringResource
 
 /**
  * A LUT pack the operator downloads from its maker's own web page (the maker's terms are accepted
@@ -211,11 +212,11 @@ public fun MonitorLutPackDownloadScreen(
                     }
                 },
                 onFailed = { phase = PackPhase.Failed(it) })
-            PackPhase.Downloading -> PackStatusPage(copy.downloading, null, progress, null, "Cancel" to onClose)
-            PackPhase.Importing -> PackStatusPage(copy.importing, null, null, null, "Cancel" to onClose)
-            is PackPhase.Success -> PackStatusPage(copy.success(current.count), copy.successDetail, null, "Done" to onClose)
+            PackPhase.Downloading -> PackStatusPage(copy.downloading, null, progress, null, CameraControlsContext.context.getString(R.string.cc_cancel) to onClose)
+            PackPhase.Importing -> PackStatusPage(copy.importing, null, null, null, CameraControlsContext.context.getString(R.string.cc_cancel) to onClose)
+            is PackPhase.Success -> PackStatusPage(copy.success(current.count), copy.successDetail, null, CameraControlsContext.context.getString(R.string.cc_done) to onClose)
             is PackPhase.Failed -> PackStatusPage(copy.failedTitle, current.message, null,
-                "Retry" to { phase = PackPhase.Gateway; progress = 0f }, closeLabel to onClose)
+                CameraControlsContext.context.getString(R.string.cc_retry) to { phase = PackPhase.Gateway; progress = 0f }, closeLabel to onClose)
         }
         // Above the web view so the close button always receives taps.
         MonitorActionButton(closeLabel,
@@ -253,7 +254,7 @@ private fun PackGateway(copy: MonitorLutPackCopy, readiness: MonitorLutPackReadi
                 }
             }
             Spacer(Modifier.height(16.dp))
-            val dismiss = if (switching) "Cancel" else closeLabel
+            val dismiss = if (switching) stringResource(R.string.cc_cancel) else closeLabel
             MonitorCameraAction(dismiss, primary = false, enabled = true, contentDescription = dismiss,
                 onClick = onClose, modifier = Modifier.fillMaxWidth())
         } else {

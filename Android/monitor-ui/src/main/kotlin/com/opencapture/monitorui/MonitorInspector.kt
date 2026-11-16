@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.layout
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
@@ -126,8 +127,13 @@ fun MonitorInspector(
     val edge = MonitorInspectorPolicy.edgeInset(frame.portrait, trailing, safeLeading, safeTrailing)
     val padTop = if (frame.portrait && trailing) 4f else max(4f, safeTop)
     val padBottom = if (frame.portrait && trailing) 4f else max(4f, safeBottom)
+    val dismissDescription = stringResource(R.string.mui_dismiss_title, title)
+    val closeDescription = stringResource(R.string.mui_close_title, title)
+    val showHelpDescription = stringResource(R.string.mui_show_option_help)
+    val onDescription = stringResource(R.string.mui_on)
+    val offDescription = stringResource(R.string.mui_off)
     Box(modifier.fillMaxSize().pointerInput(onDismiss) { detectTapGestures { onDismiss() } }
-        .semantics { contentDescription = "Dismiss $title"; role = Role.Button }) {
+        .semantics { contentDescription = dismissDescription; role = Role.Button }) {
         Box(
             Modifier.align(alignment).width(frame.width.dp).height(frame.height.dp)
                 .clip(GenericShape { size, _ ->
@@ -172,8 +178,8 @@ fun MonitorInspector(
                         )
                         if (helpVisible != null) Box(
                             Modifier.size(44.dp).clickable(onClick = onToggleHelp).semantics {
-                                contentDescription = "Show option help"
-                                stateDescription = if (helpVisible) "On" else "Off"
+                                contentDescription = showHelpDescription
+                                stateDescription = if (helpVisible) onDescription else offDescription
                                 role = Role.Button
                             },
                             contentAlignment = Alignment.Center,
@@ -185,7 +191,7 @@ fun MonitorInspector(
                         }
                         if (close != null) close() else Box(
                             Modifier.size(44.dp).clickable(onClick = onDismiss).semantics {
-                                contentDescription = "Close $title"; role = Role.Button
+                                contentDescription = closeDescription; role = Role.Button
                             },
                             contentAlignment = Alignment.Center,
                         ) {

@@ -46,8 +46,8 @@ public sealed interface MonitorLegalDocument {
 
     public companion object {
         /** Shown, never an empty page, when a bundled legal file is missing from the build. */
-        public const val UNAVAILABLE_TEXT: String =
-            "This build does not include this document. It is in the project's source repository."
+        public val UNAVAILABLE_TEXT: String get() =
+            CameraControlsContext.context.getString(R.string.cc_legal_unavailable)
 
         /** The bundled files joined in order, or the unavailable page when any is missing or blank. */
         public fun bundledText(parts: List<String?>): Text {

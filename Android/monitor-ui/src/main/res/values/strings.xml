@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MonitorCameraSetups -->
+    <string name="mui_setup_options">Setup options</string>
+    <string name="mui_connect_camera_over_setup">Connect %1$s over %2$s</string>
+    <string name="mui_rename_setup">Rename setup</string>
+    <string name="mui_forget_setup">Forget %1$s setup</string>
+    <string name="mui_add_setup_for_camera">Add a setup for %1$s</string>
+    <string name="mui_add_setup">Add setup</string>
+
+    <!-- MonitorInspector -->
+    <string name="mui_dismiss_title">Dismiss %1$s</string>
+    <string name="mui_show_option_help">Show option help</string>
+    <string name="mui_on">On</string>
+    <string name="mui_off">Off</string>
+    <string name="mui_close_title">Close %1$s</string>
+
+    <!-- MonitorFocusResetButton -->
+    <string name="mui_recenter_focus">Recenter focus</string>
+
+    <!-- MonitorZoomDisc -->
+    <string name="mui_zoom_level">Zoom %1$s</string>
+    <string name="mui_close_zoom">Close zoom</string>
+
+    <!-- MonitorTelemetry -->
+    <string name="mui_camera_battery">Camera battery</string>
+    <string name="mui_phone_battery">Phone battery</string>
+    <string name="mui_battery_unavailable">unavailable</string>
+    <string name="mui_camera_battery_percent">Camera battery %1$d percent</string>
+    <string name="mui_camera_battery_unavailable">Camera battery unavailable</string>
+    <string name="mui_bars_of">%1$d of %2$d bars</string>
+
+    <!-- MonitorCameraPage -->
+    <string name="mui_your_cameras">Your cameras</string>
+    <string name="mui_no_cameras_saved">No cameras saved yet</string>
+    <string name="mui_cancel">Cancel</string>
+    <string name="mui_cancel_connecting_to">Cancel connecting to %1$s</string>
+    <string name="mui_scanning_for_cameras">Scanning for cameras</string>
+    <string name="mui_scanning">SCANNING</string>
+
+    <!-- MonitorMediaDeliveryProgressPanel -->
+    <string name="mui_progress">Progress</string>
+    <string name="mui_file">File</string>
+    <string name="mui_destination">Destination: %1$s</string>
+    <string name="mui_collapse">Collapse</string>
+    <string name="mui_expand_delivery_progress">Expand delivery progress</string>
+
+    <!-- MonitorDurationDial -->
+    <string name="mui_duration">Duration</string>
+    <string name="mui_increase_duration">Increase duration</string>
+    <string name="mui_decrease_duration">Decrease duration</string>
+
+    <!-- MonitorClipCatalog -->
+    <string name="mui_toggle_selection">Toggle selection</string>
+    <string name="mui_open">Open</string>
+    <string name="mui_select_clip">Select clip</string>
+    <string name="mui_deselect_clip">Deselect clip</string>
+    <string name="mui_remove_from_favorites">Remove from favorites</string>
+    <string name="mui_add_to_favorites">Add to favorites</string>
+    <string name="mui_frames">%1$d frames</string>
+    <string name="mui_grid_view">Grid view</string>
+    <string name="mui_list_view">List view</string>
+    <string name="mui_thumbnails">%1$s thumbnails</string>
+    <string name="mui_sort_clips">Sort clips</string>
+    <string name="mui_filter_library">Filter library</string>
+    <string name="mui_filter">Filter</string>
+
+    <!-- MonitorMediaNavigation -->
+    <string name="mui_show_category_media">Show %1$s media</string>
+
+    <!-- MonitorSelectionTray -->
+    <string name="mui_share_selected">Share selected</string>
+    <string name="mui_delete_selected">Delete selected</string>
+    <string name="mui_count_selected">%1$d selected</string>
+    <string name="mui_select_all">Select all</string>
+    <string name="mui_all">All</string>
+    <string name="mui_share">Share</string>
+
+    <!-- MonitorMediaFilterForm -->
+    <string name="mui_filter_format">FORMAT</string>
+    <string name="mui_filter_resolution">RESOLUTION</string>
+    <string name="mui_filter_size">SIZE</string>
+    <string name="mui_filter_date">DATE</string>
+    <string name="mui_filter_colour">COLOUR</string>
+    <string name="mui_filter_storage">STORAGE</string>
+    <string name="mui_start">Start</string>
+    <string name="mui_end">End</string>
+    <string name="mui_nothing_to_filter">Nothing in this tab to filter by.</string>
+    <string name="mui_clear_all_filters">Clear all filters</string>
+    <string name="mui_choice_filter">%1$s filter</string>
+
+    <!-- MonitorStatusChrome -->
+    <string name="mui_timecode_not_available">Timecode not available</string>
+    <string name="mui_elapsed_time_unknown">Elapsed time unknown</string>
+
+    <!-- MonitorAudioMeter -->
+    <string name="mui_audio_levels">Audio, left %1$s dBFS, right %2$s dBFS</string>
+
+    <!-- MonitorLevelOverlay -->
+    <string name="mui_no_level_data">No level data</string>
+
+    <!-- MonitorLinkHealthScale -->
+    <string name="mui_link_poor">POOR</string>
+    <string name="mui_link_watch">WATCH</string>
+    <string name="mui_link_stable">STABLE</string>
+
+    <!-- MonitorCommandDashboard -->
+    <string name="mui_timecode_desc">Timecode %1$s</string>
+    <string name="mui_temp">Temp</string>
+    <string name="mui_storage">Storage</string>
+    <string name="mui_camera">Camera</string>
+    <string name="mui_lens">Lens</string>
+    <string name="mui_move_earlier">Move %1$s earlier</string>
+    <string name="mui_move_later">Move %1$s later</string>
+    <string name="mui_reorder_hint"> Long press and drag to reorder.</string>
+    <string name="mui_applying_change">. Applying change.</string>
+    <string name="mui_another_control_applying">. Another control is being applied.</string>
+    <string name="mui_read_only">Read-only.</string>
+    <string name="mui_controls_locked">. Controls are locked.</string>
+    <string name="mui_double_tap_change_reorder">. Double tap to change; long press and drag to reorder.</string>
+    <string name="mui_double_tap_change">. Double tap to change.</string>
+    <string name="mui_change_control">Change %1$s</string>
+    <string name="mui_more">MORE ⌄</string>
+    <string name="mui_more_controls_below">More command controls below. Swipe up to reveal them.</string>
+
+    <!-- MonitorMediaDeliveryPanel -->
+    <string name="mui_destination_header">DESTINATION</string>
+    <string name="mui_coming_soon_desc">%1$s, Coming soon</string>
+    <string name="mui_coming_soon">Coming soon</string>
+    <string name="mui_share_header">SHARE</string>
+    <string name="mui_back">Back</string>
+    <string name="mui_options">Options</string>
+    <string name="mui_close">Close</string>
+    <string name="mui_hop_to_internet">Hop to internet</string>
+    <string name="mui_project">Project</string>
+    <string name="mui_loading_projects">Loading projects…</string>
+    <string name="mui_retry">Retry</string>
+    <string name="mui_select_a_project">Select a project</string>
+    <string name="mui_no_projects">No projects</string>
+    <string name="mui_create_new_project">Create new project</string>
+    <string name="mui_export_header">EXPORT</string>
+    <string name="mui_filename">Filename</string>
+
+    <!-- MonitorFramingMenus -->
+    <string name="mui_orientation">Orientation</string>
+    <string name="mui_show_db_values">Show dB values</string>
+    <string name="mui_horizontal">Horizontal</string>
+    <string name="mui_vertical">Vertical</string>
+    <string name="mui_thirds">Thirds</string>
+    <string name="mui_phi_grid">Phi Grid</string>
+    <string name="mui_diagonal">Diagonal</string>
+    <string name="mui_mask_outside_frame">Mask outside frame</string>
+    <string name="mui_ratio">Ratio</string>
+    <string name="mui_custom">Custom</string>
+    <string name="mui_custom_ratio">Custom ratio</string>
+    <string name="mui_custom_ratio_help">1.00×–2.00× in 0.01 increments.</string>
+    <string name="mui_anamorphic_desqueeze_ratio">Anamorphic desqueeze custom ratio</string>
+    <string name="mui_direction">Direction</string>
+
+    <!-- MonitorImageAssistMenus -->
+    <string name="mui_sensitivity">Sensitivity</string>
+    <string name="mui_color">Color</string>
+    <string name="mui_scale">Scale</string>
+    <string name="mui_false_color_read">Read</string>
+    <string name="mui_reference_key">REFERENCE KEY</string>
+    <string name="mui_reference_display">Reference Display</string>
+    <string name="mui_units">Units</string>
+    <string name="mui_highlight">Highlight</string>
+    <string name="mui_midtone">Midtone</string>
+    <string name="mui_threshold">Threshold</string>
+    <string name="mui_title_threshold">%1$s threshold</string>
+
+    <!-- MonitorPairCameraPage -->
+    <string name="mui_step_of">STEP %1$d OF %2$d</string>
+    <string name="mui_pair_a_camera">Pair a camera</string>
+    <string name="mui_target">TARGET</string>
+    <string name="mui_report_a_problem">Report a problem</string>
+    <string name="mui_pairing_help_diagnostics">Pairing help and diagnostics</string>
+    <string name="mui_share_diagnostics">Share Diagnostics</string>
+    <string name="mui_watch_a_feed">Watch a feed</string>
+    <string name="mui_step_title_status">Step %1$d: %2$s, %3$s</string>
+    <string name="mui_status_complete">complete</string>
+    <string name="mui_status_current">current</string>
+    <string name="mui_status_waiting">waiting</string>
+    <string name="mui_connect_device">Connect %1$s</string>
+    <string name="mui_signal_bars_of">Signal %1$d of 4</string>
+
+    <!-- MonitorScopeMenus -->
+    <string name="mui_mode">Mode</string>
+    <string name="mui_brightness">Brightness</string>
+    <string name="mui_brightness_help">Raise trace intensity in bright light.</string>
+    <string name="mui_encoded_code_percentage">Encoded code percentage. Source calibration unavailable.</string>
+    <string name="mui_guide_lines">GUIDE LINES</string>
+    <string name="mui_safe_clip">Safe clip</string>
+    <string name="mui_safe_crush">Safe crush</string>
+    <string name="mui_middle_gray">Middle gray</string>
+    <string name="mui_trace_zoom">Trace Zoom</string>
+    <string name="mui_trace_zoom_help">Magnifies only the chroma trace; the graticule stays at unity.</string>
+    <string name="mui_chroma_brightness_help">Raise trace intensity when the chroma plot is hard to read.</string>
+
+    <!-- MonitorHistogramMenu -->
+    <string name="mui_traffic_lights">Traffic Lights</string>
+    <string name="mui_crush_clip_compensation">Crush/Clip Compensation</string>
+
+    <!-- MonitorTrackingOverlay -->
+    <string name="mui_stop_subject_tracking">Stop subject tracking</string>
+
+    <!-- MonitorAssistPalette -->
+    <string name="mui_view_assists">view assists</string>
+    <string name="mui_show_view_assists">Show %1$s</string>
+    <string name="mui_collapse_view_assists">Collapse %1$s</string>
+
+    <!-- MonitorImagePreview -->
+    <string name="mui_waiting_for_picture">Waiting for picture</string>
+
+    <!-- MonitorSettingsPage -->
+    <string name="mui_operator_setup">Operator Setup</string>
+    <string name="mui_disconnect">Disconnect</string>
+    <string name="mui_active_link">Active link</string>
+    <string name="mui_no_camera_connected">No camera connected</string>
+
+    <!-- MonitorOperatorSettings -->
+    <string name="mui_haptics_help">Short confirmation pulses for switches, settings and controls.</string>
+    <string name="mui_keep_screen_awake_help">Prevents auto-lock while this app is open. A monitor should stay lit.</string>
+    <string name="mui_touch_safety">Touch &amp; safety</string>
+    <string name="mui_record_confirmation">Record confirmation</string>
+    <string name="mui_record_confirmation_help">Ask before starting or stopping recording to prevent mistaps.</string>
+    <string name="mui_haptics">Haptics</string>
+    <string name="mui_keep_screen_awake">Keep screen awake</string>
+    <string name="mui_panel">Panel</string>
+    <string name="mui_hdr_display">HDR display</string>
+
+    <!-- MonitorSupportSettings -->
+    <string name="mui_help_feedback">Help &amp; Feedback</string>
+    <string name="mui_report_help">Tell us what happened in the app. Choose whether to include technical details and an email for a reply.</string>
+    <string name="mui_report_status">Report status</string>
+    <string name="mui_report_id">Report ID</string>
+    <string name="mui_report_id_help">Use this ID if you follow up.</string>
+    <string name="mui_queued_report">Queued report</string>
+    <string name="mui_queued_report_help">Remove the unsent report from this phone.</string>
+    <string name="mui_discard">Discard</string>
+    <string name="mui_automatic_error_reports">Automatic error reports</string>
+    <string name="mui_reporting_privacy">Reporting Privacy</string>
+    <string name="mui_reporting_privacy_help">What reports contain, retention, and how to request deletion.</string>
+    <string name="mui_read_action">Read</string>
+    <string name="mui_diagnostic_options">Diagnostic options</string>
+    <string name="mui_diagnostic_options_caption">Save or remove reports on this phone</string>
+    <string name="mui_save_diagnostic_report">Save diagnostic report</string>
+    <string name="mui_save_diagnostic_report_help">Keep a copy or share it with support.</string>
+    <string name="mui_save">Save</string>
+    <string name="mui_delete_saved_feed_reports">Delete saved feed reports</string>
+    <string name="mui_delete">Delete</string>
+
+    <!-- MonitorConnectionSettings -->
+    <string name="mui_connection">Connection</string>
+    <string name="mui_current_transport">Current Transport</string>
+    <string name="mui_phase">Phase</string>
+    <string name="mui_camera_wifi">Camera Wi-Fi</string>
+    <string name="mui_saved">Saved</string>
+    <string name="mui_none">None</string>
+
+    <!-- MonitorStorageSystemSettings -->
+    <string name="mui_full_resolution_caching">Full Resolution Caching</string>
+    <string name="mui_local_media_cache">Local Media Cache</string>
+    <string name="mui_clear_cache">Clear Cache</string>
+    <string name="mui_clearing">Clearing…</string>
+    <string name="mui_clear">Clear</string>
+    <string name="mui_app_information">App Information</string>
+    <string name="mui_theme">Theme</string>
+    <string name="mui_protocol_implementation">Protocol Implementation</string>
+    <string name="mui_app_version">App Version</string>
+    <string name="mui_project_legal">Project &amp; Legal</string>
+    <string name="mui_source_code">Source Code</string>
+    <string name="mui_open_source_code">Open Source Code</string>
+    <string name="mui_privacy">Privacy</string>
+    <string name="mui_privacy_help">What this app stores on this phone.</string>
+    <string name="mui_open_privacy_policy">Open Privacy Policy</string>
+    <string name="mui_terms">Terms</string>
+    <string name="mui_open_terms_of_use">Open Terms of Use</string>
+    <string name="mui_licenses">Licenses</string>
+    <string name="mui_licenses_help">Apache 2.0 and third-party notices.</string>
+    <string name="mui_open_licenses">Open Licenses</string>
+    <string name="mui_notice">NOTICE</string>
+    <string name="mui_notice_help">Attribution shipped with the app.</string>
+    <string name="mui_open_notice">Open NOTICE</string>
+
+    <!-- MonitorExposureLookSettings -->
+    <string name="mui_ev_meter">EV Meter</string>
+    <string name="mui_enabled">Enabled</string>
+    <string name="mui_look">Look</string>
+    <string name="mui_choose_look">Choose look</string>
+
+    <!-- MonitorMotionControlSettings -->
+    <string name="mui_gimbal">Gimbal</string>
+    <string name="mui_joystick_sensitivity">Joystick sensitivity</string>
+    <string name="mui_head_tracking_experimental">Head Tracking (Experimental)</string>
+    <string name="mui_on_screen_joystick">On-screen joystick</string>
+    <string name="mui_size">Size</string>
+    <string name="mui_invert_pan">Invert pan</string>
+    <string name="mui_invert_tilt">Invert tilt</string>
+    <string name="mui_dead_zone">Dead zone</string>
+    <string name="mui_response_curve">Response curve</string>
+    <string name="mui_controller">Controller</string>
+    <string name="mui_gimbal_joystick">Gimbal joystick</string>
+    <string name="mui_gamepad">Gamepad</string>
+
+    <!-- MonitorAccountSettings -->
+    <string name="mui_sign_in">Sign in</string>
+    <string name="mui_log_out">Log out</string>
+    <string name="mui_not_configured">Not configured</string>
+    <string name="mui_signed_out">Signed out</string>
+    <string name="mui_connected">Connected</string>
+
+    <!-- MonitorInputOrientationSettings -->
+    <string name="mui_remote_shutter">Remote shutter</string>
+    <string name="mui_auto_rotate_feed">Auto-Rotate Feed</string>
+    <string name="mui_input_orientation">Input &amp; orientation</string>
+
+    <!-- MonitorSettingsControls -->
+    <string name="mui_reset_to_defaults">Reset to defaults</string>
+    <string name="mui_help">Help</string>
+
+    <!-- MonitorDisplaySettings -->
+    <string name="mui_layout_for">Layout For</string>
+    <string name="mui_position">Position %1$d</string>
+    <string name="mui_reorder_position">Reorder %1$s, position %2$d</string>
+
+    <!-- MonitorViewAssistSettings -->
+    <string name="mui_parade">Parade</string>
+
+    <!-- MonitorPlaybackScreen -->
+    <string name="mui_buffering_from_camera">Buffering from camera…</string>
+    <string name="mui_buffering_from_camera_rate">Buffering from camera…\n%1$s</string>
+    <string name="mui_preparing_playback">Preparing playback…</string>
+
+    <!-- MonitorWristScreen -->
+    <string name="mui_camera_battery_bars">Camera battery %1$d of %2$d bars</string>
+
+    <!-- MonitorPlaybackCopy -->
+    <string name="mui_back_to_media">Back to media</string>
+    <string name="mui_favorite_clip">Favorite clip</string>
+    <string name="mui_clip_information">Clip information</string>
+    <string name="mui_share_clip">Share clip</string>
+    <string name="mui_share_title">SHARE</string>
+    <string name="mui_delete_clip_from_camera">Delete clip from camera</string>
+    <string name="mui_clip_info_title">CLIP INFO</string>
+    <string name="mui_close_clip_information">Close clip information</string>
+    <string name="mui_delete_confirmation_title">Delete this clip from the camera?</string>
+    <string name="mui_delete_confirm">Delete</string>
+    <string name="mui_delete_cancel">Cancel</string>
+    <string name="mui_cancel_deletion">Cancel deletion</string>
+    <string name="mui_delete_from_camera_card">Delete from the camera card</string>
+    <string name="mui_back_15_seconds">Back 15 seconds</string>
+    <string name="mui_forward_15_seconds">Forward 15 seconds</string>
+    <string name="mui_play">Play</string>
+    <string name="mui_pause">Pause</string>
+    <string name="mui_restart_clip">Restart clip</string>
+    <string name="mui_previous_clip">Previous clip</string>
+    <string name="mui_next_clip">Next clip</string>
+    <string name="mui_conform_preview">Conform preview</string>
+    <string name="mui_close_conform_preview">Close conform preview</string>
+    <string name="mui_mute">Mute</string>
+    <string name="mui_unmute">Unmute</string>
+    <string name="mui_loop_playback">Loop playback</string>
+    <string name="mui_hide_playback_controls">Hide playback controls</string>
+    <string name="mui_hide_controls_hint">A restore control stays in the corner</string>
+    <string name="mui_show_playback_controls">Show playback controls</string>
+    <string name="mui_conform_title">CONFORM PREVIEW</string>
+    <string name="mui_real_time">Real time</string>
+    <string name="mui_playback_position">Playback position</string>
+    <string name="mui_show_rating">Show star rating</string>
+    <string name="mui_hide_rating">Hide star rating</string>
+    <string name="mui_seconds">%1$d seconds</string>
+    <string name="mui_rate_level">Rate %1$d %2$s</string>
+    <string name="mui_star">star</string>
+    <string name="mui_stars">stars</string>
+
+    <!-- MonitorSelectionTray -->
+    <string name="mui_exit_selection">Exit selection</string>
+
+    <!-- MonitorInteractivePicture -->
+    <string name="mui_zoom_in">Zoom in</string>
+    <string name="mui_zoom_out">Zoom out</string>
+    <string name="mui_reset_zoom">Reset zoom</string>
+    <string name="mui_zoom_scale">Zoom %1$.1fx</string>
+
+    <!-- MonitorFramingValues -->
+    <string name="mui_crosshair_help">Tap the toolbar button to show or hide the centre crosshair.</string>
+
+    <!-- MonitorWatcherLayout -->
+    <string name="mui_joining_shared_feed">Joining shared feed…</string>
+    <string name="mui_waiting_for_host_picture">Waiting for picture from the host…</string>
+    <string name="mui_reconnecting">Reconnecting… %1$d of %2$d</string>
+    <string name="mui_passcode_too_short_hint">At least 4 characters, or empty for an open feed.</string>
+
+    <!-- MonitorCameraSetups -->
+    <string name="mui_connecting">Connecting</string>
+
+    <!-- MonitorCommandDashboard -->
+    <string name="mui_command_side_description">%1$s controls. Swipe up to reveal more command controls.</string>
+
+    <!-- MonitorStatusChrome -->
+    <string name="mui_recording">Recording</string>
+    <string name="mui_standby">Standby</string>
+    <string name="mui_recording_state_unknown">Recording state unknown</string>
+    <string name="mui_one_minute">1 minute</string>
+    <string name="mui_minutes">%1$d minutes</string>
+    <string name="mui_one_second">1 second</string>
+
+    <!-- MonitorLevelOverlay -->
+    <string name="mui_level_with_label">Level, %1$s</string>
+    <string name="mui_level_roll_tilt">Level, roll %1$+.1f°, tilt %2$+.1f°</string>
+    <string name="mui_level_off_plumb">Level, off plumb %1$+.1f° / %2$+.1f°</string>
+    <string name="mui_level_horizon_roll">Level, horizon roll %1$+.1f°</string>
+
+    <!-- MonitorAssistToolValues -->
+    <string name="mui_assist_peaking">Peaking</string>
+    <string name="mui_assist_zebra">Zebra</string>
+    <string name="mui_assist_waveform">Waveform</string>
+    <string name="mui_assist_rgb_parade">RGB Parade</string>
+    <string name="mui_assist_histogram">Histogram</string>
+    <string name="mui_assist_vectorscope">Vectorscope</string>
+    <string name="mui_assist_nd">ND Suggestion</string>
+    <string name="mui_assist_audio">Audio Levels</string>
+    <string name="mui_assist_guides">Guides</string>
+    <string name="mui_assist_grid">Grid</string>
+    <string name="mui_assist_crosshair">Crosshair</string>
+    <string name="mui_assist_level">Level</string>
+    <string name="mui_assist_desqueeze">Anamorphic Desqueeze</string>
+    <string name="mui_assist_mirror">Mirror</string>
+
+    <!-- MonitorValueDrum -->
+    <string name="mui_choose_value">Choose value</string>
+
+    <!-- MonitorTelemetryValues -->
+    <string name="mui_battery_percent_value">%1$d%%</string>
+    <string name="mui_external_power">external power</string>
+    <string name="mui_charging">charging</string>
+    <string name="mui_percent_spoken">%1$d percent</string>
+    <string name="mui_exhausted">exhausted</string>
+    <string name="mui_link_down">down</string>
+    <string name="mui_delivery_bars">%1$d of 4 delivery bars</string>
+    <string name="mui_unavailable">unavailable</string>
+    <string name="mui_frames_per_second">%1$s frames per second</string>
+    <string name="mui_live_link_feed">Live link %1$s, feed %2$s</string>
+</resources>

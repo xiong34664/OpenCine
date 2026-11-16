@@ -37,6 +37,7 @@ import com.opencapture.opencine.media.MediaAssetID
 import com.opencapture.opencine.media.MediaTransferRate
 import com.opencapture.opencine.vocabulary.MediaLibrarySort
 import com.opencapture.opencine.vocabulary.MediaLibraryTab
+import androidx.compose.ui.res.stringResource
 
 /** Source metadata and native readback; catalog policy never parses a payload. */
 public data class MonitorMediaGalleryFileFacts(
@@ -129,9 +130,9 @@ public fun <P> MonitorOperatorCatalogScreen(
         layout = MediaBrowserLayout.valueOf((presentation?.layout ?: value.layout).name),
         thumbnailSize = MediaThumbnailSize.valueOf((presentation?.thumbnailSize ?: value.thumbnailSize).name), sortOrder = sort,
         headerCount = when {
-            value.fetching && value.fetchedCount == 0 -> "Scanning…"
-            value.fetching -> "Listing… ${value.fetchedCount} found"
-            else -> (presentation?.projection?.displayIDs?.size ?: records.size).let { "$it item${if (it == 1) "" else "s"}" }
+            value.fetching && value.fetchedCount == 0 -> stringResource(R.string.cc_scanning)
+            value.fetching -> stringResource(R.string.cc_listing_found, value.fetchedCount)
+            else -> (presentation?.projection?.displayIDs?.size ?: records.size).let { if (it == 1) stringResource(R.string.cc_item_count_one, it) else stringResource(R.string.cc_item_count_many, it) }
         }, fetchInProgress = value.fetching, isLive = sourceAvailable, isSelecting = value.selecting,
         filterOpen = state.filterPopupPresented, activeFilterCount = presentation?.activeFilterCount ?: value.activeFilterCount,
         selectedCount = selected.size,
@@ -226,7 +227,7 @@ public fun <P> MonitorOperatorCatalogScreen(
         val confirmation = state.deleteRequestID
         MonitorConfirmPopup(
             title = state.deletionMessage ?: "Delete ${state.deleteCount} item${if (state.deleteCount == 1) "" else "s"} from the camera?",
-            confirmTitle = "Delete", onClickFeedback = haptics::selection,
+            confirmTitle = stringResource(R.string.cc_delete), onClickFeedback = haptics::selection,
             cancelDescription = MonitorPlaybackCopy.DELETE_CANCEL_DESCRIPTION,
             confirmDescription = MonitorPlaybackCopy.DELETE_CONFIRM_DESCRIPTION,
             onDismiss = { gallery.cancelDelete(confirmation) }, onConfirm = { gallery.confirmDelete(confirmation) },
@@ -234,7 +235,7 @@ public fun <P> MonitorOperatorCatalogScreen(
     }
     state.failure?.let { message ->
         AlertDialog(onDismissRequest = gallery::dismissFailure, title = { Text(message) },
-            confirmButton = { TextButton(onClick = gallery::dismissFailure) { Text("OK") } })
+            confirmButton = { TextButton(onClick = gallery::dismissFailure) { Text(stringResource(R.string.cc_ok)) } })
     }
 }
 
@@ -400,7 +401,7 @@ internal fun <P> monitorCatalogClip(
     resolvedDuration: String?, libraryProgress: Double?, cell: MonitorClipValue?,
     libraryRate: MediaTransferRate? = null, showsRate: Boolean = true,
 ): MonitorClipValue {
-    val source = if (entry?.original != null) "CACHED" else if (entry?.proxy != null) "PROXY" else "ON CAMERA"
+    val source = if (entry?.original != null) "CACHED" else if (entry?.proxy != null) "PROXY" else CameraControlsContext.context.getString(R.string.cc_on_camera)
     val progress = (facts.progress ?: libraryProgress)?.toFloat()
     val rate = if (showsRate) (facts.transferRate ?: libraryRate)?.label else null
     // A source cell's own speed wins, as on iOS.

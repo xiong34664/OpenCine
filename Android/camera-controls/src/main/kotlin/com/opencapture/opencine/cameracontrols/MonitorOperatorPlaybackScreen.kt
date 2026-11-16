@@ -38,6 +38,7 @@ import com.opencapture.monitorui.*
 import com.opencapture.opencine.appkit.*
 import com.opencapture.opencine.media.*
 import com.opencapture.opencine.vocabulary.MediaClipFormatting
+import androidx.compose.ui.res.stringResource
 
 /** Complete playback. Only the real native picture, preview and source facts arrive from an app. */
 @Composable
@@ -197,13 +198,13 @@ public fun <P, L> MonitorOperatorPlaybackScreen(
     val favorite = library.records.firstOrNull { it.asset.id == asset.id }?.favorite ?: record.favorite
     val metadata = buildList {
         fun row(label: String, text: String?) { if (!text.isNullOrBlank()) add(MonitorMetadataRow(label, text)) }
-        row("File", asset.filename); row("Format", record.facts.format); row("Resolution", record.facts.resolution)
-        row("Frame rate", asset.frameRate?.let { number(it) + " fps" }); row("Duration", clock(duration))
-        row("Playback source", sourceLabel)
-        row("Size", asset.representations.firstOrNull { it.role == MediaRepresentationRole.ORIGINAL }
+        row(stringResource(R.string.cc_file), asset.filename); row(stringResource(R.string.cc_format), record.facts.format); row(stringResource(R.string.cc_resolution), record.facts.resolution)
+        row(stringResource(R.string.cc_frame_rate), asset.frameRate?.let { number(it) + " fps" }); row(stringResource(R.string.cc_duration), clock(duration))
+        row(stringResource(R.string.cc_playback_source), sourceLabel)
+        row(stringResource(R.string.cc_size), asset.representations.firstOrNull { it.role == MediaRepresentationRole.ORIGINAL }
             ?.byteCount?.takeIf { it > 0 }?.let(MediaClipFormatting::byteLabel))
-        row("Created", MonitorPlaybackCapturedAt.label(asset.capturedAt, record.facts.orderKey))
-        row("Favorite", if (favorite) "Yes" else "No")
+        row(stringResource(R.string.cc_created), MonitorPlaybackCapturedAt.label(asset.capturedAt, record.facts.orderKey))
+        row(stringResource(R.string.cc_favorite), if (favorite) stringResource(R.string.cc_yes) else stringResource(R.string.cc_no))
         facts.metadata.forEach { row(it.title, it.value) }
     }
     val access = operations.access?.invoke(record)
@@ -333,16 +334,17 @@ internal fun OperatorPlaybackAssistOverlays(
 /** Shared return surface for refused or retired media; Close never borrows source admission. */
 @Composable
 public fun MonitorOperatorMediaUnavailable(closeEnabled: Boolean = true, close: () -> Unit) {
+    val closeLabel = stringResource(R.string.cc_close)
     Column(Modifier.fillMaxSize().background(Color.Black).padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Media unavailable", color = LiveDesign.text, style = LiveType.ui(20f, FontWeight.SemiBold),
+        Text(stringResource(R.string.cc_media_unavailable), color = LiveDesign.text, style = LiveType.ui(20f, FontWeight.SemiBold),
             modifier = Modifier.testTag("monitor.media.unavailable"))
-        Text("This media is no longer available.", color = LiveDesign.muted,
+        Text(stringResource(R.string.cc_media_no_longer_available), color = LiveDesign.muted,
             style = LiveType.ui(14f, FontWeight.Medium))
         TextButton(onClick = close, enabled = closeEnabled,
-            modifier = Modifier.testTag("monitor.media.unavailable.close").semantics { contentDescription = "Close" }) {
-            Text("Close", color = LiveDesign.text, style = LiveType.ui(14f, FontWeight.SemiBold))
+            modifier = Modifier.testTag("monitor.media.unavailable.close").semantics { contentDescription = closeLabel }) {
+            Text(stringResource(R.string.cc_close), color = LiveDesign.text, style = LiveType.ui(14f, FontWeight.SemiBold))
         }
     }
 }

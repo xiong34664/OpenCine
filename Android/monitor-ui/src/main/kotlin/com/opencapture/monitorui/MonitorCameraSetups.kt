@@ -48,6 +48,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -89,7 +90,7 @@ object MonitorConnectProgress {
     /** One caption at a time: the active step and its detail. */
     fun caption(steps: List<MonitorConnectStep>): String {
         val step = steps.firstOrNull { it.state == MonitorConnectStep.State.ACTIVE }
-            ?: steps.lastOrNull { it.state == MonitorConnectStep.State.DONE } ?: return "Connecting"
+            ?: steps.lastOrNull { it.state == MonitorConnectStep.State.DONE } ?: return MonitorContext.context.getString(R.string.mui_connecting)
         return if (step.detail.isEmpty()) step.title else "${step.title} · ${step.detail}"
     }
 
@@ -122,15 +123,16 @@ internal fun MonitorSetupChips(
         setups.forEach { setup ->
             var menu by remember { mutableStateOf(false) }
             val shape = RoundedCornerShape(9.dp)
+            val connectDescription = stringResource(R.string.mui_connect_camera_over_setup, cameraName, setup.title)
             // 34 dp chip, 44 dp tap target.
             Box(
                 Modifier.heightIn(min = 44.dp)
                     .combinedClickable(
                         enabled = enabled, role = Role.Button, onClick = { onSetup(setup) },
-                        onLongClickLabel = "Setup options",
+                        onLongClickLabel = stringResource(R.string.mui_setup_options),
                         onLongClick = if (onRenameSetup != null || setup.canForget && onForgetSetup != null) ({ menu = true }) else null,
                     )
-                    .semantics { contentDescription = "Connect $cameraName over ${setup.title}" }
+                    .semantics { contentDescription = connectDescription }
                     .testTag("cameras.setup.${setup.kind ?: setup.id}"),
                 contentAlignment = Alignment.Center,
             ) {
@@ -147,13 +149,13 @@ internal fun MonitorSetupChips(
                 DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
                     if (onRenameSetup != null) {
                         DropdownMenuItem(
-                            text = { Text("Rename setup") }, enabled = enabled,
+                            text = { Text(stringResource(R.string.mui_rename_setup)) }, enabled = enabled,
                             onClick = { menu = false; if (enabled) onRenameSetup(setup) },
                         )
                     }
                     if (setup.canForget && onForgetSetup != null) {
                         DropdownMenuItem(
-                            text = { Text("Forget ${setup.title} setup", color = MonitorPalette.recording) }, enabled = enabled,
+                            text = { Text(stringResource(R.string.mui_forget_setup, setup.title), color = MonitorPalette.recording) }, enabled = enabled,
                             onClick = { menu = false; if (enabled) onForgetSetup(setup) },
                         )
                     }
@@ -162,10 +164,11 @@ internal fun MonitorSetupChips(
         }
         if (canAddSetup && onAddSetup != null) {
             val dash = MonitorPalette.secondary.copy(alpha = 0.22f)
+            val addSetupDescription = stringResource(R.string.mui_add_setup_for_camera, cameraName)
             Row(
                 Modifier.heightIn(min = 44.dp)
                     .clickable(enabled = enabled, role = Role.Button, onClick = onAddSetup)
-                    .semantics { contentDescription = "Add a setup for $cameraName" }
+                    .semantics { contentDescription = addSetupDescription }
                     .testTag("cameras.addSetup"),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -182,7 +185,7 @@ internal fun MonitorSetupChips(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     MonitorIcon(MonitorIcon.PLUS, null, Modifier.size(11.dp), tint = MonitorPalette.muted)
-                    Text("Add setup", color = MonitorPalette.muted, style = MonitorTypography.text(11f, FontWeight.SemiBold))
+                    Text(stringResource(R.string.mui_add_setup), color = MonitorPalette.muted, style = MonitorTypography.text(11f, FontWeight.SemiBold))
                 }
             }
         }

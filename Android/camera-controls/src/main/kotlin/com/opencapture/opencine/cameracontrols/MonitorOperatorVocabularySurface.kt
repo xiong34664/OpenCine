@@ -55,6 +55,7 @@ import com.opencapture.opencine.vocabulary.TrackingHud
 import com.opencapture.opencine.vocabulary.VideoResolution
 import com.opencapture.opencine.vocabulary.knownMonitorTransfer
 import com.opencapture.opencine.vocabulary.monitorTransfer
+import androidx.compose.ui.res.stringResource
 
 public class MonitorOperatorFocusObservation(public val point: Pair<Float, Float>?, public val tracking: TrackingHud,
     public val tapFocusSupported: Boolean, public val aeLocked: Boolean, public val held: Boolean,
@@ -228,7 +229,7 @@ public fun <Host> MonitorOperatorLiveSurface(chrome: MonitorOperatorLiveChromeSo
                 chrome.host.liveGimbalPanel == LiveGimbalPanel.SHEET && !locked)
                 LiveGimbalSheetHost(chrome.host, layout, layout.gimbalCluster(true), layout.safeLeading, layout.safeTrailing,
                     layout.safeTop, layout.safeBottom)
-        }), resetFocus = if (focus.resetAvailable) MonitorOperatorFocusReset("Recenter focus", true, false, focusActions.reset) else null,
+        }), resetFocus = if (focus.resetAvailable) MonitorOperatorFocusReset(stringResource(R.string.cc_recenter_focus), true, false, focusActions.reset) else null,
         motionCluster = motionCluster)
     MonitorOperatorLiveSurface(chrome.capture.control, session, geometry, source,
         MonitorOperatorLiveAssists(assists, palette, tools.toSet(), status.monitorTransfer, MonitorOperatorSignalOptions(),
@@ -321,23 +322,23 @@ private fun <Host> operatorStatusProjection(source: MonitorOperatorLiveChromeSou
     val formatLabel = recordingFormat?.let(com.opencapture.opencine.appkit.MonitorCapturePresentation::recordingLabel)
     val sheet = CaptureShutterPolicy.portraitSetupSheet(status.shootingMode)
     val format = if (source.session.mounts(MonitorDisplaySection.FORMAT) && !CameraCommands.isPhotoMode(status.shootingMode))
-        listOf(row(LiveSheet.FORMAT, "Recording format", formatLabel, MonitorDisplaySection.FORMAT)) else emptyList()
+        listOf(row(LiveSheet.FORMAT, CameraControlsContext.context.getString(R.string.cc_recording_format), formatLabel, MonitorDisplaySection.FORMAT)) else emptyList()
     return MonitorOperatorLiveStatus({ source.capture.control.statusPresentation(status.recordElapsedSec) },
         // The single-camera clock slot follows the DISP section (placeholder by declared precision
         // when the body has no timecode, as main showed it); Multi View tiles follow the declaration.
         CaptureShutterPolicy.showsVideoTransport(status.shootingMode) && source.session.mounts(MonitorDisplaySection.TIMECODE),
         CaptureShutterPolicy.showsVideoTransport(status.shootingMode) && source.session.mounts(MonitorDisplaySection.REC_READOUT),
-        if (source.session.mounts(MonitorDisplaySection.STORAGE)) MonitorOperatorLiveReadout("STORAGE", "Storage remaining",
+        if (source.session.mounts(MonitorDisplaySection.STORAGE)) MonitorOperatorLiveReadout("STORAGE", CameraControlsContext.context.getString(R.string.cc_storage_remaining),
             storageLabel, MonitorDisplaySection.STORAGE,
             action = { toggleStorage(storageForms.size) }, icon = MonitorIcon.CARD_SIM) else null,
         format, fps, bars, MonitorDisplaySection.BATTERIES,
-        portraitFormat = row(sheet, if (CaptureShutterPolicy.portraitSetupOpensMode(status.shootingMode)) "Shooting mode" else "Recording options",
-            if (CaptureShutterPolicy.portraitSetupOpensMode(status.shootingMode)) CaptureShutterPolicy.portraitSetupLabel(status) else formatLabel ?: "REC SETUP"),
+        portraitFormat = row(sheet, if (CaptureShutterPolicy.portraitSetupOpensMode(status.shootingMode)) CameraControlsContext.context.getString(R.string.cc_shooting_mode) else CameraControlsContext.context.getString(R.string.cc_recording_options),
+            if (CaptureShutterPolicy.portraitSetupOpensMode(status.shootingMode)) CaptureShutterPolicy.portraitSetupLabel(status) else formatLabel ?: CameraControlsContext.context.getString(R.string.cc_rec_setup)),
         portraitCaption = if (CameraCommands.isPhotoMode(status.shootingMode)) null else recordingFormat?.profile,
         color = if (source.session.mounts(MonitorDisplaySection.COLOR) && CaptureShutterPolicy.showsColorReadout(status.shootingMode))
-            row(LiveSheet.COLOR, "Color mode", recordingFormat?.profile, MonitorDisplaySection.COLOR) else null,
+            row(LiveSheet.COLOR, CameraControlsContext.context.getString(R.string.cc_color_mode), recordingFormat?.profile, MonitorDisplaySection.COLOR) else null,
         mode = if (!field.portrait && source.session.mounts(MonitorDisplaySection.FORMAT))
-            row(LiveSheet.MODE, "Shooting mode", CameraCommands.shootingModeLabel(status.shootingMode, source.host.camera?.name, labels)) else null,
+            row(LiveSheet.MODE, CameraControlsContext.context.getString(R.string.cc_shooting_mode), CameraCommands.shootingModeLabel(status.shootingMode, source.host.camera?.name, labels)) else null,
         recordingSection = MonitorDisplaySection.REC_READOUT, timecodeSection = MonitorDisplaySection.TIMECODE,
         headerAccent = headerAccent)
 }

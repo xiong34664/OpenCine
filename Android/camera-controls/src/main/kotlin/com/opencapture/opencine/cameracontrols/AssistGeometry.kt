@@ -36,11 +36,9 @@ object LiveZebra {
 }
 
 object MirrorAssist {
-    const val EXPLANATION =
-        "Flips the monitor for a camera pointed back at you or mounted upside down. " +
-            "The recording and the scopes are never mirrored."
-    const val HORIZONTAL_HELP = "Left-to-right, for a camera pointed back at you."
-    const val VERTICAL_HELP = "Top-to-bottom, for an underslung mount. Both on turns it 180°."
+    val EXPLANATION get() = CameraControlsContext.context.getString(R.string.cc_mirror_help)
+    val HORIZONTAL_HELP get() = CameraControlsContext.context.getString(R.string.cc_mirror_horizontal_help)
+    val VERTICAL_HELP get() = CameraControlsContext.context.getString(R.string.cc_mirror_vertical_help)
 
     fun feedScaleX(mirrored: Boolean, squeeze: Float = 1f): Float = if (mirrored) -squeeze else squeeze
 }
@@ -48,7 +46,7 @@ object MirrorAssist {
 object AudioAssist {
     const val PANEL_WIDTH_DP = 28f
     const val PANEL_HEIGHT_DP = 168f
-    const val HELP = "Meters the camera's audio. Available while live view is up."
+    val HELP get() = CameraControlsContext.context.getString(R.string.cc_audio_meter_help)
     const val FLOOR_DB = -60.0
     const val YELLOW_FROM_DB = -18.0
     const val RED_FROM_DB = -6.0
@@ -113,11 +111,10 @@ object HistogramAssist {
     const val TRAFFIC_LAMP_HEIGHT = 15f
     const val TRAFFIC_OUTER_PAD = 6f
     const val TRAFFIC_LINE_GAP = 4f
-    const val TRAFFIC_LIGHTS_TITLE = "Traffic Lights"
-    const val TRAFFIC_LIGHTS_HELP = "Show small RGB edge blocks for crushed and clipped channels. Clip lights from about a third of a stop under the camera's clip, the same point zebra 100% and CineStop use."
-    const val COMPENSATION_TITLE = "Crush/Clip Compensation"
-    const val COMPENSATION_HELP =
-        "Stops of crush/clip tolerance before a traffic light glows. Shared with the goal-post meter."
+    val TRAFFIC_LIGHTS_TITLE get() = CameraControlsContext.context.getString(R.string.cc_traffic_lights)
+    val TRAFFIC_LIGHTS_HELP get() = CameraControlsContext.context.getString(R.string.cc_traffic_lights_help)
+    val COMPENSATION_TITLE get() = CameraControlsContext.context.getString(R.string.cc_crush_clip_compensation)
+    val COMPENSATION_HELP get() = CameraControlsContext.context.getString(R.string.cc_crush_clip_compensation_help)
 
     val trafficGutter: Float
         get() = TRAFFIC_OUTER_PAD + TRAFFIC_LAMP_WIDTH + TRAFFIC_LINE_GAP

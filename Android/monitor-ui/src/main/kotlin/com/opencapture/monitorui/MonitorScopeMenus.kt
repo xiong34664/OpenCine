@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,29 +22,29 @@ fun <Mode> MonitorScopeTraceMenu(
     onGuides: (MonitorScopeGuides) -> Unit, supportsCalibratedReferences: Boolean = true,
 ) {
     MonitorOptionGroup {
-        MonitorSettingsInlineRow("Mode", showTopDivider = false) {
+        MonitorSettingsInlineRow(stringResource(R.string.mui_mode), showTopDivider = false) {
             MonitorSettingsChoices(modes, mode, compact = false, accentSelection = true,
                 title = title, onSelect = onMode)
         }
-        MonitorSettingsInlineRow("Brightness", help = "Raise trace intensity in bright light.", stacked = true) {
+        MonitorSettingsInlineRow(stringResource(R.string.mui_brightness), help = stringResource(R.string.mui_brightness_help), stacked = true) {
             MonitorSettingsPercentSlider(brightness, 0..200, onBrightness)
         }
     }
     Spacer(Modifier.height(11.dp))
     if (!supportsCalibratedReferences) {
-        Text("Encoded code percentage. Source calibration unavailable.", color = MonitorPalette.faint)
+        Text(stringResource(R.string.mui_encoded_code_percentage), color = MonitorPalette.faint)
         return
     }
-    Text("GUIDE LINES", modifier = Modifier.padding(start = 12.dp, bottom = 5.dp),
+    Text(stringResource(R.string.mui_guide_lines), modifier = Modifier.padding(start = 12.dp, bottom = 5.dp),
         style = MonitorTypography.text(7.5f, FontWeight.Medium).copy(letterSpacing = 1.sp), color = MonitorPalette.faint)
     MonitorOptionGroup {
-        MonitorSettingsSwitchInlineRow("Safe clip", isOn = guides.clip, showTopDivider = false) {
+        MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_safe_clip), isOn = guides.clip, showTopDivider = false) {
             onGuides(guides.copy(clip = !guides.clip))
         }
-        MonitorSettingsSwitchInlineRow("Safe crush", isOn = guides.crush) {
+        MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_safe_crush), isOn = guides.crush) {
             onGuides(guides.copy(crush = !guides.crush))
         }
-        MonitorSettingsSwitchInlineRow("Middle gray", isOn = guides.middle) {
+        MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_middle_gray), isOn = guides.middle) {
             onGuides(guides.copy(middle = !guides.middle))
         }
     }
@@ -52,12 +53,12 @@ fun <Mode> MonitorScopeTraceMenu(
 @Composable
 fun MonitorVectorscopeMenu(zoom: MonitorVectorscopeZoom, onZoom: (MonitorVectorscopeZoom) -> Unit,
     brightness: Int, onBrightness: (Int) -> Unit) {
-    MonitorSettingsInlineRow("Trace Zoom", help = "Magnifies only the chroma trace; the graticule stays at unity.",
+    MonitorSettingsInlineRow(stringResource(R.string.mui_trace_zoom), help = stringResource(R.string.mui_trace_zoom_help),
         showTopDivider = false, stacked = true) {
         MonitorSettingsChoices(MonitorVectorscopeZoom.entries, zoom, accentSelection = true,
             title = { it.label }, onSelect = onZoom)
     }
-    MonitorSettingsInlineRow("Brightness", help = "Raise trace intensity when the chroma plot is hard to read.", stacked = true) {
+    MonitorSettingsInlineRow(stringResource(R.string.mui_brightness), help = stringResource(R.string.mui_chroma_brightness_help), stacked = true) {
         MonitorSettingsPercentSlider(brightness, 0..200, onBrightness)
     }
 }

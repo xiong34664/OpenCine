@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -46,7 +47,9 @@ data class MonitorStatusPresentation(
     val clock: String get() = timecode ?: timecodePlaceholder
     val recordingLabel: String get() = when (recording) { true -> "REC"; false -> "STBY"; null -> "--" }
     val recordingAccessibilityLabel: String get() = when (recording) {
-        true -> "Recording"; false -> "Standby"; null -> "Recording state unknown"
+        true -> MonitorContext.context.getString(R.string.mui_recording)
+        false -> MonitorContext.context.getString(R.string.mui_standby)
+        null -> MonitorContext.context.getString(R.string.mui_recording_state_unknown)
     }
     val elapsedLabel: String get() = elapsedSeconds?.coerceAtLeast(0)?.let {
         String.format(Locale.ROOT, "%02d:%02d", it / 60, it % 60)
@@ -54,10 +57,12 @@ data class MonitorStatusPresentation(
     val elapsedAccessibilityLabel: String get() = elapsedSeconds?.coerceAtLeast(0)?.let {
         val minutes = it / 60
         val seconds = it % 60
-        val m = if (minutes == 1) "1 minute" else "$minutes minutes"
-        val s = if (seconds == 1) "1 second" else "$seconds seconds"
+        val m = if (minutes == 1) MonitorContext.context.getString(R.string.mui_one_minute)
+            else MonitorContext.context.getString(R.string.mui_minutes, minutes)
+        val s = if (seconds == 1) MonitorContext.context.getString(R.string.mui_one_second)
+            else MonitorContext.context.getString(R.string.mui_seconds, seconds)
         when { minutes == 0 -> s; seconds == 0 -> m; else -> "$m $s" }
-    } ?: "Elapsed time unknown"
+    } ?: MonitorContext.context.getString(R.string.mui_elapsed_time_unknown)
 }
 
 /** Integrations fill format, color, mode and telemetry readouts; common status owns orientation. */
@@ -212,6 +217,8 @@ fun MonitorClock(
     val fontSizeOverride = LocalMonitorPortraitPrimaryFit.current?.clockSize
     val displayed = timecode ?: placeholder
     val (base, accent) = MonitorTimecodeFormat.accentComponents(displayed)
+    val timecodeDescription = timecode?.let { stringResource(R.string.mui_timecode_desc, it) }
+        ?: stringResource(R.string.mui_timecode_not_available)
     Text(buildAnnotatedString {
         withStyle(SpanStyle(color = MonitorPalette.text)) { append(base) }
         withStyle(SpanStyle(color = MonitorPalette.accent)) { append(accent) }
@@ -219,19 +226,20 @@ fun MonitorClock(
         .let { if (fontSizeOverride != null) it.copy(letterSpacing = (LocalMonitorPortraitPrimaryFit.current?.tracking ?: 0f).sp) else it },
         maxLines = 1, softWrap = false,
         modifier = modifier.then(if (fontSizeOverride != null) Modifier.wrapContentWidth(unbounded = true) else Modifier)
-            .clearAndSetSemantics { contentDescription = timecode?.let { "Timecode $it" } ?: "Timecode not available" })
+            .clearAndSetSemantics { contentDescription = timecodeDescription })
 }
 
 /** Camera telemetry supplies elapsed time. Unknown recording never displays Standby. */
 @Composable
 fun MonitorRecordingReadout(status: MonitorStatusPresentation, modifier: Modifier = Modifier) {
     val fit = LocalMonitorPortraitPrimaryFit.current
+    val elapsedUnknownDescription = stringResource(R.string.mui_elapsed_time_unknown)
     Row(modifier.background(Color.Black.copy(alpha = .65f), RoundedCornerShape(50))
         .clearAndSetSemantics {
             contentDescription = if (status.recording != null && (status.recording == true || (status.elapsedSeconds ?: 0) > 0))
                 "${status.recordingAccessibilityLabel}, ${status.elapsedAccessibilityLabel}"
                 else status.recordingAccessibilityLabel
-            if (status.elapsedSeconds == null) stateDescription = "Elapsed time unknown"
+            if (status.elapsedSeconds == null) stateDescription = elapsedUnknownDescription
         }.padding(horizontal = (fit?.recordingPadding ?: 8f).dp, vertical = 4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy((fit?.recordingSpacing ?: 5f).dp)) {

@@ -6,7 +6,7 @@ import com.opencapture.opencine.core.ControlEpoch
 /** A coherent optional audio domain, outside the common capture command entry. */
 enum class CaptureAudioControl { CHANNEL, WIND, DIRECTION, VOCAL }
 enum class CaptureAudioChannel(val raw: Int, val label: String) { STEREO(2, "Stereo"), MONO(1, "Mono"), SPATIAL(3, "Spatial") }
-enum class CaptureAudioDirection(val raw: Int, val label: String) { ALL(0, "All"), FRONT(1, "Front"), FRONT_AND_BACK(2, "Front+back") }
+enum class CaptureAudioDirection(val raw: Int, val label: String) { ALL(0, CameraControlsContext.context.getString(R.string.cc_all)), FRONT(1, "Front"), FRONT_AND_BACK(2, "Front+back") }
 sealed interface CaptureAudioValue {
     val label: String
     data class Channel(val value: CaptureAudioChannel) : CaptureAudioValue { override val label get() = value.label }

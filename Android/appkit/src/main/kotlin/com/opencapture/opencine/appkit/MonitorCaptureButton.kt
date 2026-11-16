@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
@@ -93,9 +94,10 @@ public fun MonitorCaptureButton(
                 .monitorMaterial(MonitorMaterial.Expanded, RoundedCornerShape(16.dp))
                 .padding(horizontal = 18.dp, vertical = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(if (approval.recording) "Stop recording?" else "Start recording?",
+                Text(if (approval.recording) stringResource(R.string.appkit_stop_recording_question)
+                    else stringResource(R.string.appkit_start_recording_question),
                     color = MonitorPalette.text, style = MonitorTypography.text(16f, FontWeight.SemiBold))
-                Text(if (approval.recording) "Stop" else "Start",
+                Text(if (approval.recording) stringResource(R.string.appkit_stop) else stringResource(R.string.appkit_start),
                     color = if (approval.recording) MonitorPalette.recording else MonitorPalette.accent,
                     style = MonitorTypography.text(16f, FontWeight.SemiBold), textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().clickable(role = Role.Button) {
@@ -103,7 +105,7 @@ public fun MonitorCaptureButton(
                         haptics.selection()
                         if (interactive && !photo) control.commitRecord(approval)
                     }.padding(vertical = 14.dp))
-                Text("Cancel", color = MonitorPalette.muted,
+                Text(stringResource(R.string.appkit_cancel), color = MonitorPalette.muted,
                     style = MonitorTypography.text(15f, FontWeight.Medium), textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth().clickable(role = Role.Button) { haptics.selection(); approved = null }
                         .padding(vertical = 12.dp))

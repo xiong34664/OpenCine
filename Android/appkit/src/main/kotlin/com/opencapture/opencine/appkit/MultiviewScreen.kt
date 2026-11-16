@@ -26,7 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -221,13 +223,13 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewScreen(
             onDismissRequest = { coordinator.error = null },
             title = { Text("Multiview") },
             text = { Text(message) },
-            confirmButton = { TextButton(onClick = { coordinator.error = null }) { Text("OK") } },
+            confirmButton = { TextButton(onClick = { coordinator.error = null }) { Text(stringResource(R.string.appkit_ok)) } },
             dismissButton = if (coordinator.hasPendingCleanup) {
                 {
                     TextButton(onClick = {
                         coordinator.error = null
                         close.value()
-                    }) { Text("Close anyway") }
+                    }) { Text(stringResource(R.string.appkit_close_anyway)) }
                 }
             } else {
                 null
@@ -244,7 +246,7 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewScreen(
                     closeStage()
                 }) { Text(MultiviewNetworkRestore.CLOSE_ACTION) }
             },
-            dismissButton = { TextButton(onClick = { showLeave = false }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { showLeave = false }) { Text(stringResource(R.string.appkit_cancel)) } },
         )
     }
 }
@@ -326,7 +328,7 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewStageContent(
                 // Only a stage that chose its network offers the Shared Wi-Fi page.
                 network = if (coordinator.choosesNetwork) {
                     MultiviewStageButton(
-                        "Shared Wi-Fi", MonitorIcon.WIFI,
+                        stringResource(R.string.appkit_shared_wifi), MonitorIcon.WIFI,
                         enabled = coordinator.running && !coordinator.busy && !coordinator.connectingCameras,
                         identifier = "multiview.network", action = onNetwork,
                     )
@@ -373,7 +375,9 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewNetworkSetup(
             coordinator.selectNetwork(network.ssid)
             coordinator.password = network.password
             // The Android wizard's own fallback, kept (the SwiftUI wizard shows no line when none is set).
-            if (coordinator.configureNetwork()) null else coordinator.networkSetupError ?: "Could not connect. Try again."
+            if (coordinator.configureNetwork()) null
+            else coordinator.networkSetupError
+                ?: AppkitContext.context.getString(R.string.appkit_could_not_connect_try_again)
         },
         cancel = cancel,
         complete = complete,

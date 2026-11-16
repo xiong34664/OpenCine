@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -75,12 +76,13 @@ fun LivePopupCloseButton(
     modifier: Modifier = Modifier,
     size: Dp = 34.dp,
 ) {
+    val closeLabel = stringResource(R.string.cc_close)
     Box(
         modifier
             .size(size)
             .monitorGlass(CircleShape)
             .chromeClickable(onClick = onClick)
-            .semantics { contentDescription = "Close" },
+            .semantics { contentDescription = closeLabel },
         contentAlignment = Alignment.Center,
     ) {
         MonitorIcon(

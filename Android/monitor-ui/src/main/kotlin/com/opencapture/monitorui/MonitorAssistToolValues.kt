@@ -31,7 +31,7 @@ enum class MonitorAssistTool {
     /** Settings names, matching the shared Swift catalog. */
     val displaySettingsTitle: String
         get() = when (this) {
-            PARADE -> "Parade"
+            PARADE -> MonitorContext.context.getString(R.string.mui_parade)
             ND -> "ND"
             else -> title
         }
@@ -40,23 +40,23 @@ enum class MonitorAssistTool {
         get() =
             when (this) {
                 LUT -> "LUT"
-                PEAK -> "Peaking"
+                PEAK -> MonitorContext.context.getString(R.string.mui_assist_peaking)
                 FALSE -> "False Color"
-                ZEBRA -> "Zebra"
-                WAVE -> "Waveform"
-                PARADE -> "RGB Parade"
-                HISTO -> "Histogram"
-                VECTOR -> "Vectorscope"
-                LIGHTS -> "Traffic Lights"
-                ND -> "ND Suggestion"
-                EV -> "EV Meter"
-                AUDIO -> "Audio Levels"
-                GUIDES -> "Guides"
-                GRID -> "Grid"
-                CROSS -> "Crosshair"
-                LEVEL -> "Level"
-                DESQ -> "Anamorphic Desqueeze"
-                MIRROR -> "Mirror"
+                ZEBRA -> MonitorContext.context.getString(R.string.mui_assist_zebra)
+                WAVE -> MonitorContext.context.getString(R.string.mui_assist_waveform)
+                PARADE -> MonitorContext.context.getString(R.string.mui_assist_rgb_parade)
+                HISTO -> MonitorContext.context.getString(R.string.mui_assist_histogram)
+                VECTOR -> MonitorContext.context.getString(R.string.mui_assist_vectorscope)
+                LIGHTS -> MonitorContext.context.getString(R.string.mui_traffic_lights)
+                ND -> MonitorContext.context.getString(R.string.mui_assist_nd)
+                EV -> MonitorContext.context.getString(R.string.mui_ev_meter)
+                AUDIO -> MonitorContext.context.getString(R.string.mui_assist_audio)
+                GUIDES -> MonitorContext.context.getString(R.string.mui_assist_guides)
+                GRID -> MonitorContext.context.getString(R.string.mui_assist_grid)
+                CROSS -> MonitorContext.context.getString(R.string.mui_assist_crosshair)
+                LEVEL -> MonitorContext.context.getString(R.string.mui_assist_level)
+                DESQ -> MonitorContext.context.getString(R.string.mui_assist_desqueeze)
+                MIRROR -> MonitorContext.context.getString(R.string.mui_assist_mirror)
             }
 
     /** The fixed camera EV meter and LEVEL are tap-only toggles. */

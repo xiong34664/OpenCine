@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.wrist
 
+import com.opencapture.monitorui.R
+
 import com.opencapture.opencine.media.BatteryReading
 import com.opencapture.opencine.media.BatteryFraction
 import com.opencapture.opencine.media.BatterySteps
@@ -54,6 +56,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -268,14 +271,15 @@ private fun MonitorWristBatteryReadout(reading: BatteryReading?, exhausted: Bool
                     reading.filled.toDouble() / reading.of <= 0.4 -> Color(0xFFFFB347)
                     else -> Color(0xFFC3C5C8)
                 }
+                val batteryDescription = stringResource(R.string.mui_camera_battery_bars, reading.filled, reading.of)
                 if (reading.of > 10) {
                     Text("${reading.filled}/${reading.of}", color = tint, fontSize = 11.sp,
                         maxLines = 1, textAlign = TextAlign.End, modifier = Modifier.semantics {
-                            contentDescription = "Camera battery ${reading.filled} of ${reading.of} bars"
+                            contentDescription = batteryDescription
                         })
                 } else {
                     Row(horizontalArrangement = Arrangement.spacedBy(1.dp), modifier = Modifier.semantics {
-                        contentDescription = "Camera battery ${reading.filled} of ${reading.of} bars"
+                        contentDescription = batteryDescription
                     }) {
                         repeat(reading.of) { index ->
                             Box(Modifier.size(width = 2.5.dp, height = 7.dp).background(

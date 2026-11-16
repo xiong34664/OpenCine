@@ -50,7 +50,7 @@ public class MonitorHeaderCombinedCodec<K, S>(
 
 public object MonitorHeaderReadoutPolicy {
     /** The one spoken title for a combined codec control. */
-    public const val COMBINED_CODEC_TITLE: String = "Codec and color"
+    public val COMBINED_CODEC_TITLE: String get() = CameraControlsContext.context.getString(R.string.cc_codec_and_color)
 
     /**
      * The status row's mounted format readouts and the separate colour readout. Portrait and

@@ -1,9 +1,12 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.MonitorPalette
 import com.opencapture.monitorui.MonitorTypography
@@ -15,14 +18,14 @@ const val REMOTE_SHUTTER_TAG: String = "monitor.settings.controls.remoteShutter"
 @Composable
 fun MonitorInputOrientationSettings(
     remoteShutter: Boolean? = null, onRemoteShutter: ((Boolean) -> Unit)? = null,
-    remoteTitle: String = "Remote shutter", remoteHelp: String? = null, remoteCaption: String? = null,
+    remoteTitle: String = stringResource(R.string.mui_remote_shutter), remoteHelp: String? = null, remoteCaption: String? = null,
     autoRotateFeed: Boolean? = null, onAutoRotateFeed: ((Boolean) -> Unit)? = null,
-    rotationTitle: String = "Auto-Rotate Feed", rotationHelp: String, feedback: () -> Unit = {},
+    rotationTitle: String = stringResource(R.string.mui_auto_rotate_feed), rotationHelp: String, feedback: () -> Unit = {},
 ): Unit {
     val offersRemote = remoteShutter != null && onRemoteShutter != null
     val offersRotation = autoRotateFeed != null && onAutoRotateFeed != null
     if (!offersRemote && !offersRotation) return
-    MonitorSettingsRowCard(title = "Input & orientation") {
+    MonitorSettingsRowCard(title = stringResource(R.string.mui_input_orientation)) {
         if (remoteShutter != null && onRemoteShutter != null) {
             MonitorSettingsSwitchInlineRow(title = remoteTitle, help = remoteHelp,
                 isOn = remoteShutter, showTopDivider = false, testTag = REMOTE_SHUTTER_TAG) {

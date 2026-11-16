@@ -73,6 +73,7 @@ import com.opencapture.monitorui.MonitorAssistPanelMetrics
 import com.opencapture.opencine.appkit.MonitorCapturePreferences
 import com.opencapture.opencine.vocabulary.CaptureSessionState
 import com.opencapture.opencine.vocabulary.CaptureSetting
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun LiveControlSheet(
@@ -122,9 +123,9 @@ private fun RecordingSetupPanel(
     var tab by remember(initial, tabNames) {
         mutableStateOf(
             when {
-                "Mode" in tabNames && (initial == LiveSheet.MODE || tabNames == listOf("Mode")) -> "Mode"
-                initial == LiveSheet.COLOR && "Color" in tabNames -> "Color"
-                else -> tabNames.firstOrNull() ?: "Format"
+                CameraControlsContext.context.getString(R.string.cc_mode) in tabNames && (initial == LiveSheet.MODE || tabNames == listOf(CameraControlsContext.context.getString(R.string.cc_mode))) -> CameraControlsContext.context.getString(R.string.cc_mode)
+                initial == LiveSheet.COLOR && CameraControlsContext.context.getString(R.string.cc_color) in tabNames -> CameraControlsContext.context.getString(R.string.cc_color)
+                else -> tabNames.firstOrNull() ?: CameraControlsContext.context.getString(R.string.cc_format)
             },
         )
     }
@@ -136,14 +137,14 @@ private fun RecordingSetupPanel(
         }
     }
     androidx.compose.runtime.key(tab) {
-        if (tab == "Mode" || tabNames == listOf("Mode")) {
+        if (tab == CameraControlsContext.context.getString(R.string.cc_mode) || tabNames == listOf(CameraControlsContext.context.getString(R.string.cc_mode))) {
             val modeScroll = rememberScrollState()
             Column(Modifier.fillMaxWidth().then(if (maxHeightDp != null) Modifier.heightIn(max = maxHeightDp.dp) else Modifier)
                 .then(if (chromeless) Modifier else Modifier.pickerPanelGlass(capturePanelShape(fromTop = true, portrait = viewportIsPortrait()))
                     .monitorScrollFade(modeScroll).verticalScroll(modeScroll, enabled = preview == null).padding(14.dp)),
                 verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                androidx.compose.runtime.SideEffect { onHeaderChanged("SHOOTING MODE", "Capture mode") }
-                if (!chromeless) SheetHeader("SHOOTING MODE", "Capture mode", onDismiss)
+                androidx.compose.runtime.SideEffect { onHeaderChanged(CameraControlsContext.context.getString(R.string.cc_shooting_mode_caps), CameraControlsContext.context.getString(R.string.cc_capture_mode)) }
+                if (!chromeless) SheetHeader(CameraControlsContext.context.getString(R.string.cc_shooting_mode_caps), CameraControlsContext.context.getString(R.string.cc_capture_mode), onDismiss)
                 val bodyName = host.camera?.name
                 val labels = CaptureLists.shootingModeLabels(bodyName, status.shootingMode, host.labelProfile)
                 CaptureDrumWheel(labels, CameraCommands.shootingModeLabel(status.shootingMode, bodyName, host.labelProfile).orEmpty()
@@ -156,13 +157,13 @@ private fun RecordingSetupPanel(
                 ) {
                     categories()
                 }
-                if (status.isRecording) Text("Stop recording to change mode.", color = LiveDesign.muted, style = LiveType.text(11f))
+                if (status.isRecording) Text(CameraControlsContext.context.getString(R.string.cc_stop_recording_to_change_mode), color = LiveDesign.muted, style = LiveType.text(11f))
                 if (!chromeless && com.opencapture.monitorui.MonitorLayoutPolicy.showsCaptureGrabber(preview != null, fromTop = true)) {
                     com.opencapture.monitorui.MonitorPanelGrabber()
                 }
             }
         } else {
-            LiveControlSheetContent(if (tab == "Color") LiveSheet.COLOR else LiveSheet.FORMAT,
+            LiveControlSheetContent(if (tab == CameraControlsContext.context.getString(R.string.cc_color)) LiveSheet.COLOR else LiveSheet.FORMAT,
                 host, status, locked, onDismiss, maxHeightDp, footer = categories,
                 showsHeader = !chromeless, chromeless = chromeless, onHeaderChanged = onHeaderChanged)
         }
@@ -487,7 +488,7 @@ private fun LiveControlSheetContent(
     val portrait = viewportIsPortrait()
     val topPadding = if (showsHeader) com.opencapture.monitorui.MonitorLayoutPolicy.captureTopPadding(fromTop, portrait, compact) else 0f
     val headerTitle = CaptureLists.headerTitle(sheet, status.expoMode, status.shootingMode)
-    val headerSubtitle = if (compact) "drag to set" else CaptureLists.headerSubtitle(sheet, status.expoMode,
+    val headerSubtitle = if (compact) CameraControlsContext.context.getString(R.string.cc_drag_to_set) else CaptureLists.headerSubtitle(sheet, status.expoMode,
         selectedMode, prefs.facePriorityExposure, status.shootingMode)
     androidx.compose.runtime.SideEffect { onHeaderChanged(headerTitle, headerSubtitle) }
     // Every drum has the same 86dp viewport; the card hugs its own controls.
@@ -517,7 +518,7 @@ private fun LiveControlSheetContent(
                 title = if (sheet == LiveSheet.COLOR) host.recordingCodecColor(status).title
                     else CaptureLists.headerTitle(sheet, status.expoMode, status.shootingMode),
                 subtitle =
-                    if (compact) "drag to set"
+                    if (compact) CameraControlsContext.context.getString(R.string.cc_drag_to_set)
                     else
                         CaptureLists.headerSubtitle(
                             sheet,
@@ -724,7 +725,7 @@ private fun LiveControlSheetContent(
                             applyDrum(it)
                         },
                     )
-                    if (status.isRecording) Text("Stop recording to change mode.",
+                    if (status.isRecording) Text(CameraControlsContext.context.getString(R.string.cc_stop_recording_to_change_mode),
                         color = LiveDesign.muted, style = LiveType.text(11f))
                 }
             }
@@ -819,18 +820,20 @@ private fun AudioBody(status: CameraStatus, enabled: Boolean, selectedMode: Int,
     val sourceID = remember(host) { service?.sourceID }
     var refusal by remember(host) { mutableStateOf<String?>(null) }
     val field = service?.fields?.getOrNull(selectedMode)
-    if (field == null) Text("Audio controls unavailable", color = LiveDesign.faint)
+    val audioControlUnavailable = stringResource(R.string.cc_audio_control_unavailable)
+    val audioControlRefused = stringResource(R.string.cc_audio_control_refused)
+    if (field == null) Text(stringResource(R.string.cc_audio_controls_unavailable), color = LiveDesign.faint)
     else CheckedRows(field.choices.map { it.label }, field.observed?.label,
         enabled && field.isEditable && service?.sourceID == sourceID) { label ->
         val current = host.audioService
         val currentField = current?.fields?.firstOrNull { it.id == field.id }
         val value = currentField?.choices?.firstOrNull { it.label == label }
         refusal = if (current == null || current.sourceID != sourceID || currentField?.isEditable != true || value == null)
-            "Audio control unavailable"
+            audioControlUnavailable
         else when (current.commit(value)) {
             CaptureAudioCommitResult.SUBMITTED -> null
-            CaptureAudioCommitResult.UNAVAILABLE -> "Audio control unavailable"
-            CaptureAudioCommitResult.REFUSED -> "Audio control refused"
+            CaptureAudioCommitResult.UNAVAILABLE -> audioControlUnavailable
+            CaptureAudioCommitResult.REFUSED -> audioControlRefused
         }
     }
     refusal?.let { Text(it, color = LiveDesign.faint) }

@@ -83,13 +83,13 @@ public fun MonitorOperatorCacheSettings(
         color = MonitorPalette.accent)
     if (value.confirmationPresented) AlertDialog(
         onDismissRequest = model::cancelConfirmation,
-        title = { Text("Clear cache?", color = LiveDesign.text) },
+        title = { Text(CameraControlsContext.context.getString(R.string.cc_clear_cache_question), color = LiveDesign.text) },
         text = { Text(clearHelp, color = LiveDesign.muted) },
-        confirmButton = { TextButton(onClick = model::clear) { Text("Clear", color = MonitorPalette.recording) } },
-        dismissButton = { TextButton(onClick = model::cancelConfirmation) { Text("Cancel", color = LiveDesign.muted) } },
+        confirmButton = { TextButton(onClick = model::clear) { Text(CameraControlsContext.context.getString(R.string.cc_clear), color = MonitorPalette.recording) } },
+        dismissButton = { TextButton(onClick = model::cancelConfirmation) { Text(CameraControlsContext.context.getString(R.string.cc_cancel), color = LiveDesign.muted) } },
         containerColor = LiveDesign.surface,
     )
     if (value.clearFailed) AlertDialog(onDismissRequest = model::dismissError,
         title = { Text(value.failure ?: clearFailureLabel) },
-        confirmButton = { TextButton(onClick = model::dismissError) { Text("OK") } })
+        confirmButton = { TextButton(onClick = model::dismissError) { Text(CameraControlsContext.context.getString(R.string.cc_ok)) } })
 }

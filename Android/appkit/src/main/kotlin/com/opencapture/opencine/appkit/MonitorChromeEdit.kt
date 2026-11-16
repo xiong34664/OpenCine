@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
@@ -146,8 +147,8 @@ public fun MonitorChromeEditBanner(
     ) {
         MonitorIcon(MonitorIcon.EYE, null, Modifier.size(11.dp), MonitorPalette.accent)
         Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
-            Text("Editing $modeTitle", color = MonitorPalette.text, style = MonitorTypography.text(11.5f, FontWeight.SemiBold))
-            Text("Tap an eye to show or hide it", color = MonitorPalette.muted, style = MonitorTypography.text(10f))
+            Text(stringResource(R.string.appkit_editing, modeTitle), color = MonitorPalette.text, style = MonitorTypography.text(11.5f, FontWeight.SemiBold))
+            Text(stringResource(R.string.appkit_tap_eye_to_toggle), color = MonitorPalette.muted, style = MonitorTypography.text(10f))
         }
         Box(
             Modifier
@@ -157,7 +158,7 @@ public fun MonitorChromeEditBanner(
                 .monitorChromeClickable(onClickFeedback = { haptics.selection() }, onClick = onDone)
                 .padding(horizontal = 12.dp, vertical = 6.dp),
         ) {
-            Text("Done", color = MonitorPalette.background, style = MonitorTypography.text(11.5f, FontWeight.Bold))
+            Text(stringResource(R.string.appkit_done), color = MonitorPalette.background, style = MonitorTypography.text(11.5f, FontWeight.Bold))
         }
     }
 }
@@ -194,7 +195,11 @@ public fun <K> MonitorChromeEditBadgeLayer(
         val click =
             Modifier
                 .monitorChromeClickable(onClickFeedback = { haptics.selection() }, onClick = { onToggle(section) })
-                .then(label?.let { name -> Modifier.semantics { contentDescription = name(section); stateDescription = if (on) "Shown" else "Hidden" } } ?: Modifier)
+                .then(label?.let { name -> Modifier.semantics {
+                    contentDescription = name(section)
+                    stateDescription = if (on) AppkitContext.context.getString(R.string.appkit_shown)
+                        else AppkitContext.context.getString(R.string.appkit_hidden)
+                } } ?: Modifier)
                 .then(tag?.let { Modifier.testTag(it(section)) } ?: Modifier)
         val eye = @Composable {
             MonitorIcon(if (on) MonitorIcon.EYE else MonitorIcon.EYE_OFF, null, Modifier.size(11.dp),

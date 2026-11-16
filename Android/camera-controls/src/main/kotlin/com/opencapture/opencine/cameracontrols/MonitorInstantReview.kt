@@ -35,6 +35,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.LocalMonitorAssistVisible
 import com.opencapture.monitorui.MonitorIcon
 import com.opencapture.monitorui.MonitorInstantReviewLayout as Layout
@@ -84,13 +85,16 @@ fun MonitorInstantReview(
 ) {
     val blur by animateDpAsState(if (isFullResolution) 0.dp else Layout.STAND_IN_BLUR.dp,
         tween(Layout.SHARPEN_MILLIS), label = "instantReviewSharpen")
+    val instantPlaybackLabel = stringResource(R.string.cc_instant_playback)
+    val removeFavoriteStarLabel = stringResource(R.string.cc_remove_favorite_star)
+    val favoriteThisShotLabel = stringResource(R.string.cc_favorite_this_shot)
     BoxWithConstraints(
         modifier
             .fillMaxSize()
             .background(Color.Black)
             .clickable(remember { MutableInteractionSource() }, indication = null, onClick = onDismiss)
             .testTag(MonitorInstantReviewIds.REVIEW)
-            .semantics { contentDescription = "Instant playback" },
+            .semantics { contentDescription = instantPlaybackLabel },
     ) {
         val aspect = displayAspect?.takeIf { it.isFinite() && it > 0f }
         val fitted = Layout.imageFrame(aspect ?: image.width.toFloat(), if (aspect != null) 1f else image.height.toFloat(),
@@ -124,7 +128,7 @@ fun MonitorInstantReview(
                         .chromeClickable { onToggleFavorite(!starred) }
                         .testTag(MonitorInstantReviewIds.FAVORITE)
                         .semantics {
-                            contentDescription = if (starred) "Remove favorite star" else "Favorite this shot"
+                            contentDescription = if (starred) removeFavoriteStarLabel else favoriteThisShotLabel
                         },
                     contentAlignment = Alignment.Center,
                 ) {

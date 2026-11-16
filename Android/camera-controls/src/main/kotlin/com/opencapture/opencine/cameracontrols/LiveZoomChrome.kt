@@ -40,6 +40,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.MonitorPalette
 import com.opencapture.monitorui.MonitorRect
 import com.opencapture.monitorui.MonitorZoomCaption
@@ -112,6 +113,10 @@ fun LiveZoomChip(
         }
     }
     val digital = MonitorZoomCaption.isDigital(held, opticalStops)
+    val zoomDigitalCropSuffix = stringResource(R.string.cc_zoom_digital_crop)
+    val zoomDoubleTapSuffix = stringResource(R.string.cc_zoom_double_tap)
+    val zoomDescription = stringResource(R.string.cc_zoom_a11y, LiveZoom.label(held),
+        if (digital) zoomDigitalCropSuffix else "", if (onDigitalCycle != null) zoomDoubleTapSuffix else "")
     Box(
         modifier
             .fillMaxSize()
@@ -123,10 +128,7 @@ fun LiveZoomChip(
                     { haptics.longPress(); dialBase = dialFactor; dialOpen = true }
                 } else null)
             .semantics {
-                val crop = if (digital) ", digital crop" else ""
-                val extra = if (onDigitalCycle != null) "; double tap for digital zoom" else ""
-                contentDescription =
-                    "Zoom ${LiveZoom.label(held)}$crop. Tap to cycle; hold to adjust$extra"
+                contentDescription = zoomDescription
             },
         contentAlignment = Alignment.Center,
     ) {
@@ -304,7 +306,7 @@ fun LiveFeedGestureWell(
                                     haptics.lock()
                                     @Suppress("DEPRECATION")
                                     view.announceForAccessibility(
-                                        if (locked) "Focus box locked" else "Focus box unlocked",
+                                        if (locked) CameraControlsContext.context.getString(R.string.cc_focus_box_locked) else CameraControlsContext.context.getString(R.string.cc_focus_box_unlocked),
                                     )
                                 } else if (latestCanLockAe.value()) {
                                     gesture.aeLockHeld = true

@@ -184,6 +184,6 @@ fun MonitorValueDrum(options: List<String>, selection: String, modifier: Modifie
  * so the hint (the Swift drum's `accessibilityHint`) follows the value.
  */
 internal fun monitorDrumDescription(selection: String, hint: String?): String {
-    val value = selection.ifBlank { "Choose value" }
+    val value = selection.ifBlank { MonitorContext.context.getString(R.string.mui_choose_value) }
     return if (hint.isNullOrBlank()) value else "$value. $hint"
 }

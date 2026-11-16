@@ -116,7 +116,7 @@ object NDAssist {
     const val HELP =
         "Meters the live picture against middle gray and suggests a screw-on ND (stops and ND number) to balance it. The app cannot set a filter."
     const val METER_TITLE = "ND"
-    const val NOTATION_TITLE = "Units"
+    val NOTATION_TITLE get() = CameraControlsContext.context.getString(R.string.cc_units)
     const val NOTATION_HELP =
         "Stops vs middle gray, filter factor (ND16 / ND32 / ND64), or optical density (ND 0.3 = 1 stop)."
 }

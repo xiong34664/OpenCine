@@ -36,6 +36,7 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -77,6 +78,9 @@ fun MonitorClipCard(clip: MonitorClipValue, list: Boolean, selecting: Boolean, s
     modifier: Modifier = Modifier, clicks: Boolean = true,
     artworkAspect: Double = MonitorMediaMasonry.DEFAULT_ASPECT, thumbnail: @Composable BoxScope.() -> Unit) {
     val shape = RoundedCornerShape(11.dp)
+    val toggleSelectionLabel = stringResource(R.string.mui_toggle_selection)
+    val openLabel = stringResource(R.string.mui_open)
+    val selectClipLabel = stringResource(R.string.mui_select_clip)
     val surface = modifier.fillMaxWidth().clip(shape)
         .background(if (selected) MonitorPalette.accent.copy(alpha = .12f) else MonitorPalette.surface)
         .border(if (selected) 2.dp else 1.dp,
@@ -95,11 +99,11 @@ fun MonitorClipCard(clip: MonitorClipValue, list: Boolean, selecting: Boolean, s
                 role = Role.Button
                 contentDescription = clip.accessibilityDescription ?: clip.title
                 clip.progressCaption?.let { stateDescription = it }
-                onClick(label = if (selecting) "Toggle selection" else "Open") {
+                onClick(label = if (selecting) toggleSelectionLabel else openLabel) {
                     if (selecting) onSelect() else onOpen()
                     true
                 }
-                onLongClick(label = if (selecting) "Toggle selection" else "Select clip") {
+                onLongClick(label = if (selecting) toggleSelectionLabel else selectClipLabel) {
                     onSelect()
                     true
                 }
@@ -134,7 +138,7 @@ fun MonitorClipCard(clip: MonitorClipValue, list: Boolean, selecting: Boolean, s
             clip.source?.let { Text(it, color = MonitorPalette.muted, style = MonitorTypography.text(7.5f, FontWeight.SemiBold)) }
         }
         if (favoriteAction != null) {
-            MonitorClipFavorite(clip.favorite, favoriteAction, clip.favoriteLabel ?: if (clip.favorite) "Remove from favorites" else "Add to favorites")
+            MonitorClipFavorite(clip.favorite, favoriteAction, clip.favoriteLabel ?: if (clip.favorite) stringResource(R.string.mui_remove_from_favorites) else stringResource(R.string.mui_add_to_favorites))
         }
     } else Column(surface, verticalArrangement = Arrangement.spacedBy(2.dp)) {
         // The grid card's picture keeps the shape the masonry placed it with; the thumbnail fills
@@ -147,11 +151,11 @@ fun MonitorClipCard(clip: MonitorClipValue, list: Boolean, selecting: Boolean, s
                     MonitorClipSelection(selected, if (clicks) onSelect else null)
                 }
             } else clip.burstCount?.let {
-                ClipBadge("$it frames", Modifier.align(Alignment.TopStart).padding(6.dp))
+                ClipBadge(stringResource(R.string.mui_frames, it), Modifier.align(Alignment.TopStart).padding(6.dp))
             }
             if (favoriteAction != null) {
                 Box(Modifier.align(Alignment.TopEnd)) {
-                    MonitorClipFavorite(clip.favorite, favoriteAction, clip.favoriteLabel ?: if (clip.favorite) "Remove from favorites" else "Add to favorites")
+                    MonitorClipFavorite(clip.favorite, favoriteAction, clip.favoriteLabel ?: if (clip.favorite) stringResource(R.string.mui_remove_from_favorites) else stringResource(R.string.mui_add_to_favorites))
                 }
             }
             clip.source?.let {
@@ -179,7 +183,7 @@ fun MonitorClipCard(clip: MonitorClipValue, list: Boolean, selecting: Boolean, s
 
 @Composable
 fun MonitorClipFavorite(favorite: Boolean, onClick: () -> Unit,
-    label: String = if (favorite) "Remove from favorites" else "Add to favorites") {
+    label: String = if (favorite) stringResource(R.string.mui_remove_from_favorites) else stringResource(R.string.mui_add_to_favorites)) {
     Box(Modifier.size(44.dp).combinedClickable(role = Role.Button, onClick = onClick), contentAlignment = Alignment.Center) {
         MonitorIcon(MonitorIcon.STAR, label,
             Modifier.size(13.dp), if (favorite) Color(0xFFE9C35A) else MonitorPalette.muted, favorite)
@@ -188,9 +192,10 @@ fun MonitorClipFavorite(favorite: Boolean, onClick: () -> Unit,
 
 @Composable
 fun MonitorClipSelection(selected: Boolean, onClick: (() -> Unit)? = null) {
+    val selectionDescription = if (selected) stringResource(R.string.mui_deselect_clip) else stringResource(R.string.mui_select_clip)
     Box(Modifier.size(44.dp).then(
         if (onClick != null) Modifier.combinedClickable(role = Role.Checkbox, onClick = onClick) else Modifier,
-    ).semantics { contentDescription = if (selected) "Deselect clip" else "Select clip" }, contentAlignment = Alignment.Center) {
+    ).semantics { contentDescription = selectionDescription }, contentAlignment = Alignment.Center) {
         // iOS: circle-check / circle glyph over a 40% black disc.
         MonitorIcon(if (selected) MonitorIcon.CIRCLE_CHECK else MonitorIcon.CIRCLE, null,
             Modifier.size(22.dp).background(Color.Black.copy(alpha = .4f), CircleShape),
@@ -230,9 +235,9 @@ fun MonitorCatalogDisplayControls(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(2.dp),
         ) {
-            CatalogLayoutCell(MonitorIcon.LAYOUT_GRID, "Grid view", "monitor.media.layout.grid",
+            CatalogLayoutCell(MonitorIcon.LAYOUT_GRID, stringResource(R.string.mui_grid_view), "monitor.media.layout.grid",
                 selected = !list, onClick = { onList(false) })
-            CatalogLayoutCell(MonitorIcon.MENU, "List view", "monitor.media.layout.list",
+            CatalogLayoutCell(MonitorIcon.MENU, stringResource(R.string.mui_list_view), "monitor.media.layout.list",
                 selected = list, onClick = { onList(true) })
         }
         Row(
@@ -242,11 +247,12 @@ fun MonitorCatalogDisplayControls(
         ) {
             MonitorThumbnailSize.entries.forEach { size ->
                 val selected = size == thumbnailSize
+                val sizeDescription = stringResource(R.string.mui_thumbnails, size.name.lowercase().replaceFirstChar { it.uppercase() })
                 Box(Modifier.size(28.dp).clip(RoundedCornerShape(7.dp))
                     .background(if (selected) Color.White.copy(alpha = .14f) else Color.Transparent)
                     .combinedClickable(role = Role.Button, onClick = { onThumbnailSize(size) })
                     .semantics {
-                        contentDescription = "${size.name.lowercase().replaceFirstChar { it.uppercase() }} thumbnails"
+                        contentDescription = sizeDescription
                         this.selected = selected
                     },
                     contentAlignment = Alignment.Center) {
@@ -285,12 +291,13 @@ fun MonitorCatalogHeader(title: String, subtitle: String, compact: Boolean, sort
     }
     val controls: @Composable () -> Unit = {
         val controlsScroll = rememberScrollState()
+        val filterLibraryDescription = stringResource(R.string.mui_filter_library)
         Row(Modifier.monitorScrollFade(controlsScroll, vertical = false).horizontalScroll(controlsScroll), verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             Row(Modifier.height(34.dp).clip(RoundedCornerShape(8.dp)).background(MonitorPalette.tile)
                 .combinedClickable(role = Role.Button, onClick = onSort).padding(horizontal = 9.dp),
                 verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
-                MonitorIcon(MonitorIcon.ARROW_UP_DOWN, "Sort clips", Modifier.size(12.dp), MonitorPalette.muted)
+                MonitorIcon(MonitorIcon.ARROW_UP_DOWN, stringResource(R.string.mui_sort_clips), Modifier.size(12.dp), MonitorPalette.muted)
                 Text(sort, style = MonitorTypography.text(10.5f, FontWeight.Medium), color = MonitorPalette.muted)
             }
             Row(
@@ -301,7 +308,7 @@ fun MonitorCatalogHeader(title: String, subtitle: String, compact: Boolean, sort
                     )
                     .combinedClickable(role = Role.Button, onClick = onFilter)
                     .semantics {
-                        contentDescription = "Filter library"
+                        contentDescription = filterLibraryDescription
                         selected = filterActive
                     }
                     .padding(horizontal = 9.dp),
@@ -313,7 +320,7 @@ fun MonitorCatalogHeader(title: String, subtitle: String, compact: Boolean, sort
                     if (filterActive) MonitorPalette.text else MonitorPalette.muted,
                 )
                 Text(
-                    "Filter",
+                    stringResource(R.string.mui_filter),
                     style = MonitorTypography.text(10.5f, FontWeight.Medium),
                     color = if (filterActive) MonitorPalette.text else MonitorPalette.muted,
                 )

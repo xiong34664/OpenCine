@@ -1,5 +1,7 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
@@ -12,6 +14,7 @@ import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.*
 import com.opencapture.opencine.media.MonitorCrushClipCompensation
@@ -177,7 +180,7 @@ private fun AssistSettingsCard(section: MonitorAssistSettingsSection): Unit {
         else -> error("No settings menu for ${section.tool}")
     }
     Column(Modifier.testTag("settings.assist.$tag")) {
-        MonitorSettingsRowCard(title = if (section.tool == MonitorAssistTool.PARADE) "Parade" else section.tool.title,
+        MonitorSettingsRowCard(title = if (section.tool == MonitorAssistTool.PARADE) stringResource(R.string.mui_parade) else section.tool.title,
             onReset = section.reset) { section.Menu() }
     }
 }

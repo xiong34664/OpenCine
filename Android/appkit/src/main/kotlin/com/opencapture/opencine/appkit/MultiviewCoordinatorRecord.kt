@@ -221,29 +221,39 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCoordinator<Cam
     val recording = recordingActive(slot)
     val actions = mutableListOf(
         MultiviewCameraAction(
-            MultiviewCameraAction.LIVE_VIEW, "Live View",
+            MultiviewCameraAction.LIVE_VIEW, AppkitContext.context.getString(R.string.appkit_live_view),
             enabled = member.controlHost != null && !member.recovering,
         ),
         MultiviewCameraAction(
-            MultiviewCameraAction.RECORD, if (recording == true) "Stop recording" else "Start recording",
+            MultiviewCameraAction.RECORD,
+            if (recording == true) AppkitContext.context.getString(R.string.appkit_stop_recording)
+            else AppkitContext.context.getString(R.string.appkit_start_recording),
             MultiviewCameraAction.Kind.RECORD,
             enabled = member.recordingAvailable && !member.recordingBusy && !groupRecordingBusy && !closing,
         ),
         MultiviewCameraAction(
-            MultiviewCameraAction.LUT, if (member.lutEnabled) "Disable Auto LUT" else "Enable Auto LUT",
+            MultiviewCameraAction.LUT,
+            if (member.lutEnabled) AppkitContext.context.getString(R.string.appkit_disable_auto_lut)
+            else AppkitContext.context.getString(R.string.appkit_enable_auto_lut),
             enabled = preview,
         ),
     )
     if (preview || member.failureMessage != null) {
-        actions += MultiviewCameraAction(MultiviewCameraAction.RECONNECT, "Reconnect", enabled = settled, closes = true)
+        actions += MultiviewCameraAction(
+            MultiviewCameraAction.RECONNECT, AppkitContext.context.getString(R.string.appkit_reconnect),
+            enabled = settled, closes = true,
+        )
     }
     if (offersExperimentalJoin && member.failureMessage != null && !member.experimental && member.identity == null) {
         actions += MultiviewCameraAction(
-            MultiviewCameraAction.EXPERIMENTAL, "Try experimental shared Wi-Fi", enabled = settled, closes = true,
+            MultiviewCameraAction.EXPERIMENTAL,
+            AppkitContext.context.getString(R.string.appkit_try_experimental_shared_wifi),
+            enabled = settled, closes = true,
         )
     }
     actions += MultiviewCameraAction(
-        MultiviewCameraAction.REMOVE, "Remove camera", MultiviewCameraAction.Kind.DESTRUCTIVE,
+        MultiviewCameraAction.REMOVE, AppkitContext.context.getString(R.string.appkit_remove_camera),
+        MultiviewCameraAction.Kind.DESTRUCTIVE,
         enabled = !(busy || member.connecting || groupRecordingBusy || member.recordingBusy || closing),
     )
     val note = member.recordingNote
@@ -266,9 +276,9 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCoordinator<Cam
         status = if (showsStatus) {
             MultiviewTileStatus(
                 text = when {
-                    member.recovering -> "Restoring picture…"
+                    member.recovering -> AppkitContext.context.getString(R.string.appkit_restoring_picture)
                     member.failureMessage == null -> member.status
-                    else -> "Connection failed · Options"
+                    else -> AppkitContext.context.getString(R.string.appkit_connection_failed_options)
                 },
                 detail = member.failureMessage ?: member.status,
                 inProgress = member.recovering || (member.failureMessage == null && !member.networkVerified),
@@ -279,7 +289,7 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCoordinator<Cam
         detail = member.status,
         failure = member.failureMessage,
         footnote = if (member.networkVerified && !preview) {
-            "Remove this camera to enable group recording for your other cameras."
+            AppkitContext.context.getString(R.string.appkit_remove_camera_enable_group_recording)
         } else {
             null
         },

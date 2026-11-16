@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -60,8 +61,8 @@ fun <T> MonitorCameraPage(
     key: (T) -> Any,
     emptyMessage: String,
     modifier: Modifier = Modifier,
-    title: String = "Your cameras",
-    emptyTitle: String = "No cameras saved yet",
+    title: String = stringResource(R.string.mui_your_cameras),
+    emptyTitle: String = stringResource(R.string.mui_no_cameras_saved),
     scanning: Boolean = false,
     actions: @Composable RowScope.() -> Unit,
     camera: @Composable (T) -> Unit,
@@ -342,10 +343,10 @@ fun MonitorCameraCard(
                 }
             } else {
                 MonitorCameraAction(
-                    text = if (busy) "Cancel" else actionTitle,
+                    text = if (busy) stringResource(R.string.mui_cancel) else actionTitle,
                     primary = primary && !busy,
                     enabled = if (busy) onCancel != null else enabled,
-                    contentDescription = if (busy) "Cancel connecting to $title" else "$actionTitle $title",
+                    contentDescription = if (busy) stringResource(R.string.mui_cancel_connecting_to, title) else "$actionTitle $title",
                     onClick = { if (busy) onCancel?.invoke() else onOpen() },
                 )
             }
@@ -357,8 +358,9 @@ fun MonitorCameraCard(
 @Composable
 private fun MonitorCameraScanStatus(fullLabels: Boolean) {
     val phase = monitorPulsePhase(1400)
+    val scanningDescription = stringResource(R.string.mui_scanning_for_cameras)
     Row(
-        Modifier.semantics(mergeDescendants = true) { contentDescription = "Scanning for cameras" },
+        Modifier.semantics(mergeDescendants = true) { contentDescription = scanningDescription },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(6.dp),
     ) {
@@ -370,7 +372,7 @@ private fun MonitorCameraScanStatus(fullLabels: Boolean) {
         )
         if (fullLabels) {
             Text(
-                "SCANNING",
+                stringResource(R.string.mui_scanning),
                 color = MonitorPalette.accent,
                 style = MonitorTypography.text(9.5f, FontWeight.Bold).copy(letterSpacing = 1.1.sp),
                 maxLines = 1,

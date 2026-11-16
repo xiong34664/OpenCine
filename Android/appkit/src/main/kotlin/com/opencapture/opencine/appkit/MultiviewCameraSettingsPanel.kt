@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
@@ -117,7 +118,7 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCameraSettingsP
                 Box(
                     Modifier.size(48.dp).testTag("monitor.capture.close").monitorChromeClickable(onClick = onDismiss)
                         .semantics {
-                            contentDescription = "Close camera settings"
+                            contentDescription = AppkitContext.context.getString(R.string.appkit_close_camera_settings)
                             role = Role.Button
                         },
                     contentAlignment = Alignment.Center,
@@ -135,7 +136,9 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCameraSettingsP
                 Modifier.fillMaxWidth().monitorScrollFade(cameraTabScroll, vertical = false)
                     .horizontalScroll(cameraTabScroll),
             ) {
-                val names = cameras.map { "${MultiviewTile.letter(it)} · ${coordinator.cameraName(it) ?: "Camera"}" }
+                val names = cameras.map {
+                    "${MultiviewTile.letter(it)} · ${coordinator.cameraName(it) ?: AppkitContext.context.getString(R.string.appkit_camera)}"
+                }
                 MonitorDrawerTabs(
                     // The tabs show upper-cased and read mixed case, as on iOS.
                     tabs = names.map { it.uppercase() },
@@ -166,12 +169,13 @@ public fun <Camera, Link : MultiviewMemberLink<Camera>> MultiviewCameraSettingsP
                         ) {
                             // 16:9 from the measured column: full width when the tallest controls still fit.
                             key(selected) {
-                                val name = coordinator.cameraName(selected) ?: "Camera"
+                                val name = coordinator.cameraName(selected) ?: stringResource(R.string.appkit_camera)
+                                val previewLabel = stringResource(R.string.appkit_name_preview, name)
                                 host.SettingsPreview(
                                     selected,
                                     Modifier.align(Alignment.CenterHorizontally)
                                         .width(previewHeight * 16f / 9f).height(previewHeight)
-                                        .semantics { contentDescription = "$name preview" },
+                                        .semantics { contentDescription = previewLabel },
                                 )
                             }
                             Column(

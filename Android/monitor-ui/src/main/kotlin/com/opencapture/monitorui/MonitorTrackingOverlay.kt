@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
@@ -109,9 +110,10 @@ fun MonitorTrackingLayer(brackets: List<MonitorTrackingBracketValue>, focus: Mon
 @Composable
 fun MonitorTrackingCancelButton(rect: MonitorRect, color: Color, ink: Color,
     onClick: () -> Unit, feedback: () -> Unit = {}) {
+    val stopTrackingDescription = stringResource(R.string.mui_stop_subject_tracking)
     Box(Modifier.offset(rect.x.dp, rect.y.dp).size(rect.width.dp, rect.height.dp)
         .clip(CircleShape).monitorChromeClickable(onClickFeedback = feedback, onClick = onClick)
-        .semantics { contentDescription = "Stop subject tracking" }, contentAlignment = Alignment.Center) {
+        .semantics { contentDescription = stopTrackingDescription }, contentAlignment = Alignment.Center) {
         Box(Modifier.size(MonitorTrackingGeometry.CANCEL_SIZE.dp).clip(CircleShape).background(color),
             contentAlignment = Alignment.Center) {
             MonitorIcon(MonitorIcon.X, null, Modifier.size(11.dp), ink)

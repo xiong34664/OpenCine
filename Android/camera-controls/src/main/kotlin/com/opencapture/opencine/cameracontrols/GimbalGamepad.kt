@@ -244,7 +244,7 @@ class GimbalGamepadDriver(private val stickPreference: (Context) -> GamepadGimba
         if (connected == model.gamepadConnected) return
         model.gamepadConnected = connected
         model.presentControlNote(
-            if (connected) "Gamepad connected" else "Gamepad disconnected",
+            if (connected) CameraControlsContext.context.getString(R.string.cc_gamepad_connected) else CameraControlsContext.context.getString(R.string.cc_gamepad_disconnected),
         )
         if (!connected) noteBlocked(model)
     }

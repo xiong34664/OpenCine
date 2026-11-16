@@ -50,6 +50,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.res.stringResource
+import com.opencapture.opencine.appkit.AppkitContext
+import com.opencapture.opencine.appkit.R
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.Dispatchers
@@ -68,7 +71,11 @@ private val ChromeShape = RoundedCornerShape(12.dp)
 /** The Settings support card's report status, or null while this phone holds no report. */
 public val ManualProblemReportSnapshot.settingsStatus: MonitorReportStatus?
     get() = if (delivery == ManualProblemReportDelivery.IDLE) null else
-        MonitorReportStatus(statusLabel, detail ?: "This phone keeps one report until Sentry accepts it or you discard it.", eventId)
+        MonitorReportStatus(
+            statusLabel,
+            detail ?: AppkitContext.context.getString(R.string.appkit_report_kept_until_sentry),
+            eventId,
+        )
 
 @Composable
 private fun Modifier.settingsClickable(role: Role, onClick: () -> Unit): Modifier =
@@ -101,15 +108,15 @@ public fun ManualProblemReportDialog(
     if (!manualReport.isConfigured()) {
         AlertDialog(
             onDismissRequest = onClose,
-            title = { Text("Report unavailable", color = MonitorPalette.text) },
+            title = { Text(stringResource(R.string.appkit_report_unavailable), color = MonitorPalette.text) },
             text = {
                 Text(
-                    "This build cannot send a report. Use Share Diagnostics in the pairing menu, or Diagnostic options in System, to save a diagnostic report.",
+                    stringResource(R.string.appkit_report_unavailable_body),
                     color = MonitorPalette.muted,
                 )
             },
             confirmButton = {
-                TextButton(onClick = onClose) { Text("OK", color = MonitorPalette.accent) }
+                TextButton(onClick = onClose) { Text(stringResource(R.string.appkit_ok), color = MonitorPalette.accent) }
             },
             containerColor = MonitorPalette.surface,
         )
@@ -148,7 +155,7 @@ public fun ManualProblemReportDialog(
         } catch (cancelled: CancellationException) {
             throw cancelled
         } catch (_: Exception) {
-            error = "Couldn’t prepare technical details. You can still send your description."
+            error = AppkitContext.context.getString(R.string.appkit_couldnt_prepare_technical_details)
             includeTech = false
         }
     }
@@ -174,21 +181,21 @@ public fun ManualProblemReportDialog(
                                         prepared += ManualImageDraft(result.jpeg, bitmap)
                                     } else {
                                         rejected =
-                                            "Couldn't open this image. Please choose another photo or screenshot."
+                                            AppkitContext.context.getString(R.string.appkit_couldnt_open_image)
                                     }
                                 }
                                 ManualReportImageNormalizer.Result.Unreadable ->
                                     rejected =
-                                        "Couldn't open this image. Please choose another photo or screenshot."
+                                        AppkitContext.context.getString(R.string.appkit_couldnt_open_image)
                                 ManualReportImageNormalizer.Result.TooLarge ->
-                                    rejected = "This image is too large to attach. Please choose a smaller image."
+                                    rejected = AppkitContext.context.getString(R.string.appkit_image_too_large)
                             }
                         }
                     }
                     val accepted = ManualReportImages.accept(images.map { it.jpeg } + prepared.map { it.jpeg })
                     if (accepted == null) {
                         prepared.forEach { if (!it.preview.isRecycled) it.preview.recycle() }
-                        error = "You can attach up to three photos, 1 MB each and 3 MB total."
+                        error = AppkitContext.context.getString(R.string.appkit_attach_limit)
                     } else {
                         images = images + prepared
                         adopted = true
@@ -197,7 +204,7 @@ public fun ManualProblemReportDialog(
                 } catch (cancelled: CancellationException) {
                     throw cancelled
                 } catch (_: Exception) {
-                    error = "Couldn’t prepare this image. Please choose another photo or screenshot."
+                    error = AppkitContext.context.getString(R.string.appkit_couldnt_prepare_image)
                 } finally {
                     if (!adopted) prepared.forEach { if (!it.preview.isRecycled) it.preview.recycle() }
                     preparingImages = false
@@ -226,12 +233,12 @@ public fun ManualProblemReportDialog(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(
-                "Report a problem",
+                stringResource(R.string.appkit_report_a_problem),
                 style = MonitorTypography.text(16f, FontWeight.SemiBold),
                 color = MonitorPalette.text,
             )
             Text(
-                "Tell us what happened. Technical details stay off unless you include them. You can attach up to three photos. Sending does not turn on automatic reports.",
+                stringResource(R.string.appkit_report_intro),
                 style = MonitorTypography.text(12f, FontWeight.Normal),
                 color = MonitorPalette.muted,
             )
@@ -242,7 +249,7 @@ public fun ManualProblemReportDialog(
                     color = MonitorPalette.accent,
                 )
                 Text(
-                    "Discard the queued report before sending another.",
+                    stringResource(R.string.appkit_discard_queued_report),
                     style = MonitorTypography.text(12f, FontWeight.Normal),
                     color = MonitorPalette.muted,
                 )
@@ -261,7 +268,7 @@ public fun ManualProblemReportDialog(
                     value = message,
                     onValueChange = { message = it.take(ManualProblemReport.MESSAGE_MAX) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("What happened?") },
+                    label = { Text(stringResource(R.string.appkit_what_happened)) },
                     supportingText = {
                         Text("${message.length}/${ManualProblemReport.MESSAGE_MAX}", color = MonitorPalette.faint)
                     },
@@ -273,7 +280,7 @@ public fun ManualProblemReportDialog(
                     value = email,
                     onValueChange = { email = it.take(ManualProblemReport.EMAIL_MAX) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Reply email (optional)") },
+                    label = { Text(stringResource(R.string.appkit_reply_email_optional)) },
                     supportingText = {
                         Text("${email.length}/${ManualProblemReport.EMAIL_MAX}", color = MonitorPalette.faint)
                     },
@@ -289,12 +296,12 @@ public fun ManualProblemReportDialog(
                 ) {
                     Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                         Text(
-                            "Include technical details",
+                            stringResource(R.string.appkit_include_technical_details),
                             style = MonitorTypography.text(13f, FontWeight.SemiBold),
                             color = MonitorPalette.text,
                         )
                         Text(
-                            "Off by default. Review the preview before sending. App and device versions, connection events and errors. No footage.",
+                            stringResource(R.string.appkit_technical_details_description),
                             style = MonitorTypography.text(11f, FontWeight.Normal),
                             color = MonitorPalette.muted,
                         )
@@ -303,7 +310,7 @@ public fun ManualProblemReportDialog(
                 }
                 if (includeTech && preview.isNotEmpty()) {
                     Text(
-                        "Technical details preview",
+                        stringResource(R.string.appkit_technical_details_preview),
                         style = MonitorTypography.text(11f, FontWeight.SemiBold),
                         color = MonitorPalette.muted,
                     )
@@ -319,18 +326,18 @@ public fun ManualProblemReportDialog(
                     )
                 }
                 Text(
-                    "Photos or screenshots (optional)",
+                    stringResource(R.string.appkit_photos_screenshots_optional),
                     style = MonitorTypography.text(13f, FontWeight.SemiBold),
                     color = MonitorPalette.text,
                 )
                 Text(
-                    "Choose up to 3 images you have permission to share. Location metadata is removed. Not taken automatically. Images are sent only with this report.",
+                    stringResource(R.string.appkit_photos_help),
                     style = MonitorTypography.text(11f, FontWeight.Normal),
                     color = MonitorPalette.muted,
                 )
                 if (remainingSlots > 0) {
                     SettingsActionPill(
-                        "Add photos or screenshots",
+                        stringResource(R.string.appkit_add_photos_screenshots),
                         enabled = !preparingImages,
                     ) {
                         val request = PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -339,7 +346,7 @@ public fun ManualProblemReportDialog(
                 }
                 if (preparingImages) {
                     Text(
-                        "Preparing images…",
+                        stringResource(R.string.appkit_preparing_images),
                         style = MonitorTypography.text(11f, FontWeight.Normal),
                         color = MonitorPalette.muted,
                     )
@@ -352,7 +359,7 @@ public fun ManualProblemReportDialog(
                     ) {
                         Image(
                             bitmap = draft.preview.asImageBitmap(),
-                            contentDescription = "Selected photo ${index + 1}",
+                            contentDescription = AppkitContext.context.getString(R.string.appkit_selected_photo, index + 1),
                             modifier =
                                 Modifier
                                     .width(72.dp)
@@ -361,7 +368,7 @@ public fun ManualProblemReportDialog(
                             contentScale = ContentScale.Fit,
                         )
                         SettingsActionPill(
-                            "Remove",
+                            stringResource(R.string.appkit_remove),
                             tint = MonitorPalette.recording,
                             background = MonitorPalette.recording.copy(alpha = 0.15f),
                             enabled = !preparingImages,
@@ -375,7 +382,7 @@ public fun ManualProblemReportDialog(
                 }
             }
             Text(
-                "OpenCapture receives this through Sentry. Sending does not turn on automatic reports. Only share images you have permission to send. Do not include passwords or other sensitive information.",
+                stringResource(R.string.appkit_report_footer_legal),
                 style = MonitorTypography.text(11f, FontWeight.Normal),
                 color = MonitorPalette.muted,
             )
@@ -388,14 +395,14 @@ public fun ManualProblemReportDialog(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 TextButton(onClick = onPrivacy) {
-                    Text("Reporting Privacy", color = MonitorPalette.muted)
+                    Text(stringResource(R.string.appkit_reporting_privacy_title), color = MonitorPalette.muted)
                 }
-                SettingsActionPill("Cancel", tint = MonitorPalette.muted, background = MonitorPalette.faint.copy(alpha = 0.2f), onClick = onClose)
+                SettingsActionPill(stringResource(R.string.appkit_cancel), tint = MonitorPalette.muted, background = MonitorPalette.faint.copy(alpha = 0.2f), onClick = onClose)
                 if (report.allowsNewSubmit) {
-                    SettingsActionPill("Send report", enabled = !sendBlocked) {
+                    SettingsActionPill(stringResource(R.string.appkit_send_report), enabled = !sendBlocked) {
                         if (sendBlocked) return@SettingsActionPill
                         if (includeTech && !previewReady) {
-                            error = "Technical details are not ready. Wait, or turn them off to send your description."
+                            error = AppkitContext.context.getString(R.string.appkit_technical_details_not_ready)
                             return@SettingsActionPill
                         }
                         when (
@@ -413,17 +420,17 @@ public fun ManualProblemReportDialog(
                         ) {
                             ManualSubmitResult.QUEUED -> onClose()
                             ManualSubmitResult.INVALID ->
-                                error = "Add a description and check the optional email address."
+                                error = AppkitContext.context.getString(R.string.appkit_add_description_check_email)
                             ManualSubmitResult.UNAVAILABLE ->
-                                error = "This build cannot send a report."
+                                error = AppkitContext.context.getString(R.string.appkit_build_cannot_send)
                             ManualSubmitResult.STORAGE_ERROR ->
-                                error = "Could not save this report. Your text is still here; please try again."
+                                error = AppkitContext.context.getString(R.string.appkit_could_not_save_report)
                             ManualSubmitResult.PENDING_EXISTS ->
-                                error = "A report is already waiting to send."
+                                error = AppkitContext.context.getString(R.string.appkit_report_already_waiting)
                         }
                     }
                 } else if (report.allowsDiscard) {
-                    SettingsActionPill("Discard") {
+                    SettingsActionPill(stringResource(R.string.appkit_discard)) {
                         manualReport.discard()
                         onClose()
                     }
@@ -463,12 +470,12 @@ public fun AutomaticReportsPrompt(
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
-                    "Help improve $product",
+                    stringResource(R.string.appkit_help_improve, product),
                     style = MonitorTypography.text(21f, FontWeight.SemiBold),
                     color = MonitorPalette.text,
                 )
                 Text(
-                    "Optional crash, error and feed-dropout reports are used only to improve app stability and reliability. Sent to OpenCapture through Sentry. Automatic reports exclude all images. No footage, screenshots or GPS location. You can change this in System.",
+                    stringResource(R.string.appkit_automatic_reports_body),
                     style = MonitorTypography.text(14f, FontWeight.Normal),
                     color = MonitorPalette.muted,
                 )
@@ -480,7 +487,7 @@ public fun AutomaticReportsPrompt(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        "Reporting privacy",
+                        stringResource(R.string.appkit_reporting_privacy),
                         style = MonitorTypography.text(14f, FontWeight.Normal),
                         color = MonitorPalette.accent,
                     )
@@ -500,7 +507,7 @@ public fun AutomaticReportsPrompt(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            "Enable automatic reports",
+                            stringResource(R.string.appkit_enable_automatic_reports),
                             style = MonitorTypography.text(14f, FontWeight.SemiBold),
                             color = MonitorPalette.accent,
                             textAlign = TextAlign.Center,
@@ -517,7 +524,7 @@ public fun AutomaticReportsPrompt(
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            "Not now",
+                            stringResource(R.string.appkit_not_now),
                             style = MonitorTypography.text(14f, FontWeight.SemiBold),
                             color = MonitorPalette.muted,
                             textAlign = TextAlign.Center,

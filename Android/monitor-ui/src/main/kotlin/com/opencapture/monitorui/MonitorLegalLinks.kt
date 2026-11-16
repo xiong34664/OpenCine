@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 /** Legal destinations stay with the app, including in-app documents and external URLs. */
@@ -21,8 +22,8 @@ import androidx.compose.ui.unit.dp
 fun MonitorLegalLinks(onPrivacy: (() -> Unit)?, onTerms: (() -> Unit)?, modifier: Modifier = Modifier.fillMaxWidth()) {
     if (onPrivacy == null && onTerms == null) return
     Row(modifier, horizontalArrangement = Arrangement.spacedBy(20.dp, Alignment.CenterHorizontally)) {
-        if (onPrivacy != null) LegalLink("Privacy", "legal.privacy", onPrivacy)
-        if (onTerms != null) LegalLink("Terms", "legal.terms", onTerms)
+        if (onPrivacy != null) LegalLink(stringResource(R.string.mui_privacy), "legal.privacy", onPrivacy)
+        if (onTerms != null) LegalLink(stringResource(R.string.mui_terms), "legal.terms", onTerms)
     }
 }
 

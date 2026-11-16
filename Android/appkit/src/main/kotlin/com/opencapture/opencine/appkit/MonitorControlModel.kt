@@ -514,7 +514,9 @@ public class MonitorControlModel(
                 return@async null
             }
             val receipt = finished(session, CameraCommand(intent, CommandPreconditions(fresh), operation), admission)
-            val label = if (intent == CameraCommandIntent.StartRecording) "Record" else "Stop"
+            val label = if (intent == CameraCommandIntent.StartRecording)
+                AppkitContext.context.getString(R.string.appkit_record)
+            else AppkitContext.context.getString(R.string.appkit_stop)
             if (binding != current || recordOperation != operation) return@async null
             finishRecord(operation, current, noteFor(receipt.stage, label), receipt)
             receipt
@@ -530,8 +532,10 @@ public class MonitorControlModel(
     }
 
     public companion object {
-        public const val CONNECT_FIRST: String = "Connect the camera to use its controls."
-        public const val RECORDING_UNKNOWN: String = "Recording state is not known yet. Try again in a moment."
+        public val CONNECT_FIRST: String
+            get() = AppkitContext.context.getString(R.string.appkit_connect_camera_controls)
+        public val RECORDING_UNKNOWN: String
+            get() = AppkitContext.context.getString(R.string.appkit_recording_not_known_yet)
 
         /** How long [frameRateSettling] holds after a reported frame-rate change (Swift `rateChangeHold`). */
         public val RATE_CHANGE_HOLD: kotlin.time.Duration = 3.seconds
@@ -551,22 +555,26 @@ public class MonitorControlModel(
         public fun note(stage: CommandStage, label: String): String? = when (stage) {
             CommandStage.Confirmed -> null
             is CommandStage.Rejected -> when (val rejection = stage.rejection) {
-                CommandRejection.CameraRefused -> "$label: the camera refused it."
+                CommandRejection.CameraRefused ->
+                    AppkitContext.context.getString(R.string.appkit_note_camera_refused, label)
                 CommandRejection.OutOfDomain, CommandRejection.Unsupported, CommandRejection.SupportUnknown ->
-                    "$label is not offered by this camera."
+                    AppkitContext.context.getString(R.string.appkit_note_not_offered, label)
                 CommandRejection.StaleCapabilities, CommandRejection.StaleEpoch ->
-                    "$label was not sent: the camera state changed. Try again."
+                    AppkitContext.context.getString(R.string.appkit_note_stale_not_sent, label)
                 is CommandRejection.Unavailable ->
-                    if (rejection.reason == UnavailableReason.Mode) "$label is not available in this mode." else "$label is not available right now."
+                    if (rejection.reason == UnavailableReason.Mode)
+                        AppkitContext.context.getString(R.string.appkit_note_unavailable_mode, label)
+                    else AppkitContext.context.getString(R.string.appkit_note_unavailable_now, label)
                 else -> CONNECT_FIRST
             }
             is CommandStage.Failed -> when (stage.failure) {
-                CommandFailure.NOT_APPLIED -> "$label was not applied by the camera."
-                CommandFailure.NOT_SENT -> "$label was not sent."
+                CommandFailure.NOT_APPLIED ->
+                    AppkitContext.context.getString(R.string.appkit_note_not_applied, label)
+                CommandFailure.NOT_SENT -> AppkitContext.context.getString(R.string.appkit_note_not_sent, label)
                 CommandFailure.SUPERSEDED -> null
             }
-            CommandStage.OutcomeUnknown -> "$label: the camera link dropped before it confirmed."
-            else -> "The camera did not confirm $label."
+            CommandStage.OutcomeUnknown -> AppkitContext.context.getString(R.string.appkit_note_link_dropped, label)
+            else -> AppkitContext.context.getString(R.string.appkit_note_did_not_confirm, label)
         }
     }
 }

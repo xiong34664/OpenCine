@@ -177,7 +177,9 @@ public class MonitorMediaPlaybackModel<P, L>(
             }
             if (!admit(token) || !isActive) return@launch
             loadTask = null
-            mutate { it.copy(loading = false, error = it.error ?: if (library.canTransfer || hasHostSource) "Could not open that clip." else "This clip is not cached on the phone.") }
+            mutate { it.copy(loading = false, error = it.error ?: if (library.canTransfer || hasHostSource)
+                AppkitContext.context.getString(R.string.appkit_could_not_open_clip)
+            else AppkitContext.context.getString(R.string.appkit_clip_not_cached)) }
         }
         loadTask = task; task.start()
     }

@@ -53,7 +53,8 @@ public object MonitorCapturePresentation {
     public val unreportedMarks: Set<String> = setOf("", "--", "\u2014")
 
     /** Whether a readout's value stands for a value the camera has not reported. */
-    public fun isUnreported(drawn: String?): Boolean = drawn == null || drawn in unreportedMarks || drawn == "Not set"
+    public fun isUnreported(drawn: String?): Boolean =
+        drawn == null || drawn in unreportedMarks || drawn == AppkitContext.context.getString(R.string.appkit_not_set)
 
     /**
      * An unreported readout whose owner offers nothing to edit is inert: it is disabled and opens
@@ -86,12 +87,12 @@ public object MonitorCapturePresentation {
 
     public fun label(value: SettingValue): String = when (value) {
         is SettingValue.Iso -> when (val iso = value.value) {
-            ISOValue.Auto -> "Auto"
-            is ISOValue.AutoLimited -> "Auto ${iso.maximum}"
+            ISOValue.Auto -> AppkitContext.context.getString(R.string.appkit_auto)
+            is ISOValue.AutoLimited -> AppkitContext.context.getString(R.string.appkit_auto_max, iso.maximum)
             is ISOValue.Manual -> iso.iso.toString()
         }
         is SettingValue.Shutter -> when (val shutter = value.value) {
-            ShutterValue.Auto -> "Auto"
+            ShutterValue.Auto -> AppkitContext.context.getString(R.string.appkit_auto)
             is ShutterValue.Duration -> if (shutter.seconds.numerator == 1) "1/${shutter.seconds.denominator}"
                 else "${number(shutter.seconds.doubleValue)}s"
             is ShutterValue.Angle -> "${number(shutter.degrees)}°"
@@ -99,7 +100,7 @@ public object MonitorCapturePresentation {
         // One decimal, as every body and its menus spell it ("f/4.0").
         is SettingValue.Aperture -> "f/%.1f".format(java.util.Locale.ROOT, value.fNumber)
         is SettingValue.WhiteBalance -> when (val wb = value.value) {
-            WhiteBalanceValue.Auto -> "Auto"
+            WhiteBalanceValue.Auto -> AppkitContext.context.getString(R.string.appkit_auto)
             is WhiteBalanceValue.Preset -> wb.id
             is WhiteBalanceValue.Kelvin -> "${wb.kelvin}K"
         }

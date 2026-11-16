@@ -1,9 +1,12 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import com.opencapture.monitorui.MonitorPalette
 
 /** The host supplies cache scope, current IO state and actions. */
@@ -16,17 +19,17 @@ public fun MonitorCacheSettings(
     MonitorSettingsRowCard {
         if (cacheOriginals != null && onCacheOriginals != null) {
             MonitorSettingsSwitchInlineRow(
-                title = "Full Resolution Caching", help = cacheHelp,
+                title = stringResource(R.string.mui_full_resolution_caching), help = cacheHelp,
                 showTopDivider = false, isOn = cacheOriginals,
             ) { feedback(); onCacheOriginals(!cacheOriginals) }
         }
-        MonitorSettingsInlineRow("Local Media Cache", scopeHelp,
+        MonitorSettingsInlineRow(stringResource(R.string.mui_local_media_cache), scopeHelp,
             showTopDivider = cacheOriginals != null && onCacheOriginals != null) {
             MonitorSettingsValueText(sizeLabel)
         }
-        MonitorSettingsInlineRow("Clear Cache", clearHelp) {
-            if (clearing) MonitorSettingsValueText("Clearing…")
-            else MonitorSettingsTextAction("Clear", color = MonitorPalette.recording, onClick = clear)
+        MonitorSettingsInlineRow(stringResource(R.string.mui_clear_cache), clearHelp) {
+            if (clearing) MonitorSettingsValueText(stringResource(R.string.mui_clearing))
+            else MonitorSettingsTextAction(stringResource(R.string.mui_clear), color = MonitorPalette.recording, onClick = clear)
         }
     }
 }
@@ -37,10 +40,10 @@ public fun MonitorAppInformationSettings(
     theme: String, protocolName: String, version: String,
     themeHelp: String, protocolHelp: String, versionHelp: String,
 ) {
-    MonitorSettingsRowCard(title = "App Information") {
-        MonitorSettingsInlineRow("Theme", themeHelp, showTopDivider = false) { MonitorSettingsValueText(theme) }
-        MonitorSettingsInlineRow("Protocol Implementation", protocolHelp) { MonitorSettingsValueText(protocolName) }
-        MonitorSettingsInlineRow("App Version", versionHelp) { MonitorSettingsValueText(version) }
+    MonitorSettingsRowCard(title = stringResource(R.string.mui_app_information)) {
+        MonitorSettingsInlineRow(stringResource(R.string.mui_theme), themeHelp, showTopDivider = false) { MonitorSettingsValueText(theme) }
+        MonitorSettingsInlineRow(stringResource(R.string.mui_protocol_implementation), protocolHelp) { MonitorSettingsValueText(protocolName) }
+        MonitorSettingsInlineRow(stringResource(R.string.mui_app_version), versionHelp) { MonitorSettingsValueText(version) }
     }
 }
 
@@ -51,29 +54,34 @@ public fun MonitorProjectLegalSettings(
     source: () -> Unit, privacy: () -> Unit, terms: () -> Unit,
     licenses: (() -> Unit)? = null, notice: (() -> Unit)? = null,
 ) {
-    MonitorSettingsRowCard(title = "Project & Legal") {
-        MonitorSettingsInlineRow("Source Code", sourceHelp, showTopDivider = false) {
-            MonitorSettingsActionPill("Open", onClick = source,
-                modifier = Modifier.semantics { contentDescription = "Open Source Code" })
+    val openSourceDescription = stringResource(R.string.mui_open_source_code)
+    val openPrivacyDescription = stringResource(R.string.mui_open_privacy_policy)
+    val openTermsDescription = stringResource(R.string.mui_open_terms_of_use)
+    val openLicensesDescription = stringResource(R.string.mui_open_licenses)
+    val openNoticeDescription = stringResource(R.string.mui_open_notice)
+    MonitorSettingsRowCard(title = stringResource(R.string.mui_project_legal)) {
+        MonitorSettingsInlineRow(stringResource(R.string.mui_source_code), sourceHelp, showTopDivider = false) {
+            MonitorSettingsActionPill(stringResource(R.string.mui_open), onClick = source,
+                modifier = Modifier.semantics { contentDescription = openSourceDescription })
         }
-        MonitorSettingsInlineRow("Privacy", "What this app stores on this phone.") {
-            MonitorSettingsActionPill("Open", onClick = privacy,
-                modifier = Modifier.semantics { contentDescription = "Open Privacy Policy" })
+        MonitorSettingsInlineRow(stringResource(R.string.mui_privacy), stringResource(R.string.mui_privacy_help)) {
+            MonitorSettingsActionPill(stringResource(R.string.mui_open), onClick = privacy,
+                modifier = Modifier.semantics { contentDescription = openPrivacyDescription })
         }
-        MonitorSettingsInlineRow("Terms", termsHelp) {
-            MonitorSettingsActionPill("Open", onClick = terms,
-                modifier = Modifier.semantics { contentDescription = "Open Terms of Use" })
+        MonitorSettingsInlineRow(stringResource(R.string.mui_terms), termsHelp) {
+            MonitorSettingsActionPill(stringResource(R.string.mui_open), onClick = terms,
+                modifier = Modifier.semantics { contentDescription = openTermsDescription })
         }
         licenses?.let { action ->
-            MonitorSettingsInlineRow("Licenses", "Apache 2.0 and third-party notices.") {
-                MonitorSettingsActionPill("Open", onClick = action,
-                    modifier = Modifier.semantics { contentDescription = "Open Licenses" })
+            MonitorSettingsInlineRow(stringResource(R.string.mui_licenses), stringResource(R.string.mui_licenses_help)) {
+                MonitorSettingsActionPill(stringResource(R.string.mui_open), onClick = action,
+                    modifier = Modifier.semantics { contentDescription = openLicensesDescription })
             }
         }
         notice?.let { action ->
-            MonitorSettingsInlineRow("NOTICE", "Attribution shipped with the app.") {
-                MonitorSettingsActionPill("Open", onClick = action,
-                    modifier = Modifier.semantics { contentDescription = "Open NOTICE" })
+            MonitorSettingsInlineRow(stringResource(R.string.mui_notice), stringResource(R.string.mui_notice_help)) {
+                MonitorSettingsActionPill(stringResource(R.string.mui_open), onClick = action,
+                    modifier = Modifier.semantics { contentDescription = openNoticeDescription })
             }
         }
     }

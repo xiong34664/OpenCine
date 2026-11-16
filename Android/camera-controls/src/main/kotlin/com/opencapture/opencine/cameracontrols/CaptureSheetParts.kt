@@ -49,6 +49,7 @@ import com.opencapture.opencine.vocabulary.CameraStatus
 import com.opencapture.opencine.vocabulary.CaptureLadder
 import com.opencapture.opencine.vocabulary.LadderSheetPresentation
 import com.opencapture.opencine.vocabulary.LadderTab
+import androidx.compose.ui.res.stringResource
 
 val LocalCapturePreview = staticCompositionLocalOf<MonitorQuickPreview?> { null }
 
@@ -194,7 +195,7 @@ fun CaptureDrumWheel(
 fun FocusBody(status: CameraStatus, labels: List<String> = CaptureFocusChoices.labels, enabled: Boolean, onSelect: (String) -> Unit) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         CaptureDrumWheel(labels, CaptureFocusChoices.selection(status, labels), interactive = enabled, onSelect = onSelect)
-        Text("AF-S focuses once. AF-C follows focus continuously; the other modes use the camera's supported tracking modes.",
+        Text(stringResource(R.string.cc_af_focus_help),
             style = LiveType.ui(9.5f).copy(lineHeight = 13.3.sp), color = LiveDesign.faint)
     }
 }

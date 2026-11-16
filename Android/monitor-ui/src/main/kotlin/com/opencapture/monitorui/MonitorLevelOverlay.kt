@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextMeasurer
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
@@ -74,10 +75,10 @@ object MonitorLevelGeometry {
         if (value == null) unknownLabel else String.format(Locale.ROOT, "%+.1f°", if (abs(value) < 0.05) 0.0 else value)
 
     fun accessibilityLabel(display: MonitorLevelDisplay, noDataLabel: String = "No level data"): String = when (display) {
-        MonitorLevelDisplay.Unavailable -> "Level, $noDataLabel"
-        is MonitorLevelDisplay.Gauges -> String.format(Locale.ROOT, "Level, roll %+.1f°, tilt %+.1f°", display.rollDeg, display.tiltDeg)
-        is MonitorLevelDisplay.Bubble -> String.format(Locale.ROOT, "Level, off plumb %+.1f° / %+.1f°", display.xDeg, display.yDeg)
-        is MonitorLevelDisplay.Horizon -> String.format(Locale.ROOT, "Level, horizon roll %+.1f°", display.rollDeg)
+        MonitorLevelDisplay.Unavailable -> MonitorContext.context.getString(R.string.mui_level_with_label, noDataLabel)
+        is MonitorLevelDisplay.Gauges -> MonitorContext.context.getString(R.string.mui_level_roll_tilt, display.rollDeg, display.tiltDeg)
+        is MonitorLevelDisplay.Bubble -> MonitorContext.context.getString(R.string.mui_level_off_plumb, display.xDeg, display.yDeg)
+        is MonitorLevelDisplay.Horizon -> MonitorContext.context.getString(R.string.mui_level_horizon_roll, display.rollDeg)
     }
 }
 
@@ -89,7 +90,7 @@ fun MonitorLevelOverlay(
     viewportDp: MonitorScopeRect,
     portrait: Boolean,
     modifier: Modifier = Modifier,
-    noDataLabel: String = "No level data",
+    noDataLabel: String = stringResource(R.string.mui_no_level_data),
     unknownLabel: String = "?",
 ) {
     val measurer = rememberTextMeasurer()

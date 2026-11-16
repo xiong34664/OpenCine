@@ -11,8 +11,10 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
+import com.opencapture.opencine.appkit.AppkitContext
 import com.opencapture.opencine.appkit.DiscoveryPermissions
 import com.opencapture.opencine.appkit.MediaShare
+import com.opencapture.opencine.appkit.R
 import com.opencapture.opencine.media.BoundedDiagnosticFormatter
 import com.opencapture.opencine.media.DecoderErrorRecord
 import com.opencapture.opencine.media.DiagnosticJournal
@@ -137,7 +139,7 @@ public abstract class DiagnosticCenterRuntime<S>(
 
     public fun shareReport(context: Context, session: S, emailSupport: Boolean = false, copyForFeedback: Boolean = true) {
         if (!sharing.compareAndSet(false, true)) {
-            android.widget.Toast.makeText(context, "Preparing the report…", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(context, AppkitContext.context.getString(R.string.appkit_preparing_the_report), android.widget.Toast.LENGTH_SHORT).show()
             return
         }
         if (!emailSupport && copyForFeedback) copyCompact(context, session)
@@ -154,7 +156,7 @@ public abstract class DiagnosticCenterRuntime<S>(
                 } catch (_: Exception) {
                     Handler(Looper.getMainLooper()).post {
                         android.widget.Toast.makeText(app,
-                            "Couldn't prepare the report. Please try again or email ${host.supportEmail}.",
+                            AppkitContext.context.getString(R.string.appkit_couldnt_prepare_report_email, host.supportEmail),
                             android.widget.Toast.LENGTH_LONG).show()
                     }
                 } finally {
@@ -202,7 +204,7 @@ public abstract class DiagnosticCenterRuntime<S>(
 
     private fun launchShare(context: Context, files: List<File>, emailSupport: Boolean = false) {
         if (files.isEmpty()) {
-            android.widget.Toast.makeText(context, "Couldn't prepare a diagnostic report. Please try again.",
+            android.widget.Toast.makeText(context, AppkitContext.context.getString(R.string.appkit_couldnt_prepare_diagnostic_report),
                 android.widget.Toast.LENGTH_LONG).show()
             return
         }
@@ -215,7 +217,7 @@ public abstract class DiagnosticCenterRuntime<S>(
             uris.add(uri)
         }
         if (uris.isEmpty()) {
-            android.widget.Toast.makeText(context, "Couldn't attach the diagnostic report. Please try again.",
+            android.widget.Toast.makeText(context, AppkitContext.context.getString(R.string.appkit_couldnt_attach_diagnostic_report),
                 android.widget.Toast.LENGTH_LONG).show()
             return
         }
@@ -244,15 +246,15 @@ public abstract class DiagnosticCenterRuntime<S>(
             intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(host.supportEmail))
             intent.putExtra(Intent.EXTRA_SUBJECT, supportSubject(host.product))
             intent.putExtra(Intent.EXTRA_TEXT,
-                "What happened?\n\n\nTechnical details are attached to help us investigate. Please do not include private footage or passwords.")
+                AppkitContext.context.getString(R.string.appkit_email_body))
         }
-        val chooser = Intent.createChooser(intent, if (emailSupport) "Email support" else null)
+        val chooser = Intent.createChooser(intent, if (emailSupport) AppkitContext.context.getString(R.string.appkit_email_support) else null)
         if (context !is android.app.Activity) chooser.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         try {
             context.startActivity(chooser)
         } catch (_: android.content.ActivityNotFoundException) {
             android.widget.Toast.makeText(context,
-                "Email ${host.supportEmail}. No compatible app is available.",
+                AppkitContext.context.getString(R.string.appkit_email_no_app, host.supportEmail),
                 android.widget.Toast.LENGTH_LONG).show()
         }
     }
@@ -351,7 +353,8 @@ public abstract class DiagnosticCenterRuntime<S>(
         private const val SHARE_MAX_BYTES = 2_097_152L
 
         /** The support email subject: the product, a colon, "report a problem". */
-        internal fun supportSubject(product: String): String = "$product: report a problem"
+        internal fun supportSubject(product: String): String =
+            AppkitContext.context.getString(R.string.appkit_report_problem_subject, product)
 
         internal fun compactSummary(host: DiagnosticsHost, env: Env, recent: List<String>): String {
             val lines =

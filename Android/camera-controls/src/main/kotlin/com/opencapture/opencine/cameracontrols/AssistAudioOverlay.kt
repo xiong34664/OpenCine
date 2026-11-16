@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.MonitorPalette
@@ -59,12 +60,14 @@ public fun AssistAudioOverlay(state: MonitorAssistState, levels: MonitorAudioMet
     portraitOverride: Boolean? = null, caption: String? = null, unavailableLabel: String? = null,
     provenance: String? = null, spokenValue: String? = null): Unit {
     val base = MonitorScopeSize(if (provenance == null) 28f else 104f, 168f)
+    val audioLevelsLabel = stringResource(R.string.cc_audio_levels)
+    val audioLevelsUnavailableLabel = stringResource(R.string.cc_audio_levels_unavailable)
     AssistAudioPanel(state, base, canvas, placement, locked, null, panelPlacement, feed,
         portraitOverride) {
         Column(Modifier.fillMaxSize().clearAndSetSemantics {
-            contentDescription = "Audio levels"
+            contentDescription = audioLevelsLabel
             if (spokenValue != null) stateDescription = spokenValue
-            else if (levels == null) stateDescription = "Audio levels unavailable"
+            else if (levels == null) stateDescription = audioLevelsUnavailableLabel
         }, horizontalAlignment = Alignment.CenterHorizontally) {
             Box(Modifier.weight(1f).fillMaxWidth(), contentAlignment = Alignment.Center) {
                 // The floor is a drawing baseline only; absence is explicitly labelled no data.

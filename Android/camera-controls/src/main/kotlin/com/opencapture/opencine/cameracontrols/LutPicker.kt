@@ -69,6 +69,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import androidx.compose.ui.res.stringResource
 
 /**
  * What one app's LUT picker says about its camera tab; the catalog, captions logic and layout are
@@ -283,12 +284,12 @@ fun LUTPicker(
                                     armCurrent()
                                 }
                             } else {
-                                deletionError = "The LUT \u201c${LutCatalog.displayName(fileName)}\u201d could not be deleted."
+                                deletionError = CameraControlsContext.context.getString(R.string.cc_lut_delete_failed_named, LutCatalog.displayName(fileName))
                             }
                         } catch (cancelled: CancellationException) {
                             throw cancelled
                         } catch (error: Exception) {
-                            deletionError = error.message ?: "The LUT could not be deleted."
+                            deletionError = error.message ?: CameraControlsContext.context.getString(R.string.cc_lut_delete_failed)
                         }
                     }
                 }
@@ -324,7 +325,7 @@ fun LUTPicker(
                 Spacer(Modifier.weight(1f))
                 if (onClose != null) {
                     Text(
-                        "Done",
+                        CameraControlsContext.context.getString(R.string.cc_done),
                         color = LiveDesign.accent,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -342,9 +343,9 @@ fun LUTPicker(
     if (deletionError != null) {
         AlertDialog(
             onDismissRequest = { deletionError = null },
-            title = { Text("Couldn’t Delete LUT") },
-            text = { Text(deletionError ?: "The LUT could not be deleted.") },
-            confirmButton = { TextButton(onClick = { deletionError = null }) { Text("OK") } },
+            title = { Text(CameraControlsContext.context.getString(R.string.cc_couldnt_delete_lut)) },
+            text = { Text(deletionError ?: CameraControlsContext.context.getString(R.string.cc_lut_delete_failed)) },
+            confirmButton = { TextButton(onClick = { deletionError = null }) { Text(CameraControlsContext.context.getString(R.string.cc_ok)) } },
         )
     }
 }
@@ -435,17 +436,17 @@ fun LUTPicker(
     pendingDeletion?.let { (library, look) ->
         AlertDialog(
             onDismissRequest = { pendingDeletion = null },
-            title = { Text("Clear ${look.title}?") },
-            text = { Text("This removes the stored LUT from this device. This action cannot be undone.") },
+            title = { Text(stringResource(R.string.cc_clear_look_confirm, look.title)) },
+            text = { Text(stringResource(R.string.cc_clear_lut_body)) },
             confirmButton = {
                 TextButton(
                     onClick = {
                         pendingDeletion = null
                         libraries.firstOrNull { it.title == library }?.onDelete?.invoke(look)
                     }
-                ) { Text("Clear LUT", color = LiveDesign.destructive) }
+                ) { Text(stringResource(R.string.cc_clear_lut), color = LiveDesign.destructive) }
             },
-            dismissButton = { TextButton(onClick = { pendingDeletion = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { pendingDeletion = null }) { Text(stringResource(R.string.cc_cancel)) } },
         )
     }
 }
@@ -558,7 +559,7 @@ private fun FilesTab(library: LutPickerLibrary, onDelete: (LutPickerEntry) -> Un
                     .padding(vertical = 8.dp),
                 contentAlignment = Alignment.Center,
             ) {
-                Text("Import .cube", color = LiveDesign.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
+                Text(stringResource(R.string.cc_import_cube), color = LiveDesign.text, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
             }
             Spacer(Modifier.height(6.dp))
         }
@@ -603,7 +604,7 @@ private fun FilesTab(library: LutPickerLibrary, onDelete: (LutPickerEntry) -> Un
                                     .clickable { onDelete(entry) }
                                     .padding(horizontal = 8.dp, vertical = 6.dp),
                             ) {
-                                Text("Clear", color = LiveDesign.destructive, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                                Text(stringResource(R.string.cc_clear), color = LiveDesign.destructive, fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                             }
                         }
                     }
@@ -618,15 +619,16 @@ private fun FilesTab(library: LutPickerLibrary, onDelete: (LutPickerEntry) -> Un
 @Composable
 fun LUTExposureCompensationBar(stops: Double, onChange: (Double) -> Unit,
     modifier: Modifier = Modifier) {
+    val exposureCompensationLabel = stringResource(R.string.cc_exposure_compensation_stops)
     Column(modifier.fillMaxWidth()) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text("Exposure", style = LiveType.ui(11f, FontWeight.Medium), color = LiveDesign.text)
+            Text(stringResource(R.string.cc_exposure), style = LiveType.ui(11f, FontWeight.Medium), color = LiveDesign.text)
             Spacer(Modifier.weight(1f))
             Text(MonitorLUTExposureCompensation.label(stops) + " EV", style = LiveType.ui(11f, FontWeight.Medium),
                 color = LiveDesign.muted)
         }
         com.opencapture.monitorui.MonitorSlider(stops.toFloat(), -3f..3f,
-            Modifier.semantics { contentDescription = "Exposure compensation in stops" }) {
+            Modifier.semantics { contentDescription = exposureCompensationLabel }) {
             val next = MonitorLUTExposureCompensation.snap(it.toDouble())
             if (next != stops) onChange(next)
         }
@@ -651,7 +653,7 @@ fun LUTSplitComparisonBar(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text("Split comparison", style = LiveType.ui(11f, FontWeight.Medium), color = LiveDesign.text)
+            Text(CameraControlsContext.context.getString(R.string.cc_split_comparison), style = LiveType.ui(11f, FontWeight.Medium), color = LiveDesign.text)
             Spacer(Modifier.weight(1f))
             Row(
                 Modifier.clip(RoundedCornerShape(50))
@@ -678,11 +680,13 @@ fun LUTSplitComparisonBar(
             }
         }
         if (splitComparison) {
+            val splitLeftRight = stringResource(R.string.cc_split_left_right)
+            val splitTopBottom = stringResource(R.string.cc_split_top_bottom)
             LutSegmentedButtons(
-                items = listOf("Left / Right", "Top / Bottom"),
-                selected = if (splitVertical) "Left / Right" else "Top / Bottom",
+                items = listOf(splitLeftRight, splitTopBottom),
+                selected = if (splitVertical) splitLeftRight else splitTopBottom,
             ) { label ->
-                onSplitVertical(label == "Left / Right")
+                onSplitVertical(label == splitLeftRight)
             }
         }
     }
@@ -730,7 +734,7 @@ internal fun creativeCaption(
             copy.noLookCaption, profile?.cameraLooks.orEmpty(),
         )
     } else {
-        "Looks for the displayed picture"
+        CameraControlsContext.context.getString(R.string.cc_lut_looks_for_picture)
     }
 
 internal fun cameraCaption(
@@ -749,7 +753,7 @@ internal fun cameraCaption(
                 copy.noLookCaption, profile?.cameraLooks.orEmpty(),
             )
         selection.startsWith("camera:") ->
-            profile?.cameraLooks?.firstOrNull { it.id == selection }?.caption ?: "Manual camera conversion"
+            profile?.cameraLooks?.firstOrNull { it.id == selection }?.caption ?: CameraControlsContext.context.getString(R.string.cc_lut_manual_conversion)
         LutCatalog.categoryOf(selection) == LutCategory.CAMERA -> copy.officialCubeCaption
         else -> copy.cameraLooksCaption
     }

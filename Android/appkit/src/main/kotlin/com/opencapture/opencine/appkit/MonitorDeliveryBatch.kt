@@ -96,7 +96,7 @@ public suspend fun <R, A, H> MonitorDeliveryModel.Companion.runBatch(
 ): MonitorDeliveryBatchOutcome<A> {
     val operationJob = currentCoroutineContext()[kotlinx.coroutines.Job]
     fun accepts() = operationJob?.isActive == true && admission.isCurrent() && operationJob.isActive
-    fun cancelled() = MonitorDeliveryBatchOutcome.Failed<A>("Cancelled.")
+    fun cancelled() = MonitorDeliveryBatchOutcome.Failed<A>(AppkitContext.context.getString(R.string.appkit_cancelled))
     var lease = initialLease
     val retainedArtifacts = mutableListOf<A>()
     try {
@@ -126,7 +126,8 @@ public suspend fun <R, A, H> MonitorDeliveryModel.Companion.runBatch(
                 uploadHistory.wasUploaded(record)) alreadyUploaded += 1 else deliverable += record
         }
         if (!accepts()) return cancelled()
-        if (deliverable.isEmpty() && alreadyUploaded > 0) return MonitorDeliveryBatchOutcome.Uploaded("$alreadyUploaded skipped")
+        if (deliverable.isEmpty() && alreadyUploaded > 0)
+            return MonitorDeliveryBatchOutcome.Uploaded(AppkitContext.context.getString(R.string.appkit_skipped_count, alreadyUploaded))
         val cached = cacheOriginals(deliverable, destination, admission, originals, filename,
             upload?.progressCaption, sleep, progress) ?: return cancelled()
         val ready = cached.ready
@@ -138,7 +139,8 @@ public suspend fun <R, A, H> MonitorDeliveryModel.Companion.runBatch(
                 else -> MonitorDeliveryBatchPolicy.EMPTY_SELECTION
             })
         if (destination == MonitorDeliveryDestination.REMOTE_UPLOAD) {
-            if (upload == null) return MonitorDeliveryBatchOutcome.Failed("Upload is unavailable.")
+            if (upload == null)
+                return MonitorDeliveryBatchOutcome.Failed(AppkitContext.context.getString(R.string.appkit_upload_unavailable))
             if (internet != null) {
                 if (!accepts()) return cancelled()
                 val needsHop = internet.needsHop()
@@ -207,17 +209,19 @@ public suspend fun <R, A, H> MonitorDeliveryModel.Companion.runBatch(
         if (destination == MonitorDeliveryDestination.REMOTE_UPLOAD) {
             if (ready.size == 1 && firstFailure != null) return MonitorDeliveryBatchOutcome.Failed(firstFailure)
             val parts = buildList {
-                if (uploaded > 0) add("$uploaded uploaded")
-                if (skipped > 0) add("$skipped skipped")
-                if (uncached > 0) add("$uncached not cached")
-                if (failed > 0) add("$failed failed")
+                if (uploaded > 0) add(AppkitContext.context.getString(R.string.appkit_uploaded_count, uploaded))
+                if (skipped > 0) add(AppkitContext.context.getString(R.string.appkit_skipped_count, skipped))
+                if (uncached > 0) add(AppkitContext.context.getString(R.string.appkit_uncached_count, uncached))
+                if (failed > 0) add(AppkitContext.context.getString(R.string.appkit_failed_count, failed))
             }.joinToString(", ")
             if (failed > 0) return MonitorDeliveryBatchOutcome.Failed(parts)
-            return MonitorDeliveryBatchOutcome.Uploaded(parts.ifEmpty { "Nothing to upload." })
+            return MonitorDeliveryBatchOutcome.Uploaded(
+                parts.ifEmpty { AppkitContext.context.getString(R.string.appkit_nothing_to_upload) })
         }
         if (prepared.isEmpty()) return MonitorDeliveryBatchOutcome.Failed(firstFailure ?: noPrepared(ready) ?: MonitorDeliveryBatchPolicy.EMPTY_SELECTION)
         if (action == MonitorDeliveryPostExportAction.SAVE_TO_PHOTOS) {
-            if (photos == null) return MonitorDeliveryBatchOutcome.Failed("Saving to Photos is unavailable.")
+            if (photos == null)
+                return MonitorDeliveryBatchOutcome.Failed(AppkitContext.context.getString(R.string.appkit_saving_photos_unavailable))
             var saved = 0; var rejected = 0
             for ((index, artifact) in prepared.withIndex()) {
                 if (!accepts()) return cancelled()
@@ -239,7 +243,8 @@ public suspend fun <R, A, H> MonitorDeliveryModel.Companion.runBatch(
             if (!accepts()) return cancelled()
             return MonitorDeliveryBatchOutcome.SavedToPhotos(count)
         }
-        if (share == null) return MonitorDeliveryBatchOutcome.Failed("Sharing is unavailable.")
+        if (share == null)
+            return MonitorDeliveryBatchOutcome.Failed(AppkitContext.context.getString(R.string.appkit_sharing_unavailable))
         val staged = share(prepared)
         val text = if (accepts()) {
             val note = MonitorDeliveryBatchPolicy.nativeSummary(MonitorDeliveryBatchCounts(prepared.size, uploaded, skipped, failed, uncached))

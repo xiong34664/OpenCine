@@ -20,6 +20,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.opencapture.monitorui.MonitorPalette
 import com.opencapture.monitorui.MonitorTypography
+import com.opencapture.opencine.cameracontrols.CameraControlsContext
+import com.opencapture.opencine.cameracontrols.R
 
 /** The radius shared with the Monitor theme and the mockups. */
 private const val GYRO_BUTTON_RADIUS_DP = 12f
@@ -108,7 +110,7 @@ internal fun GyroSecondaryButton(
 }
 
 /**
- * A quiet text action in the accent: "Use last calibration" and the top-bar "Cancel". Full width
+ * A quiet text action in the accent: "Use last calibration" and the top-bar Cancel. Full width
  * by default; [fillWidth] false keeps it as the small top-bar control.
  */
 @Composable

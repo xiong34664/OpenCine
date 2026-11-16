@@ -62,6 +62,7 @@ import com.opencapture.opencine.motion.LevelReading
 import com.opencapture.opencine.vocabulary.ControlHud
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import androidx.compose.ui.res.stringResource
 
 /** Geometry is a value; decoder/native surface identity is never owned by this module. */
 public class MonitorOperatorLiveLayout(public val layout: LiveMonitorLayout, public val zones: PortraitZones?,
@@ -279,7 +280,7 @@ private fun OperatorWaitingPicture(frame: MonitorRect, control: MonitorControlMo
     Box(Modifier.frame(frame).background(Color.Black), contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
             CircularProgressIndicator(color = LiveDesign.text.copy(alpha = .72f))
-            Text("WAITING FOR LIVE VIEW", color = LiveDesign.text.copy(alpha = .72f), style = LiveType.mono(15f, FontWeight.SemiBold))
+            Text(stringResource(R.string.cc_waiting_for_live_view), color = LiveDesign.text.copy(alpha = .72f), style = LiveType.mono(15f, FontWeight.SemiBold))
             if (hint) Text(LocalVPNFilter.LIVE_HINT, color = LiveDesign.muted, style = LiveType.ui(12f),
                 textAlign = TextAlign.Center, modifier = Modifier.padding(horizontal = 28.dp))
         }

@@ -1,10 +1,13 @@
 package com.opencapture.monitorui.settings
 
+import com.opencapture.monitorui.R
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 
 /** Optional queued report values from an app-owned reporting workflow. */
 public data class MonitorReportStatus(val label: String, val detail: String, val id: String? = null)
@@ -20,11 +23,11 @@ public fun MonitorSupportSettings(
     automaticReports: Boolean? = null, available: Boolean = false, automaticHelp: String = "", unavailableHelp: String = "",
     onAutomaticReports: ((Boolean) -> Unit)? = null, report: () -> Unit, privacy: (() -> Unit)? = null,
     status: MonitorReportStatus? = null, discard: (() -> Unit)? = null, feedback: () -> Unit = {},
-    reportTitle: String = "Report a problem",
-    reportHelp: String = "Tell us what happened in the app. Choose whether to include technical details and an email for a reply.",
-    reportActionTitle: String = "Open", actions: List<MonitorSupportAction> = emptyList(),
+    reportTitle: String = stringResource(R.string.mui_report_a_problem),
+    reportHelp: String = stringResource(R.string.mui_report_help),
+    reportActionTitle: String = stringResource(R.string.mui_open), actions: List<MonitorSupportAction> = emptyList(),
 ) {
-    MonitorSettingsRowCard(title = "Help & Feedback") {
+    MonitorSettingsRowCard(title = stringResource(R.string.mui_help_feedback)) {
         MonitorSettingsInlineRow(reportTitle, reportHelp, showTopDivider = false) {
             MonitorSettingsActionPill(reportActionTitle, onClick = report,
                 modifier = Modifier.testTag("support.report.open").semantics { contentDescription = reportTitle })
@@ -36,28 +39,28 @@ public fun MonitorSupportSettings(
             }
         }
         if (status != null) {
-            MonitorSettingsInlineRow("Report status", status.detail) { MonitorSettingsValueText(status.label) }
+            MonitorSettingsInlineRow(stringResource(R.string.mui_report_status), status.detail) { MonitorSettingsValueText(status.label) }
             status.id?.let { id ->
-                MonitorSettingsInlineRow("Report ID", "Use this ID if you follow up.") { MonitorSettingsValueText(id) }
+                MonitorSettingsInlineRow(stringResource(R.string.mui_report_id), stringResource(R.string.mui_report_id_help)) { MonitorSettingsValueText(id) }
             }
             if (discard != null) {
-                MonitorSettingsInlineRow("Queued report", "Remove the unsent report from this phone.") {
-                    MonitorSettingsActionPill("Discard", onClick = discard)
+                MonitorSettingsInlineRow(stringResource(R.string.mui_queued_report), stringResource(R.string.mui_queued_report_help)) {
+                    MonitorSettingsActionPill(stringResource(R.string.mui_discard), onClick = discard)
                 }
             }
         }
         if (automaticReports != null) {
             if (available && onAutomaticReports != null) {
-                MonitorSettingsSwitchInlineRow("Automatic error reports", automaticReports, automaticHelp) {
+                MonitorSettingsSwitchInlineRow(stringResource(R.string.mui_automatic_error_reports), automaticReports, automaticHelp) {
                     feedback(); onAutomaticReports(!automaticReports)
                 }
             } else {
-                MonitorSettingsInlineRow("Automatic error reports", unavailableHelp) { MonitorSettingsValueText("Off") }
+                MonitorSettingsInlineRow(stringResource(R.string.mui_automatic_error_reports), unavailableHelp) { MonitorSettingsValueText(stringResource(R.string.mui_off)) }
             }
         }
         privacy?.let { action ->
-            MonitorSettingsInlineRow("Reporting Privacy", "What reports contain, retention, and how to request deletion.") {
-                MonitorSettingsActionPill("Read", onClick = action)
+            MonitorSettingsInlineRow(stringResource(R.string.mui_reporting_privacy), stringResource(R.string.mui_reporting_privacy_help)) {
+                MonitorSettingsActionPill(stringResource(R.string.mui_read_action), onClick = action)
             }
         }
     }
@@ -68,12 +71,12 @@ public fun MonitorDiagnosticSettings(
     expanded: Boolean, onExpanded: (Boolean) -> Unit, deleteHelp: String,
     save: () -> Unit, delete: () -> Unit,
 ) {
-    MonitorSettingsGroupCard(title = "Diagnostic options", caption = "Save or remove reports on this phone",
+    MonitorSettingsGroupCard(title = stringResource(R.string.mui_diagnostic_options), caption = stringResource(R.string.mui_diagnostic_options_caption),
         expanded = expanded, onExpandToggle = { onExpanded(!expanded) }) {
-        MonitorSettingsInlineRow("Save diagnostic report", "Keep a copy or share it with support.",
-            showTopDivider = false) { MonitorSettingsActionPill("Save", onClick = save) }
-        MonitorSettingsInlineRow("Delete saved feed reports", deleteHelp) {
-            MonitorSettingsActionPill("Delete", onClick = delete)
+        MonitorSettingsInlineRow(stringResource(R.string.mui_save_diagnostic_report), stringResource(R.string.mui_save_diagnostic_report_help),
+            showTopDivider = false) { MonitorSettingsActionPill(stringResource(R.string.mui_save), onClick = save) }
+        MonitorSettingsInlineRow(stringResource(R.string.mui_delete_saved_feed_reports), deleteHelp) {
+            MonitorSettingsActionPill(stringResource(R.string.mui_delete), onClick = delete)
         }
     }
 }

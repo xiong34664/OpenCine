@@ -249,36 +249,51 @@ public class MultiviewNetworkStorage(
 
 /** The coordinator's operator copy, the same in every app. Swift twin: `MultiviewCopy`. */
 public object MultiviewCopy {
-    public const val ADD_CAMERA: String = "Add camera"
-    public const val APPROVE_ON_CAMERA: String = "Connecting · approve on camera"
-    public const val CONNECTING_PREVIEW: String = "Connecting normal preview"
-    public const val WAITING_FOR_VIDEO: String = "Waiting for video"
-    public const val LIVE: String = "Live · Video mode"
-    public const val RECONNECTING: String = "Reconnecting…"
-    public const val COULD_NOT_CONNECT: String = "Could not connect"
-    public const val COULD_NOT_CONNECT_PREVIEW: String = "Could not connect preview"
-    public const val COULD_NOT_RESTORE: String = "Could not restore preview. Tap Reconnect to try again."
-    public const val SHARED_NETWORK_LOST: String = "Shared network unavailable. Rejoin it, then reconnect this camera."
-    public const val NOT_FOUND: String =
-        "Could not find this camera on the shared Wi-Fi. Check that both devices use the same network and that client isolation is off, then tap Reconnect."
-    public const val UNAVAILABLE_ADDRESS: String =
-        "Camera discovery returned an unavailable address. Tap Reconnect to search again."
-    public const val UNSUPPORTED_SUBNET: String =
-        "Automatic discovery needs a shared IPv4 network with at most 1,022 device addresses."
-    public const val DUPLICATE: String = "This camera is already in Multiview."
-    public const val VERIFIED_WITHOUT_PREVIEW: String = "Wi-Fi join verified · Preview not supported yet"
-    public const val NOT_QUALIFIED: String = "Multiview preview is not available for this camera model yet."
-    public const val JOIN_NETWORK_FIRST: String = "Join the shared Wi-Fi network on this device first."
-    public const val NOT_NEARBY: String = "Camera is not nearby. Check that it is powered on."
-    public const val CHECK_NETWORK: String = "Check the network name and password."
-    public const val CLEANUP_NOT_SAVED: String = "Could not save camera Wi-Fi cleanup. Try again."
-    public const val SCAN_CLEANUP_FAILED: String =
-        "Camera Wi-Fi could not be restored. Keep it powered on and close Multiview to retry."
-    public const val CLOSE_CLEANUP_FAILED: String =
-        "Some cameras could not return to their own Wi-Fi. Keep them powered on and close Multiview again to retry."
+    public val ADD_CAMERA: String get() = AppkitContext.context.getString(R.string.appkit_add_camera)
+    public val APPROVE_ON_CAMERA: String
+        get() = AppkitContext.context.getString(R.string.appkit_connecting_approve_on_camera)
+    public val CONNECTING_PREVIEW: String
+        get() = AppkitContext.context.getString(R.string.appkit_connecting_normal_preview)
+    public val WAITING_FOR_VIDEO: String
+        get() = AppkitContext.context.getString(R.string.appkit_waiting_for_video)
+    public val LIVE: String get() = AppkitContext.context.getString(R.string.appkit_live_video_mode)
+    public val RECONNECTING: String get() = AppkitContext.context.getString(R.string.appkit_reconnecting)
+    public val COULD_NOT_CONNECT: String
+        get() = AppkitContext.context.getString(R.string.appkit_could_not_connect)
+    public val COULD_NOT_CONNECT_PREVIEW: String
+        get() = AppkitContext.context.getString(R.string.appkit_could_not_connect_preview)
+    public val COULD_NOT_RESTORE: String
+        get() = AppkitContext.context.getString(R.string.appkit_could_not_restore_preview)
+    public val SHARED_NETWORK_LOST: String
+        get() = AppkitContext.context.getString(R.string.appkit_shared_network_unavailable)
+    public val NOT_FOUND: String
+        get() = AppkitContext.context.getString(R.string.appkit_could_not_find_camera_shared_wifi)
+    public val UNAVAILABLE_ADDRESS: String
+        get() = AppkitContext.context.getString(R.string.appkit_camera_discovery_unavailable_address)
+    public val UNSUPPORTED_SUBNET: String
+        get() = AppkitContext.context.getString(R.string.appkit_automatic_discovery_subnet)
+    public val DUPLICATE: String
+        get() = AppkitContext.context.getString(R.string.appkit_camera_already_in_multiview)
+    public val VERIFIED_WITHOUT_PREVIEW: String
+        get() = AppkitContext.context.getString(R.string.appkit_wifi_join_verified_no_preview)
+    public val NOT_QUALIFIED: String
+        get() = AppkitContext.context.getString(R.string.appkit_multiview_preview_unavailable_model)
+    public val JOIN_NETWORK_FIRST: String
+        get() = AppkitContext.context.getString(R.string.appkit_join_shared_network_first)
+    public val NOT_NEARBY: String
+        get() = AppkitContext.context.getString(R.string.appkit_camera_not_nearby)
+    public val CHECK_NETWORK: String
+        get() = AppkitContext.context.getString(R.string.appkit_check_network_name_password)
+    public val CLEANUP_NOT_SAVED: String
+        get() = AppkitContext.context.getString(R.string.appkit_could_not_save_wifi_cleanup)
+    public val SCAN_CLEANUP_FAILED: String
+        get() = AppkitContext.context.getString(R.string.appkit_camera_wifi_not_restored)
+    public val CLOSE_CLEANUP_FAILED: String
+        get() = AppkitContext.context.getString(R.string.appkit_cameras_could_not_return_wifi)
 
     /** The search line while the stage looks for a member on the shared network. */
-    public fun finding(attempt: Int, of: Int): String = "Finding camera on Wi-Fi · $attempt of $of"
+    public fun finding(attempt: Int, of: Int): String =
+        AppkitContext.context.getString(R.string.appkit_finding_camera_wifi, attempt, of)
 
     /**
      * The Add camera list's footer: cameras the app moves onto [network] (approved on the camera where
@@ -286,18 +301,26 @@ public object MultiviewCopy {
      */
     public fun pickerFooter(network: String, commissioned: Boolean, asksApproval: Boolean = true): String =
         when {
-            commissioned -> "Each camera will join $network." + if (asksApproval) " Approve on the camera if asked." else ""
-            network.isEmpty() -> "Cameras on this phone\u2019s network appear here."
-            else -> "Cameras already on $network appear here."
+            commissioned ->
+                AppkitContext.context.getString(R.string.appkit_each_camera_will_join, network) +
+                    if (asksApproval) AppkitContext.context.getString(R.string.appkit_approve_on_camera_if_asked) else ""
+            network.isEmpty() -> AppkitContext.context.getString(R.string.appkit_cameras_on_this_phones_network)
+            else -> AppkitContext.context.getString(R.string.appkit_cameras_already_on_network, network)
         }
 
     /** A listed camera that joins without its picture. */
-    public const val PREVIEW_UNAVAILABLE: String = "Try experimental shared Wi-Fi · Preview unavailable"
-    public const val RECONNECT_BEFORE_SETTINGS: String = "Reconnect this camera before changing settings."
-    public const val WAITING_FOR_CONTROLS: String = "Waiting for camera controls\u2026"
-    public const val CONTROLS_UNAVAILABLE: String = "Controls unavailable"
-    public const val LOCKED_WHILE_RECORDING: String = "Locked while recording"
-    public const val CAMERA_SETTINGS: String = "Camera settings"
+    public val PREVIEW_UNAVAILABLE: String
+        get() = AppkitContext.context.getString(R.string.appkit_try_experimental_shared_wifi_preview)
+    public val RECONNECT_BEFORE_SETTINGS: String
+        get() = AppkitContext.context.getString(R.string.appkit_reconnect_before_settings)
+    public val WAITING_FOR_CONTROLS: String
+        get() = AppkitContext.context.getString(R.string.appkit_waiting_for_camera_controls)
+    public val CONTROLS_UNAVAILABLE: String
+        get() = AppkitContext.context.getString(R.string.appkit_controls_unavailable)
+    public val LOCKED_WHILE_RECORDING: String
+        get() = AppkitContext.context.getString(R.string.appkit_locked_while_recording)
+    public val CAMERA_SETTINGS: String
+        get() = AppkitContext.context.getString(R.string.appkit_camera_settings)
 }
 
 /** Why a coordinator step failed, with its operator copy. Swift twin: `MultiviewStageFailure`. */

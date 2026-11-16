@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.opencapture.monitorui.MonitorAssistTool
+import androidx.compose.ui.res.stringResource
 
 /**
  * `AssistToolCell`: 19dp glyph over a 9sp mono label. On-state is
@@ -37,6 +38,9 @@ fun AssistToolCell(
     modifier: Modifier = Modifier,
 ) {
     val tint = if (isOn) LiveDesign.accent else LiveDesign.muted
+    val holdOptions = stringResource(R.string.cc_assist_tool_hold_options)
+    val onLabel = stringResource(R.string.cc_on)
+    val offLabel = stringResource(R.string.cc_off)
     Column(
         modifier =
             modifier
@@ -55,8 +59,8 @@ fun AssistToolCell(
                     // the 9sp "WAVE" abbreviation being read after the name;
                     // plain `semantics` leaves it behind as a second stop, and
                     // the tap and hold actions survive the clear.
-                    val options = if (onLongClick != null) ". Hold for options" else ""
-                    contentDescription = "${tool.title}, ${if (isOn) "on" else "off"}$options"
+                    val options = if (onLongClick != null) holdOptions else ""
+                    contentDescription = "${tool.title}, ${if (isOn) onLabel else offLabel}$options"
                     if (!enabled) disabled()
                 }
                 .padding(vertical = 5.dp, horizontal = 8.dp)

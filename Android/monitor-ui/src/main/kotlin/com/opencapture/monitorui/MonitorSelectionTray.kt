@@ -24,12 +24,13 @@ import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 /** The selection bar's Close, which leaves selection mode. Swift twin: `MonitorMediaSelectionCopy`. */
 object MonitorMediaSelectionCopy {
-    const val EXIT = "Exit selection"
+    val EXIT get() = MonitorContext.context.getString(R.string.mui_exit_selection)
     const val EXIT_TAG = "monitor.media.selection.close"
 }
 
@@ -49,8 +50,8 @@ fun MonitorSelectionTray(
     modifier: Modifier = Modifier,
     shareEnabled: Boolean = true,
     deleteEnabled: Boolean = true,
-    shareLabel: String = "Share selected",
-    deleteLabel: String = "Delete selected",
+    shareLabel: String = stringResource(R.string.mui_share_selected),
+    deleteLabel: String = stringResource(R.string.mui_delete_selected),
     onClickFeedback: () -> Unit = {},
 ) {
     Row(
@@ -64,14 +65,14 @@ fun MonitorSelectionTray(
         MonitorSelectionChip(MonitorIcon.X, MonitorMediaSelectionCopy.EXIT, tag = MonitorMediaSelectionCopy.EXIT_TAG,
             minimumTarget = 48f, onClickFeedback = onClickFeedback, onClick = onExit)
         // The count keeps its full width; on a narrow phone the actions scroll instead of cutting it.
-        Text("$count selected", color = MonitorPalette.text,
+        Text(stringResource(R.string.mui_count_selected, count), color = MonitorPalette.text,
             style = MonitorTypography.text(10.5f, FontWeight.SemiBold), maxLines = 1, softWrap = false)
         Box(Modifier.weight(1f).padding(start = 4.dp), contentAlignment = Alignment.CenterEnd) {
             Row(Modifier.horizontalScroll(rememberScrollState()), verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(3.dp)) {
-                MonitorSelectionChip(MonitorIcon.CIRCLE_CHECK, "Select all", text = "All",
+                MonitorSelectionChip(MonitorIcon.CIRCLE_CHECK, stringResource(R.string.mui_select_all), text = stringResource(R.string.mui_all),
                     onClickFeedback = onClickFeedback, onClick = onAll)
-                MonitorSelectionChip(MonitorIcon.SHARE, shareLabel, text = "Share", active = true,
+                MonitorSelectionChip(MonitorIcon.SHARE, shareLabel, text = stringResource(R.string.mui_share), active = true,
                     enabled = shareEnabled, onClickFeedback = onClickFeedback, onClick = onShare)
                 MonitorSelectionChip(MonitorIcon.TRASH, deleteLabel, danger = true,
                     enabled = deleteEnabled, onClickFeedback = onClickFeedback, onClick = onDelete)

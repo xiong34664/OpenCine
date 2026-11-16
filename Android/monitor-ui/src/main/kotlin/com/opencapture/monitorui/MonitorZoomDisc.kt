@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.contentDescription
@@ -198,11 +199,13 @@ fun MonitorZoomDisc(initial: Double, maximum: Double, label: (Double) -> String,
                     }
                     alpha = motion }
                 .monitorMaterial(MonitorMaterial.Zoom, MonitorZoomDiscShape(attachment))) {
+                val zoomDescription = stringResource(R.string.mui_zoom_level, MonitorZoomScale.dialLabel(factor, maximum = maxZoom))
+                val closeZoomActionLabel = stringResource(R.string.mui_close_zoom)
                 Canvas(Modifier.fillMaxSize().semantics {
-                    contentDescription = "Zoom ${MonitorZoomScale.dialLabel(factor, maximum = maxZoom)}"
+                    contentDescription = zoomDescription
                     progressBarRangeInfo = ProgressBarRangeInfo(position.toFloat(), 0f..1f)
                     setProgress { update(it.toDouble(), accessibility = true); true }
-                    customActions = listOf(CustomAccessibilityAction("Close zoom") { closing = true; true })
+                    customActions = listOf(CustomAccessibilityAction(closeZoomActionLabel) { closing = true; true })
                 }.pointerInput(pixelDisc) {
                     detectTapGestures { if (!pixelDisc.contains(it.x, it.y)) closing = true }
                 }.pointerInput(geometry, closing) {

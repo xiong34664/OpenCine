@@ -17,12 +17,13 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 
 /** The renderer supplies an already bounded image; presentation never samples a feed. */
 @Composable
 fun MonitorImagePreview(image: ImageBitmap?, description: String, modifier: Modifier = Modifier,
-    waitingLabel: String = "Waiting for picture", aspectRatio: Float? = null) {
+    waitingLabel: String = stringResource(R.string.mui_waiting_for_picture), aspectRatio: Float? = null) {
     BoxWithConstraints(modifier.fillMaxWidth().height(132.dp).clip(RoundedCornerShape(10.dp))
         .background(MonitorPalette.background).semantics { contentDescription = description },
         contentAlignment = Alignment.Center) {

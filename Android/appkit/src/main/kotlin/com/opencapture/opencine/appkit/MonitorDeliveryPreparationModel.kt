@@ -220,7 +220,7 @@ public class MonitorDeliveryPreparationModel<C, F, P, X, H>(
             if (failure is CancellationException) throw failure
             return refuse(failure.message ?: failure.toString())
         } ?: // Another hop holds the route; this popup never steals it.
-            return refuse("Couldn't leave the camera's Wi-Fi while another network switch is running.")
+            return refuse(AppkitContext.context.getString(R.string.appkit_couldnt_leave_wifi_switch_running))
         if (!current(captured) || hopRequest != request || !service.internet.owns(acquired) || !current(captured)) {
             service.internet.restore(acquired); return null
         }
@@ -235,7 +235,7 @@ public class MonitorDeliveryPreparationModel<C, F, P, X, H>(
         hopTask = null; refresh(captured)
         if (!current(captured) || hopRequest != request) return
         if (online) loadProjects() else publish(captured) { it.copy(projectsError =
-            "Couldn't reach the internet after leaving the camera's Wi-Fi. Check cellular or home Wi-Fi.") }
+            AppkitContext.context.getString(R.string.appkit_couldnt_reach_internet)) }
     }
     /** Accept an already transferred lease without a leave/wait. Refusal retains caller cleanup. */
     public fun adoptInternetLease(acquired: H): Boolean {

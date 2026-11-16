@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.disabled
@@ -58,6 +59,11 @@ public fun MonitorPhotoRelease(
     val release by rememberUpdatedState(onReleased)
     val admits by rememberUpdatedState(enabled)
     var dipped by remember { mutableStateOf(false) }
+    val releaseDescription = when {
+        timerRemaining != null -> stringResource(R.string.appkit_self_timer_seconds, timerRemaining)
+        capturing -> stringResource(R.string.appkit_capturing)
+        else -> stringResource(R.string.appkit_take_photo)
+    }
     val scale by animateFloatAsState(if (dipped) .88f else 1f, tween(120), label = "photo-release-dip")
     LaunchedEffect(bodyPulse) {
         if (bodyPulse > 0) {
@@ -83,11 +89,7 @@ public fun MonitorPhotoRelease(
             }
             .semantics {
                 role = Role.Button
-                contentDescription = when {
-                    timerRemaining != null -> "Self-timer, $timerRemaining seconds"
-                    capturing -> "Capturing"
-                    else -> "Take photo"
-                }
+                contentDescription = releaseDescription
                 if (enabled) {
                     onClick {
                         press()

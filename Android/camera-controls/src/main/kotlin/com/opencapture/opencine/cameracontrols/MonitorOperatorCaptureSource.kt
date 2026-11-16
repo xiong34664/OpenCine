@@ -93,7 +93,7 @@ public class MonitorOperatorCaptureSource(
         if (!host.capturePreferences.shutterUsesAngle || CameraCommands.isPhotoMode(status.shootingMode)) return base
         val achieved = CaptureNativeReadoutPresentation.shutterAngleAchieved(angleShutter(), angleFrameRate(),
             CaptureLists.shutterDenoms(status), host.capturePreferences.shutterAngleDegrees, shutterAngleSettling) ?: return base
-        return "Angle · actual $achieved"
+        return CameraControlsContext.context.getString(R.string.cc_shutter_angle_actual, achieved)
     }
 
     public fun readout(sheet: LiveSheet, status: CameraStatus, nativeLabel: String): String {

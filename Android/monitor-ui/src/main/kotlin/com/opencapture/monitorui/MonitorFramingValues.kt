@@ -129,5 +129,5 @@ object MonitorCrosshairGeometry {
     const val ARM_LENGTH_DP = 40f
     const val STROKE_WIDTH_DP = 1.4f
     const val OPACITY = 0.65f
-    const val HELP = "Tap the toolbar button to show or hide the centre crosshair."
+    val HELP get() = MonitorContext.context.getString(R.string.mui_crosshair_help)
 }
